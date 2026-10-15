@@ -17,6 +17,7 @@
   .arrow:disabled { opacity:.2; cursor:default; }
   .card { background:white; border:1px solid var(--line); border-radius:24px; padding:clamp(24px,5vw,64px); box-shadow:0 8px 30px #24334b0b; text-align:center; }
   .prompt { margin:0 0 18px; font-size:clamp(25px,4vw,42px); font-weight:750; line-height:1.5; }
+  .filled-blank { display:inline-block; color:#16845b; border-bottom:3px solid currentColor; padding:0 5px; margin:0 3px; }
   .hint { color:var(--muted); font-size:16px; min-height:24px; }
   .feedback { min-height:54px; margin:12px 0 0; font-size:20px; font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; }
   .feedback.good { color:#16845b; } .feedback.try { color:#c17a13; } .feedback.error { color:#c13b4a; }
@@ -82,27 +83,27 @@ const questions = [
   { type: "meaning", korean: "만나다", answer: "meet" },
   { type: "blank", prompt: "five _____ past three", korean: "3시 5분", answer: "minute" },
   { type: "meaning", korean: "멜론", answer: "melon" },
-  { type: "sentence", english: "I want to go to the zoo.", korean: "나는 동물원에 가고 싶어요.", answer: "I want to go to the zoo." },
+  { type: "sentence", english: "milk is healthy food", korean: "우유는 건강에 좋은 음식이다.", answer: "milk is healthy food." },
   { type: "blank", prompt: "fresh _____", korean: "신선한 우유", answer: "milk" },
   { type: "meaning", korean: "미터", answer: "meter" },
   { type: "blank", prompt: "middle _____", korean: "중학교", answer: "school" },
   { type: "meaning", korean: "중앙, 가운데", answer: "middle" },
-  { type: "sentence", english: "Three elephants walk to the zoo.", korean: "코끼리 세 마리가 동물원으로 걸어가요.", answer: "Three elephants walk to the zoo." },
+  { type: "sentence", english: "The model is tall and handsome.", korean: "그 모델은 키가 크고 잘생겼다.", answer: "The model is tall and handsome." },
   { type: "blank", prompt: "one _____ dollars", korean: "100만 달러", answer: "million" },
   { type: "meaning", korean: "우유", answer: "milk" },
   { type: "blank", prompt: "look in a _____", korean: "거울을 보다", answer: "mirror" },
   { type: "meaning", korean: "100만", answer: "million" },
-  { type: "sentence", english: "The dog is on the box.", korean: "개가 상자 위에 있어요.", answer: "The dog is on the box." },
+  { type: "sentence", english: "The snow is one meter deep.", korean: "눈이 1미터나 쌓였다.", answer: "The snow is one meter deep." },
   { type: "blank", prompt: "I _____ you.", korean: "나는 네가 그리워.", answer: "miss" },
   { type: "meaning", korean: "모형, 모델", answer: "model" },
   { type: "blank", prompt: "pocket _____", korean: "용돈", answer: "money" },
   { type: "meaning", korean: "원숭이", answer: "monkey" },
-  { type: "sentence", english: "I like to play with my friends.", korean: "나는 친구들과 노는 것을 좋아해요.", answer: "I like to play with my friends." },
+  { type: "sentence", english: "We often meet", korean: "우리는 종종 만난다.", answer: "We often meet." },
   { type: "blank", prompt: "this _____", korean: "이번 달", answer: "month" },
   { type: "meaning", korean: "달", answer: "moon" },
   { type: "blank", prompt: "good _____", korean: "아침 인사", answer: "morning" },
   { type: "meaning", korean: "입", answer: "mouth" },
-  { type: "sentence", english: "The cat is under the table.", korean: "고양이가 탁자 아래에 있어요.", answer: "The cat is under the table." },
+  { type: "sentence", english: "I get up early everyday.", korean: "나는 매일 아침 일찍 일어난다.", answer: "I get up early everyday." },
   { type: "blank", prompt: "_____ your mouth", korean: "입을 움직여 보세요", answer: "move" }
 ];
 
@@ -119,6 +120,16 @@ const micEl = document.getElementById("mic");
 
 function normalize(text) {
   return text.toLowerCase().replace(/[.,!?;:'"’]/g, "").replace(/\s+/g, " ").trim();
+}
+function escapeHTML(text) {
+  return String(text).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "'":"&#39;"}[ch]));
+}
+function fillBlank(spoken) {
+  const q = questions[index];
+  if (q.type !== "blank") return;
+  const safeSpoken = escapeHTML(spoken.trim());
+  const blankMarkup = `<span class="filled-blank">${safeSpoken}</span>`;
+  promptEl.innerHTML = escapeHTML(q.prompt).replace(/_{2,}/, blankMarkup);
 }
 function renderQuestion() {
   stopListening();
@@ -256,6 +267,7 @@ function similarityPercent(spoken, expected) {
 
 function checkAnswer(spoken) {
   const q = questions[index];
+  if (q.type === "blank") fillBlank(spoken);
   const score = similarityPercent(spoken, q.answer);
   answerEl.textContent = `인식한 내용: ${spoken} · 일치도 ${score}%`;
 
@@ -326,7 +338,9 @@ function playFeedbackAudio(level) {
 document.getElementById("prev").addEventListener("click", () => { if (index > 0) { playNavigationTone(); index--; renderQuestion(); } });
 document.getElementById("next").addEventListener("click", () => { if (index < questions.length - 1) { playNavigationTone(); index++; renderQuestion(); } });
 document.getElementById("showAnswer").addEventListener("click", () => {
-  answerEl.textContent = `정답: ${questions[index].answer}`;
+  const q = questions[index];
+  if (q.type === "blank") fillBlank(q.answer);
+  answerEl.textContent = `정답: ${q.answer}`;
   playNavigationTone();
 });
 function playNavigationTone() {
