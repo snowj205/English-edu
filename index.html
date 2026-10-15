@@ -18,8 +18,19 @@
   .card { background:white; border:1px solid var(--line); border-radius:24px; padding:clamp(24px,5vw,64px); box-shadow:0 8px 30px #24334b0b; text-align:center; }
   .prompt { margin:0 0 18px; font-size:clamp(25px,4vw,42px); font-weight:750; line-height:1.5; }
   .hint { color:var(--muted); font-size:16px; min-height:24px; }
-  .feedback { min-height:54px; margin:18px 0 0; font-size:20px; font-weight:700; }
+  .feedback { min-height:54px; margin:12px 0 0; font-size:20px; font-weight:700; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; }
   .feedback.good { color:#16845b; } .feedback.try { color:#c17a13; } .feedback.error { color:#c13b4a; }
+  .mascot-wrap { display:none; flex-direction:column; align-items:center; justify-content:center; margin:0 auto 8px; }
+  .mascot-wrap.show { display:flex; }
+  .mascot { width:clamp(105px,16vw,150px); height:clamp(105px,16vw,150px); object-fit:contain; }
+  .mascot-wrap.happy .mascot { animation:bunnyHop .65s ease-in-out 2; }
+  .mascot-wrap.try .mascot { animation:bearWobble .55s ease-in-out 2; }
+  .mascot-caption { font-size:clamp(22px,3vw,30px); font-weight:900; letter-spacing:1px; transform-origin:center; animation:captionPop .75s ease-in-out 2; }
+  .mascot-wrap.happy .mascot-caption { color:#16845b; }
+  .mascot-wrap.try .mascot-caption { color:#c17a13; }
+  @keyframes bunnyHop { 0%,100%{transform:translateY(0) rotate(0)} 35%{transform:translateY(-17px) rotate(-5deg)} 65%{transform:translateY(0) rotate(5deg)} }
+  @keyframes bearWobble { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-9deg)} 75%{transform:rotate(9deg)} }
+  @keyframes captionPop { 0%,100%{transform:scale(.82)} 50%{transform:scale(1.18)} }
   .bottom { display:flex; flex-direction:column; align-items:center; gap:10px; padding-top:12px; }
   .mic { width:76px; height:76px; border:0; border-radius:50%; background:var(--blue); color:white; display:grid; place-items:center; cursor:pointer; box-shadow:0 7px 18px #4c83f14a; transition:transform .15s,background .15s; }
   .mic svg { width:34px; height:34px; fill:currentColor; }
@@ -42,6 +53,10 @@
   <main class="main">
     <button class="arrow" id="prev" aria-label="이전 문제">‹</button>
     <section class="card">
+      <div class="mascot-wrap" id="mascotWrap" aria-live="polite">
+        <img class="mascot" id="mascot" src="https://raw.githubusercontent.com/snowj205/english-speaking-test/main/perfect.png" alt="정답 응원 캐릭터">
+        <div class="mascot-caption" id="mascotCaption"></div>
+      </div>
       <div class="prompt" id="prompt">나는 사과를 좋아해요.</div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
     </section>
@@ -63,20 +78,20 @@
   문제를 추가하거나 삭제해도 전체 문제 수와 진행 표시가 자동으로 바뀝니다.
 */
 const questions = [
-  { korean: "만나다.", answer: "meet" },
+  { korean: "만나다", answer: "meet" },
   { korean: "멜론", answer: "melon" },
   { korean: "미터", answer: "meter" },
-  { korean: "중앙,가운데", answer: "middle" },
+  { korean: "중앙, 가운데", answer: "middle" },
   { korean: "우유", answer: "milk" },
   { korean: "100만", answer: "million" },
-  { korean: "분,순간", answer: "minute" },
+  { korean: "분, 순간", answer: "minute" },
   { korean: "거울", answer: "mirror" },
-  { korean: "~양,그리워하다,놓치다", answer: "miss" },
-  { korean: "모형,모델", answer: "model" },
+  { korean: "그리워하다, 놓치다", answer: "miss" },
+  { korean: "모형, 모델", answer: "model" },
   { korean: "엄마", answer: "mom" },
   { korean: "돈", answer: "money" },
   { korean: "원숭이", answer: "monkey" },
-  { korean: "달,월", answer: "month" },
+  { korean: "달, 월", answer: "month" },
   { korean: "달", answer: "moon" },
   { korean: "아침", answer: "morning" },
   { korean: "어머니", answer: "mother" },
@@ -104,6 +119,7 @@ function renderQuestion() {
   promptEl.textContent = q.korean;
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
+  hideMascot();
   answerEl.textContent = "";
   statusEl.textContent = "마이크 버튼을 누르고 영어로 말해 보세요.";
   document.getElementById("counter").textContent = `${index + 1} / ${questions.length}`;
@@ -172,16 +188,51 @@ function checkAnswer(spoken) {
   const correct = normalize(questions[index].answer) === said;
   answerEl.textContent = `내가 말한 문장: ${spoken}`;
   if (correct) {
+    showMascot(true);
     feedbackEl.textContent = "정답이에요! 정말 잘했어요! 🎉";
     feedbackEl.className = "feedback good";
     statusEl.textContent = "완벽해요! 다음 문제로 넘어가 볼까요?";
     playTone(true);
+    speakFeedback("Perfect! Good job!");
   } else {
+    showMascot(false);
     feedbackEl.textContent = "다시 한 번 도전해 봐요 🙂";
     feedbackEl.className = "feedback try";
     statusEl.textContent = "인식한 문장과 정답이 달라요. 발음 인식 오류일 수도 있으니 다시 말해 보세요.";
     playTone(false);
+    speakFeedback("Try again!");
   }
+}
+function hideMascot() {
+  const wrap = document.getElementById("mascotWrap");
+  wrap.className = "mascot-wrap";
+  document.getElementById("mascotCaption").textContent = "";
+  document.getElementById("mascot").src = "";
+}
+function showMascot(correct) {
+  const wrap = document.getElementById("mascotWrap");
+  wrap.className = `mascot-wrap show ${correct ? "happy" : "try"}`;
+  const mascot = document.getElementById("mascot");
+  mascot.alt = correct ? "정답 축하 캐릭터" : "다시 도전 응원 캐릭터";
+  mascot.src = correct
+    ? "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/perfect.png"
+    : "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/tryagain.png";
+  document.getElementById("mascotCaption").textContent = correct ? "PERFECT!  GOOD JOB!" : "TRY AGAIN!";
+  if (correct) {
+    clearTimeout(window.goodJobImageTimer);
+    window.goodJobImageTimer = setTimeout(() => {
+      if (wrap.classList.contains("happy")) mascot.src = "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/goodjob.png";
+    }, 1100);
+  }
+}
+function speakFeedback(words) {
+  if (!("speechSynthesis" in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(words);
+    utterance.lang = "en-US"; utterance.rate = 0.88; utterance.pitch = 1.12;
+    window.speechSynthesis.speak(utterance);
+  } catch (e) {}
 }
 function playTone(correct) {
   try {
@@ -199,11 +250,22 @@ function playTone(correct) {
     setTimeout(() => ctx.close(), 700);
   } catch (e) {}
 }
-document.getElementById("prev").addEventListener("click", () => { if (index > 0) { index--; renderQuestion(); } });
-document.getElementById("next").addEventListener("click", () => { if (index < questions.length - 1) { index++; renderQuestion(); } });
+document.getElementById("prev").addEventListener("click", () => { if (index > 0) { playNavigationTone(); index--; renderQuestion(); } });
+document.getElementById("next").addEventListener("click", () => { if (index < questions.length - 1) { playNavigationTone(); index++; renderQuestion(); } });
 document.getElementById("showAnswer").addEventListener("click", () => {
   answerEl.textContent = `예시 정답: ${questions[index].answer}`;
+  playNavigationTone();
 });
+function playNavigationTone() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = "sine"; osc.frequency.setValueAtTime(520, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(740, ctx.currentTime + 0.09);
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.07, ctx.currentTime + 0.015); gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.13);
+    osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.14);
+    setTimeout(() => ctx.close(), 250);
+  } catch (e) {}
+}
 micEl.addEventListener("click", startListening);
 renderQuestion();
 </script>
