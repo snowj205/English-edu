@@ -16,9 +16,8 @@
   .arrow { border:0; background:transparent; color:#526170; font-size:42px; cursor:pointer; padding:8px 0; }
   .arrow:disabled { opacity:.2; cursor:default; }
   .card { background:white; border:1px solid var(--line); border-radius:24px; padding:24px; box-shadow:0 8px 30px #24334b0b; text-align:center; }
-  .picture { height:min(48vh,420px); min-height:230px; display:flex; align-items:center; justify-content:center; background:var(--pale); border-radius:18px; overflow:hidden; }
-  .picture img { width:100%; height:100%; object-fit:contain; display:none; }
-  .placeholder { color:#8793a1; padding:24px; line-height:1.7; }
+  .picture { display:none; }
+  .picture img, .placeholder { display:none !important; }
   .prompt { margin:20px 0 8px; font-size:clamp(21px,3vw,32px); font-weight:750; }
   .hint { color:var(--muted); font-size:15px; min-height:24px; }
   .feedback { min-height:54px; margin:12px 0 0; font-size:20px; font-weight:700; }
@@ -46,10 +45,6 @@
   <main class="main">
     <button class="arrow" id="prev" aria-label="이전 문제">‹</button>
     <section class="card">
-      <div class="picture">
-        <img id="questionImage" alt="영어로 설명할 그림">
-        <div class="placeholder" id="placeholder">아래 안내에 따라 직접 준비한 이미지를 넣어 주세요.<br><br><b>images/001.png</b></div>
-      </div>
       <div class="prompt" id="prompt">코끼리 세 마리가 동물원으로 걸어가요.</div>
       <div class="hint">그림을 보고 영어로 말해 보세요.</div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
@@ -66,23 +61,15 @@
   </div>
 </div>
 <script>
-/*
-  이미지 추가 방법:
-  1) GitHub 저장소에 images 폴더를 만들고 이미지 파일을 올립니다.
-  2) 아래 questions 목록의 image 경로와 korean, answers를 수정합니다.
-  3) 이미지 파일 이름과 대소문자까지 정확히 일치해야 합니다.
-*/
 const questions = [
-  { image: "images/001.png", korean: "코끼리 세 마리가 동물원으로 걸어가요.", answers: ["three elephants walk to the zoo", "three elephants are walking to the zoo"] },
-  { image: "images/002.png", korean: "개가 상자 위에 있어요.", answers: ["the dog is on the box", "a dog is on the box"] },
-  { image: "images/003.png", korean: "나는 식당에 가고 싶어요.", answers: ["i want to go to a restaurant", "i want to go to the restaurant"] }
+  { korean: "코끼리 세 마리가 동물원으로 걸어가요.", answers: ["three elephants walk to the zoo", "three elephants are walking to the zoo"] },
+  { korean: "개가 상자 위에 있어요.", answers: ["the dog is on the box", "a dog is on the box"] },
+  { korean: "나는 식당에 가고 싶어요.", answers: ["i want to go to a restaurant", "i want to go to the restaurant"] }
 ];
 let index = 0;
 let recognition = null;
 let listening = false;
 let finalTranscript = "";
-const imageEl = document.getElementById("questionImage");
-const placeholderEl = document.getElementById("placeholder");
 const promptEl = document.getElementById("prompt");
 const feedbackEl = document.getElementById("feedback");
 const statusEl = document.getElementById("status");
@@ -95,12 +82,6 @@ function normalize(text) {
 function renderQuestion() {
   stopListening();
   const q = questions[index];
-  imageEl.style.display = "none";
-  placeholderEl.style.display = "block";
-  imageEl.onload = () => { imageEl.style.display = "block"; placeholderEl.style.display = "none"; };
-  imageEl.onerror = () => { imageEl.style.display = "none"; placeholderEl.style.display = "block"; };
-  imageEl.src = q.image;
-  placeholderEl.innerHTML = `이미지를 찾을 수 없어요.<br>저장소에 <b>${q.image}</b> 파일을 올려 주세요.`;
   promptEl.textContent = q.korean;
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
