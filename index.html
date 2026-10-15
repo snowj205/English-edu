@@ -82,12 +82,12 @@ const questions = [
   { type: "meaning", korean: "만나다", answer: "meet" },
   { type: "blank", prompt: "five _____ past three", korean: "3시 5분", answer: "minute" },
   { type: "meaning", korean: "멜론", answer: "melon" },
-  { type: "sentence", english: "Melons are juicy and sweet", korean: "멜론은 즙이 많고 달다.", answer: "Melons are juicy and sweet." },
+  { type: "sentence", english: "Melons are juicy and sweet.", korean: "멜론은 즙이 많고 달다.", answer: "Melons are juicy and sweet." },
   { type: "blank", prompt: "fresh _____", korean: "신선한 우유", answer: "milk" },
   { type: "meaning", korean: "미터", answer: "meter" },
   { type: "blank", prompt: "middle _____", korean: "중학교", answer: "school" },
   { type: "meaning", korean: "중앙, 가운데", answer: "middle" },
-  { type: "sentence", english: "I bought a sacarf for my mom.", korean: "엄마를 위해 스카프를 샀다.", answer: "I bought a sacarf for my mom." },
+  { type: "sentence", english: "I bought a scarf for my mom.", korean: "엄마를 위해 스카프를 샀다.", answer: "I bought a scarf for my mom." },
   { type: "blank", prompt: "one _____ dollars", korean: "100만 달러", answer: "million" },
   { type: "meaning", korean: "우유", answer: "milk" },
   { type: "blank", prompt: "look in a _____", korean: "거울을 보다", answer: "mirror" },
@@ -235,7 +235,7 @@ function showMascot(correct) {
   mascot.src = correct
     ? "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/perfect.png"
     : "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/tryagain.png";
-  document.getElementById("mascotCaption").textContent = correct ? "PERFECT!  GOOD JOB!" : "TRY AGAIN!";
+  document.getElementById("mascotCaption").textContent = correct ? "PERFECT!" : "TRY AGAIN!";
   if (correct) {
     clearTimeout(window.goodJobImageTimer);
     window.goodJobImageTimer = setTimeout(() => {
@@ -251,7 +251,7 @@ function playFeedbackAudio(correct) {
     currentFeedbackAudio.pause();
     currentFeedbackAudio.currentTime = 0;
   }
-  const files = correct ? ["perfect.mp3", "goodjob.mp3"] : ["tryagain.mp3"];
+  const files = correct ? ["perfect.mp3"] : ["tryagain.mp3"];
   let position = 0;
   const playNext = () => {
     if (position >= files.length) return;
