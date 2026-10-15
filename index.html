@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>이미지 영어 말하기</title>
+<title>영어 말하기 연습</title>
 <style>
   :root { --ink:#263238; --muted:#6b7780; --blue:#4c83f1; --pale:#f4f7ff; --line:#e2e8f0; }
   * { box-sizing:border-box; }
@@ -15,38 +15,34 @@
   .main { flex:1; display:grid; grid-template-columns:56px minmax(0,1fr) 56px; gap:18px; align-items:center; }
   .arrow { border:0; background:transparent; color:#526170; font-size:42px; cursor:pointer; padding:8px 0; }
   .arrow:disabled { opacity:.2; cursor:default; }
-  .card { background:white; border:1px solid var(--line); border-radius:24px; padding:24px; box-shadow:0 8px 30px #24334b0b; text-align:center; }
-  .picture { display:none; }
-  .picture img, .placeholder { display:none !important; }
-  .prompt { margin:20px 0 8px; font-size:clamp(21px,3vw,32px); font-weight:750; }
-  .hint { color:var(--muted); font-size:15px; min-height:24px; }
-  .feedback { min-height:54px; margin:12px 0 0; font-size:20px; font-weight:700; }
+  .card { background:white; border:1px solid var(--line); border-radius:24px; padding:clamp(24px,5vw,64px); box-shadow:0 8px 30px #24334b0b; text-align:center; }
+  .prompt { margin:0 0 18px; font-size:clamp(25px,4vw,42px); font-weight:750; line-height:1.5; }
+  .hint { color:var(--muted); font-size:16px; min-height:24px; }
+  .feedback { min-height:54px; margin:18px 0 0; font-size:20px; font-weight:700; }
   .feedback.good { color:#16845b; } .feedback.try { color:#c17a13; } .feedback.error { color:#c13b4a; }
   .bottom { display:flex; flex-direction:column; align-items:center; gap:10px; padding-top:12px; }
   .mic { width:76px; height:76px; border:0; border-radius:50%; background:var(--blue); color:white; display:grid; place-items:center; cursor:pointer; box-shadow:0 7px 18px #4c83f14a; transition:transform .15s,background .15s; }
   .mic svg { width:34px; height:34px; fill:currentColor; }
   .mic.listening { background:#e24c66; transform:scale(1.06); animation:pulse 1.2s infinite; }
-  .mic:disabled { opacity:.6; cursor:wait; }
   @keyframes pulse { 50% { box-shadow:0 0 0 12px #e24c6624; } }
   .status { color:var(--muted); text-align:center; font-size:14px; min-height:21px; }
   .show-answer { border:0; background:transparent; color:#607080; text-decoration:underline; cursor:pointer; font-size:14px; }
-  .answer { color:#536171; font-size:15px; min-height:20px; }
+  .answer { color:#536171; font-size:15px; min-height:20px; text-align:center; }
   @media(max-width:650px) {
     .app { padding:12px; } .main { grid-template-columns:32px minmax(0,1fr) 32px; gap:5px; }
-    .arrow { font-size:32px; } .card { padding:12px; border-radius:18px; }
-    .picture { min-height:220px; height:42vh; } .mic { width:68px; height:68px; }
+    .arrow { font-size:32px; } .card { padding:24px 12px; border-radius:18px; }
+    .mic { width:68px; height:68px; }
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top"><span>이미지 영어 말하기</span><span id="counter">1 / 3</span></div>
+  <div class="top"><span>영어 말하기 연습</span><span id="counter">1 / 20</span></div>
   <div class="progress"><div id="progressBar"></div></div>
   <main class="main">
     <button class="arrow" id="prev" aria-label="이전 문제">‹</button>
     <section class="card">
-      <div class="prompt" id="prompt">코끼리 세 마리가 동물원으로 걸어가요.</div>
-      <div class="hint">그림을 보고 영어로 말해 보세요.</div>
+      <div class="prompt" id="prompt">나는 사과를 좋아해요.</div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
     </section>
     <button class="arrow" id="next" aria-label="다음 문제">›</button>
@@ -61,11 +57,34 @@
   </div>
 </div>
 <script>
+/*
+  문제를 바꾸려면 아래 questions 목록만 수정하세요.
+  각 문제는 korean(화면에 보일 한국어)과 answer(정답 영어 문장 하나)로 구성됩니다.
+  문제를 추가하거나 삭제해도 전체 문제 수와 진행 표시가 자동으로 바뀝니다.
+*/
 const questions = [
-  { korean: "코끼리 세 마리가 동물원으로 걸어가요.", answers: ["three elephants walk to the zoo", "three elephants are walking to the zoo"] },
-  { korean: "개가 상자 위에 있어요.", answers: ["the dog is on the box", "a dog is on the box"] },
-  { korean: "나는 식당에 가고 싶어요.", answers: ["i want to go to a restaurant", "i want to go to the restaurant"] }
+  { korean: "만나다.", answer: "meet" },
+  { korean: "멜론", answer: "melon" },
+  { korean: "미터", answer: "meter" },
+  { korean: "중앙,가운데", answer: "middle" },
+  { korean: "우유", answer: "milk" },
+  { korean: "100만", answer: "million" },
+  { korean: "분,순간", answer: "minute" },
+  { korean: "거울", answer: "mirror" },
+  { korean: "~양,그리워하다,놓치다", answer: "miss" },
+  { korean: "모형,모델", answer: "model" },
+  { korean: "엄마", answer: "mom" },
+  { korean: "돈", answer: "money" },
+  { korean: "원숭이", answer: "monkey" },
+  { korean: "달,월", answer: "month" },
+  { korean: "달", answer: "moon" },
+  { korean: "아침", answer: "morning" },
+  { korean: "어머니", answer: "mother" },
+  { korean: "산", answer: "mountain" },
+  { korean: "입", answer: "mouth" },
+  { korean: "움직이다", answer: "move" }
 ];
+
 let index = 0;
 let recognition = null;
 let listening = false;
@@ -104,12 +123,8 @@ function startListening() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
     statusEl.textContent = "이 브라우저는 음성 인식을 지원하지 않아요. 최신 Chrome에서 열어 주세요.";
-    feedbackEl.textContent = "마이크 인식 기능을 사용할 수 없어요.";
+    feedbackEl.textContent = "음성 인식을 사용할 수 없어요.";
     feedbackEl.className = "feedback error";
-    return;
-  }
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    statusEl.textContent = "브라우저의 마이크 접근을 사용할 수 없어요. HTTPS 주소인지 확인해 주세요.";
     return;
   }
   if (listening) { stopListening(); return; }
@@ -119,7 +134,7 @@ function startListening() {
   recognition = new SpeechRecognition();
   recognition.lang = "en-US";
   recognition.interimResults = true;
-  recognition.maxAlternatives = 3;
+  recognition.maxAlternatives = 1;
   recognition.continuous = false;
   recognition.onstart = () => {
     listening = true;
@@ -153,9 +168,8 @@ function startListening() {
   catch (e) { statusEl.textContent = "마이크를 시작하지 못했어요. 잠시 후 다시 시도해 주세요."; }
 }
 function checkAnswer(spoken) {
-  const q = questions[index];
   const said = normalize(spoken);
-  const correct = q.answers.some(a => normalize(a) === said);
+  const correct = normalize(questions[index].answer) === said;
   answerEl.textContent = `내가 말한 문장: ${spoken}`;
   if (correct) {
     feedbackEl.textContent = "정답이에요! 정말 잘했어요! 🎉";
@@ -163,9 +177,9 @@ function checkAnswer(spoken) {
     statusEl.textContent = "완벽해요! 다음 문제로 넘어가 볼까요?";
     playTone(true);
   } else {
-    feedbackEl.textContent = "좋아요! 한 번 더 도전해 봐요 🙂";
+    feedbackEl.textContent = "다시 한 번 도전해 봐요 🙂";
     feedbackEl.className = "feedback try";
-    statusEl.textContent = "인식 결과와 정답 문장이 다를 수 있어요. 다시 말해 보세요.";
+    statusEl.textContent = "인식한 문장과 정답이 달라요. 발음 인식 오류일 수도 있으니 다시 말해 보세요.";
     playTone(false);
   }
 }
@@ -188,7 +202,7 @@ function playTone(correct) {
 document.getElementById("prev").addEventListener("click", () => { if (index > 0) { index--; renderQuestion(); } });
 document.getElementById("next").addEventListener("click", () => { if (index < questions.length - 1) { index++; renderQuestion(); } });
 document.getElementById("showAnswer").addEventListener("click", () => {
-  answerEl.textContent = `예시 정답: ${questions[index].answers[0]}`;
+  answerEl.textContent = `예시 정답: ${questions[index].answer}`;
 });
 micEl.addEventListener("click", startListening);
 renderQuestion();
