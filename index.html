@@ -58,6 +58,7 @@
         <div class="mascot-caption" id="mascotCaption"></div>
       </div>
       <div class="prompt" id="prompt">나는 사과를 좋아해요.</div>
+      <div class="hint" id="meaning"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
     </section>
     <button class="arrow" id="next" aria-label="다음 문제">›</button>
@@ -78,26 +79,26 @@
   문제를 추가하거나 삭제해도 전체 문제 수와 진행 표시가 자동으로 바뀝니다.
 */
 const questions = [
-  { korean: "만나다", answer: "meet" },
-  { korean: "멜론", answer: "melon" },
-  { korean: "미터", answer: "meter" },
-  { korean: "중앙, 가운데", answer: "middle" },
-  { korean: "우유", answer: "milk" },
-  { korean: "100만", answer: "million" },
-  { korean: "분, 순간", answer: "minute" },
-  { korean: "거울", answer: "mirror" },
-  { korean: "그리워하다, 놓치다", answer: "miss" },
-  { korean: "모형, 모델", answer: "model" },
-  { korean: "엄마", answer: "mom" },
-  { korean: "돈", answer: "money" },
-  { korean: "원숭이", answer: "monkey" },
-  { korean: "달, 월", answer: "month" },
-  { korean: "달", answer: "moon" },
-  { korean: "아침", answer: "morning" },
-  { korean: "어머니", answer: "mother" },
-  { korean: "산", answer: "mountain" },
-  { korean: "입", answer: "mouth" },
-  { korean: "움직이다", answer: "move" }
+  { type: "meaning", korean: "만나다", answer: "meet" },
+  { type: "blank", prompt: "five _____ past three", korean: "3시 5분", answer: "minute" },
+  { type: "meaning", korean: "멜론", answer: "melon" },
+  { type: "blank", prompt: "fresh _____", korean: "신선한 우유", answer: "milk" },
+  { type: "meaning", korean: "미터", answer: "meter" },
+  { type: "blank", prompt: "middle _____", korean: "중학교", answer: "school" },
+  { type: "meaning", korean: "중앙, 가운데", answer: "middle" },
+  { type: "blank", prompt: "one _____ dollars", korean: "100만 달러", answer: "million" },
+  { type: "meaning", korean: "우유", answer: "milk" },
+  { type: "blank", prompt: "look in a _____", korean: "거울을 보다", answer: "mirror" },
+  { type: "meaning", korean: "100만", answer: "million" },
+  { type: "blank", prompt: "I _____ you.", korean: "나는 네가 그리워.", answer: "miss" },
+  { type: "meaning", korean: "모형, 모델", answer: "model" },
+  { type: "blank", prompt: "pocket _____", korean: "용돈", answer: "money" },
+  { type: "meaning", korean: "원숭이", answer: "monkey" },
+  { type: "blank", prompt: "this _____", korean: "이번 달", answer: "month" },
+  { type: "meaning", korean: "달", answer: "moon" },
+  { type: "blank", prompt: "good _____", korean: "아침 인사", answer: "morning" },
+  { type: "meaning", korean: "입", answer: "mouth" },
+  { type: "blank", prompt: "_____ your mouth", korean: "입을 움직여 보세요", answer: "move" }
 ];
 
 let index = 0;
@@ -105,6 +106,7 @@ let recognition = null;
 let listening = false;
 let finalTranscript = "";
 const promptEl = document.getElementById("prompt");
+const meaningEl = document.getElementById("meaning");
 const feedbackEl = document.getElementById("feedback");
 const statusEl = document.getElementById("status");
 const answerEl = document.getElementById("answer");
@@ -116,7 +118,8 @@ function normalize(text) {
 function renderQuestion() {
   stopListening();
   const q = questions[index];
-  promptEl.textContent = q.korean;
+  promptEl.textContent = q.type === "blank" ? q.prompt : q.korean;
+  meaningEl.textContent = q.type === "blank" ? `뜻: ${q.korean}` : "";
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
   hideMascot();
@@ -156,7 +159,7 @@ function startListening() {
     listening = true;
     micEl.classList.add("listening");
     micEl.setAttribute("aria-label", "말하기 중지");
-    statusEl.textContent = "듣고 있어요. 영어 문장을 말해 보세요.";
+    statusEl.textContent = questions[index].type === "blank" ? "빈칸에 들어갈 영어 단어를 말해 보세요." : "한국어 뜻에 맞는 영어 단어를 말해 보세요.";
   };
   recognition.onresult = (event) => {
     let transcript = "";
@@ -252,7 +255,7 @@ function playFeedbackAudio(correct) {
 document.getElementById("prev").addEventListener("click", () => { if (index > 0) { playNavigationTone(); index--; renderQuestion(); } });
 document.getElementById("next").addEventListener("click", () => { if (index < questions.length - 1) { playNavigationTone(); index++; renderQuestion(); } });
 document.getElementById("showAnswer").addEventListener("click", () => {
-  answerEl.textContent = `예시 정답: ${questions[index].answer}`;
+  answerEl.textContent = `정답: ${questions[index].answer}`;
   playNavigationTone();
 });
 function playNavigationTone() {
