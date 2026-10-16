@@ -81,7 +81,7 @@
 */
 const questions = [
   { type: "meaning", korean: "공기", answer: "air" },
-  { type: "blank", prompt: "fifty years _____  ago.", korean: "50년 전에.", answer: "ago" },
+  { type: "blank", prompt: "fifty years _____.", korean: "50년 전에.", answer: "ago" },
   { type: "meaning", korean: "공항", answer: "airport" },
   { type: "sentence", english: "The plane is in an airport.", korean: "비행기가 공항에 있다.", answer: "The plane is in an airport." },
   { type: "blank", prompt: "a photo _____", korean: "사진첩", answer: "album" },
@@ -90,11 +90,11 @@ const questions = [
   { type: "meaning", korean: "~을 따라서", answer: "along" },
   { type: "sentence", english: "They are walking along the beach.", korean: "그들은 해변을 따라 걷고 있다.", answer: "They are walking along the beach." },
   { type: "blank", prompt: "she is  _____ late.", korean: "그녀는 항상 늦는다.", answer: "always" },
-  { type: "meaning", korean: "He is popular among the students.", answer: "그는 학생들 사이에 인기가 있다." },
+  { type: "sentence", english: "He is popular among the students.", korean: "그는 학생들 사이에 인기가 있다.", answer: "He is popular among the students." },
   { type: "blank", prompt: "stick _____ carrot.", korean: "채찍과 당근", answer: "and" },
   { type: "meaning", korean: "화난", answer: "angry" },
   { type: "sentence", english: "I bought a stamp album.", korean: "나는 우표 앨범을 샀다.", answer: "I bought a stamp album." },
-  { type: "blank", prompt: We can't live without _____.", korean: "공기.", answer: "air" },
+  { type: "blank", prompt: "We can't live without _____.", korean: "공기.", answer: "air" },
   { type: "meaning", korean: "모든 소년들", answer: "all boys" }
 ];
 
@@ -296,9 +296,9 @@ function showMascot(level) {
   const mascot = document.getElementById("mascot");
   const base = "https://snowj205.github.io/effect-file/";
   const imageFiles = {
-    perfect: "https://snowj205.github.io/effect-file/perfect.png",
-    goodjob: "https://snowj205.github.io/effect-file/goodjob.png",
-    tryagain: "https://snowj205.github.io/effect-file/tryagin.png"
+    perfect: "perfect.png",
+    goodjob: "goodjob.png",
+    tryagain: "tryagain.png"
   };
   mascot.alt = isPerfect ? "퍼펙트 축하 캐릭터" : (isTry ? "다시 도전 응원 캐릭터" : "굿잡 응원 캐릭터");
   mascot.src = base + imageFiles[level];
@@ -313,9 +313,9 @@ function playFeedbackAudio(level) {
     currentFeedbackAudio.currentTime = 0;
   }
   const audioFiles = {
-    perfect: "https://snowj205.github.io/effect-file/perfect.mp3",
-    goodjob: "https://snowj205.github.io/effect-file/goodjob.mp3",
-    tryagain: "https://snowj205.github.io/effect-file/tryagain.mp3"
+    perfect: "perfect.mp3",
+    goodjob: "goodjob.mp3",
+    tryagain: "tryagain.mp3"
   };
   const audio = new Audio(soundBase + audioFiles[level]);
   currentFeedbackAudio = audio;
