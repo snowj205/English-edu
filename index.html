@@ -1,9 +1,10 @@
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>나만의 영어 학습 공간</title>
 
 <style>
@@ -107,11 +108,13 @@ p {
   line-height: 1.6;
 }
 
-/* 초등영단어800 화면 */
-#vocaSection {
+/* 학습 메뉴 화면 */
+#vocaSection,
+#storySection {
   display: none;
 }
 
+/* 메인 화면으로 돌아가기 */
 .back-button {
   display: inline-block;
   margin-bottom: 22px;
@@ -125,6 +128,11 @@ p {
   font-size: 15px;
 }
 
+.back-button:hover {
+  background: #edf3ff;
+}
+
+/* 학습 버튼 배치 */
 .lesson-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -136,6 +144,7 @@ p {
   align-items: center;
   justify-content: center;
   min-height: 75px;
+  padding: 10px 4px;
   border: 1px solid #e0e7f2;
   border-radius: 15px;
   background: white;
@@ -154,7 +163,7 @@ p {
   transform: translateY(-2px);
 }
 
-@media(max-width: 520px) {
+@media (max-width: 520px) {
   .wrap {
     padding: 18px 12px;
   }
@@ -193,7 +202,7 @@ p {
 
   .lesson-button {
     min-height: 60px;
-    font-size: 17px;
+    font-size: 16px;
   }
 }
 </style>
@@ -212,41 +221,52 @@ p {
 
     <section class="hero">
       <div class="eyebrow">MY LEARNING</div>
+
       <h1>오늘도 한 단계씩,<br>영어를 즐겁게 배워요!</h1>
+
       <p>원하는 학습 메뉴를 선택해 영어 공부를 시작하세요.</p>
     </section>
 
     <main class="menu">
 
-      <a class="card" href="#vocabulary"
+      <!-- 첫 번째 메뉴 -->
+      <a class="card"
+         href="#vocabulary"
          onclick="openVocaMenu(); return false;">
+
         <span class="icon">📚</span>
         <span class="title">초등영단어800</span>
         <span class="desc">알파벳별 단어 학습</span>
+
       </a>
 
-      <a class="card" href="#"
+      <!-- 두 번째 메뉴 -->
+      <a class="card"
+         href="#"
          onclick="alert('영어표현익힘은 준비 중입니다.'); return false;">
+
         <span class="icon">💬</span>
         <span class="title">영어표현익힘</span>
         <span class="desc">유용한 영어 표현 익히기</span>
+
       </a>
 
-      <a class="card" href="#story"
-      onclick="openStoryMenu(); return false;">
+      <!-- 세 번째 메뉴 -->
+      <a class="card"
+         href="#story"
+         onclick="openStoryMenu(); return false;">
 
-      <span class="icon">📖</span>
-
-      <span class="title">스토리영어</span>
-
-      <span class="desc">이야기로 배우는 영어</span>
+        <span class="icon">📖</span>
+        <span class="title">스토리영어</span>
+        <span class="desc">이야기로 배우는 영어</span>
 
       </a>
 
     </main>
   </section>
 
-  <!-- 초등영단어800 학습 메뉴 -->
+
+  <!-- 초등영단어800 메뉴 -->
   <section id="vocaSection">
 
     <button class="back-button" onclick="backToHome()">
@@ -255,7 +275,9 @@ p {
 
     <section class="hero">
       <div class="eyebrow">VOCABULARY</div>
+
       <h1>초등영단어800</h1>
+
       <p>알파벳과 번호를 선택해 학습을 시작하세요.</p>
     </section>
 
@@ -263,198 +285,132 @@ p {
 
   </section>
 
+
+  <!-- 스토리영어 메뉴 -->
+  <section id="storySection">
+
+    <button class="back-button" onclick="backToHome()">
+      ← 메인 화면
+    </button>
+
+    <section class="hero">
+      <div class="eyebrow">STORY ENGLISH</div>
+
+      <h1>스토리영어</h1>
+
+      <p>학습할 단계를 선택하세요.</p>
+    </section>
+
+    <div class="lesson-grid" id="storyGrid"></div>
+
+  </section>
+
 </div>
 
+
 <script>
-/*
-==================================================
-104개 학습 버튼 연결 주소 설정
-==================================================
+/* ==========================================
+   초등영단어800
+   A1부터 Z4까지 104개 버튼 생성
+   파일 위치: voca 폴더
+   ========================================== */
 
-각 버튼은 기본적으로 같은 이름의 HTML 파일로 연결됩니다.
-
-예:
-A1 버튼 → A1.html
-A2 버튼 → A2.html
-B1 버튼 → B1.html
-
-주소를 바꾸고 싶을 때는 아래 목록에서 해당 항목만 수정하세요.
-
-예:
-"A1": "./A1.html",
-"A2": "./A2.html",
-
-다른 폴더 안에 파일이 있다면:
-"A1": "./vocabulary/A1.html",
-
-==================================================
-*/
-
-const lessonLinks = {
-  "A1": "./voca/A1.html",
-  "A2": "./voca/A2.html",
-  "A3": "./voca/A3.html",
-  "A4": "./voca/A4.html",
-
-  "B1": "./voca/B1.html",
-  "B2": "./voca/B2.html",
-  "B3": "./voca/B3.html",
-  "B4": "./voca/B4.html",
-
-  "C1": "./voca/C1.html",
-  "C2": "./voca/C2.html",
-  "C3": "./voca/C3.html",
-  "C4": "./voca/C4.html",
-
-  "D1": "./voca/D1.html",
-  "D2": "./voca/D2.html",
-  "D3": "./voca/D3.html",
-  "D4": "./voca/D4.html",
-
-  "E1": "./voca/E1.html",
-  "E2": "./voca/E2.html",
-  "E3": "./voca/E3.html",
-  "E4": "./voca/E4.html",
-
-  "F1": "./voca/F1.html",
-  "F2": "./voca/F2.html",
-  "F3": "./voca/F3.html",
-  "F4": "./voca/F4.html",
-
-  "G1": "./voca/G1.html",
-  "G2": "./voca/G2.html",
-  "G3": "./voca/G3.html",
-  "G4": "./voca/G4.html",
-
-  "H1": "./voca/H1.html",
-  "H2": "./voca/H2.html",
-  "H3": "./voca/H3.html",
-  "H4": "./voca/H4.html",
-
-  "I1": "./voca/I1.html",
-  "I2": "./voca/I2.html",
-  "I3": "./voca/I3.html",
-  "I4": "./voca/I4.html",
-
-  "J1": "./voca/J1.html",
-  "J2": "./voca/J2.html",
-  "J3": "./voca/J3.html",
-  "J4": "./voca/J4.html",
-
-  "K1": "./voca/K1.html",
-  "K2": "./voca/K2.html",
-  "K3": "./voca/K3.html",
-  "K4": "./voca/K4.html",
-
-  "L1": "./voca/L1.html",
-  "L2": "./voca/L2.html",
-  "L3": "./voca/L3.html",
-  "L4": "./voca/L4.html",
-
-  "M1": "./voca/M1.html",
-  "M2": "./voca/M2.html",
-  "M3": "./voca/M3.html",
-  "M4": "./voca/M4.html",
-
-  "N1": "./N1.html",
-  "N2": "./voca/N2.html",
-  "N3": "./voca/N3.html",
-  "N4": "./voca/N4.html",
-
-  "O1": "./voca/O1.html",
-  "O2": "./voca/O2.html",
-  "O3": "./voca/O3.html",
-  "O4": "./voca/O4.html",
-
-  "P1": "./voca/P1.html",
-  "P2": "/voca./P2.html",
-  "P3": "./voca/P3.html",
-  "P4": "./voca/P4.html",
-
-  "Q1": "./voca/Q1.html",
-  "Q2": "./voca/Q2.html",
-  "Q3": "./voca/Q3.html",
-  "Q4": "./voca/Q4.html",
-
-  "R1": "./voca/R1.html",
-  "R2": "./voca/R2.html",
-  "R3": "./voca/R3.html",
-  "R4": "./voca/R4.html",
-
-  "S1": "./voca/S1.html",
-  "S2": "./voca/S2.html",
-  "S3": "./voca/S3.html",
-  "S4": "./voca/S4.html",
-
-  "T1": "./voca/T1.html",
-  "T2": "./voca/T2.html",
-  "T3": "./voca/T3.html",
-  "T4": "./voca/T4.html",
-
-  "U1": "./voca/U1.html",
-  "U2": "./voca/U2.html",
-  "U3": "./voca/U3.html",
-  "U4": "./voca/U4.html",
-
-  "V1": "./voca/V1.html",
-  "V2": "./voca/V2.html",
-  "V3": "./voca/V3.html",
-  "V4": "./voca/V4.html",
-
-  "W1": "./voca/W1.html",
-  "W2": "./voca/W2.html",
-  "W3": "./voca/W3.html",
-  "W4": "./voca/W4.html",
-
-  "X1": "./voca/X1.html",
-  "X2": "./voca/X2.html",
-  "X3": "./voca/X3.html",
-  "X4": "./voca/X4.html",
-
-  "Y1": "./voca/Y1.html",
-  "Y2": "./voca/Y2.html",
-  "Y3": "./voca/Y3.html",
-  "Y4": "./voca/Y4.html",
-
-  "Z1": "./voca/Z1.html",
-  "Z2": "./voca/Z2.html",
-  "Z3": "./voca/Z3.html",
-  "Z4": "./voca/Z4.html"
-};
-
-// 메인 화면에서 초등영단어800을 눌렀을 때
-function openVocaMenu() {
-  document.getElementById("homeSection").style.display = "none";
-  document.getElementById("vocaSection").style.display = "block";
-  window.scrollTo(0, 0);
-}
-
-// 메인 화면으로 돌아가기
-function backToHome() {
-  document.getElementById("vocaSection").style.display = "none";
-  document.getElementById("homeSection").style.display = "block";
-  window.scrollTo(0, 0);
-}
-
-// A1부터 Z4까지 버튼 자동 생성
 const lessonGrid = document.getElementById("lessonGrid");
+
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 letters.split("").forEach(letter => {
   for (let number = 1; number <= 4; number++) {
 
     const lessonName = letter + number;
+
     const link = document.createElement("a");
 
     link.className = "lesson-button";
     link.textContent = lessonName;
 
-    // 각 버튼에 설정된 HTML 파일 주소 연결
-    link.href = lessonLinks[lessonName];
+    // 예: ./voca/A1.html
+    link.href = "./voca/" + lessonName + ".html";
 
     lessonGrid.appendChild(link);
   }
 });
+
+
+/* ==========================================
+   스토리영어
+   basic01부터 basic08+까지 16개 버튼 생성
+   파일 위치: story 폴더
+   ========================================== */
+
+const storyGrid = document.getElementById("storyGrid");
+
+const storyLinks = [];
+
+for (let number = 1; number <= 8; number++) {
+
+  const basicNumber = String(number).padStart(2, "0");
+
+  // basic01, basic02, ... basic08
+  storyLinks.push({
+    name: "basic" + basicNumber,
+    url: "./story/basic" + basicNumber + ".html"
+  });
+
+  // basic01+, basic02+, ... basic08+
+  storyLinks.push({
+    name: "basic" + basicNumber + "+",
+    url: "./story/basic" + basicNumber + "+.html"
+  });
+}
+
+storyLinks.forEach(item => {
+
+  const link = document.createElement("a");
+
+  link.className = "lesson-button";
+  link.textContent = item.name;
+  link.href = item.url;
+
+  storyGrid.appendChild(link);
+});
+
+
+/* ==========================================
+   화면 전환
+   ========================================== */
+
+// 초등영단어800 메뉴 열기
+function openVocaMenu() {
+
+  document.getElementById("homeSection").style.display = "none";
+  document.getElementById("storySection").style.display = "none";
+  document.getElementById("vocaSection").style.display = "block";
+
+  window.scrollTo(0, 0);
+}
+
+
+// 스토리영어 메뉴 열기
+function openStoryMenu() {
+
+  document.getElementById("homeSection").style.display = "none";
+  document.getElementById("vocaSection").style.display = "none";
+  document.getElementById("storySection").style.display = "block";
+
+  window.scrollTo(0, 0);
+}
+
+
+// 메인 화면으로 돌아가기
+function backToHome() {
+
+  document.getElementById("vocaSection").style.display = "none";
+  document.getElementById("storySection").style.display = "none";
+  document.getElementById("homeSection").style.display = "block";
+
+  window.scrollTo(0, 0);
+}
 </script>
 
 </body>
