@@ -1,4 +1,3 @@
-```html
 <!doctype html>
 <html lang="ko">
 <head>
@@ -27,6 +26,7 @@ body {
 header {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   margin-bottom: 28px;
   color: #5279d8;
   font-weight: bold;
@@ -79,6 +79,7 @@ p {
   text-align: center;
   box-shadow: 0 5px 18px #2430440d;
   transition: .2s;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -103,6 +104,52 @@ p {
   color: #788397;
   margin-top: 10px;
   line-height: 1.6;
+}
+
+/* 알파벳별 학습 버튼 */
+#vocaSection {
+  display: none;
+}
+
+.back-button {
+  display: inline-block;
+  margin-bottom: 22px;
+  padding: 10px 16px;
+  border: 1px solid #dce4f2;
+  border-radius: 10px;
+  background: white;
+  color: #5279d8;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lesson-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 75px;
+  border: 1px solid #e0e7f2;
+  border-radius: 15px;
+  background: white;
+  color: #243044;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: .2s;
+  box-shadow: 0 4px 12px #24304408;
+}
+
+.lesson-button:hover {
+  background: #edf3ff;
+  border-color: #5279d8;
+  transform: translateY(-2px);
 }
 
 @media(max-width: 520px) {
@@ -136,6 +183,16 @@ p {
   .desc {
     font-size: 10px;
   }
+
+  .lesson-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .lesson-button {
+    min-height: 60px;
+    font-size: 17px;
+  }
 }
 </style>
 </head>
@@ -148,35 +205,112 @@ p {
     <span>나만의 영어 학습 공간</span>
   </header>
 
-  <section class="hero">
-    <div class="eyebrow">MY LEARNING</div>
-    <h1>오늘도 한 단계씩,<br>영어를 즐겁게 배워요!</h1>
-    <p>원하는 학습 메뉴를 선택해 영어 공부를 시작하세요.</p>
+  <!-- 메인 화면 -->
+  <section id="homeSection">
+
+    <section class="hero">
+      <div class="eyebrow">MY LEARNING</div>
+      <h1>오늘도 한 단계씩,<br>영어를 즐겁게 배워요!</h1>
+      <p>원하는 학습 메뉴를 선택해 영어 공부를 시작하세요.</p>
+    </section>
+
+    <main class="menu">
+
+      <a class="card" href="#vocabulary"
+         onclick="openVocaMenu(); return false;">
+        <span class="icon">📚</span>
+        <span class="title">초등영단어800</span>
+        <span class="desc">알파벳별 단어 학습</span>
+      </a>
+
+      <a class="card" href="#"
+         onclick="alert('영어표현익힘은 준비 중입니다.'); return false;">
+        <span class="icon">💬</span>
+        <span class="title">영어표현익힘</span>
+        <span class="desc">유용한 영어 표현 익히기</span>
+      </a>
+
+      <a class="card" href="#"
+         onclick="alert('스토리영어는 준비 중입니다.'); return false;">
+        <span class="icon">📖</span>
+        <span class="title">스토리영어</span>
+        <span class="desc">이야기로 배우는 영어</span>
+      </a>
+
+    </main>
   </section>
 
-  <main class="menu">
+  <!-- 초등영단어800 학습 메뉴 -->
+  <section id="vocaSection">
 
-    <a class="card" href="./">
-      <span class="icon">📚</span>
-      <span class="title">초등영단어800</span>
-      <span class="desc">알파벳별 단어 학습</span>
-    </a>
+    <button class="back-button" onclick="backToHome()">
+      ← 메인 화면
+    </button>
 
-    <a class="card" href="#" onclick="alert('영어표현익힘은 준비 중입니다.'); return false;">
-      <span class="icon">💬</span>
-      <span class="title">영어표현익힘</span>
-      <span class="desc">유용한 영어 표현 익히기</span>
-    </a>
+    <section class="hero">
+      <div class="eyebrow">VOCABULARY</div>
+      <h1>초등영단어800</h1>
+      <p>알파벳과 번호를 선택해 학습을 시작하세요.</p>
+    </section>
 
-    <a class="card" href="#" onclick="alert('스토리영어는 준비 중입니다.'); return false;">
-      <span class="icon">📖</span>
-      <span class="title">스토리영어</span>
-      <span class="desc">이야기로 배우는 영어</span>
-    </a>
+    <div class="lesson-grid" id="lessonGrid"></div>
 
-  </main>
+  </section>
 
 </div>
+
+<script>
+function openVocaMenu() {
+  document.getElementById("homeSection").style.display = "none";
+  document.getElementById("vocaSection").style.display = "block";
+
+  window.scrollTo(0, 0);
+}
+
+function backToHome() {
+  document.getElementById("vocaSection").style.display = "none";
+  document.getElementById("homeSection").style.display = "block";
+
+  window.scrollTo(0, 0);
+}
+
+// A부터 Z까지 각 알파벳에 1~4번 버튼 만들기
+const lessonGrid = document.getElementById("lessonGrid");
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+letters.split("").forEach(letter => {
+  for (let number = 1; number <= 4; number++) {
+
+    const lessonName = letter + number;
+
+    // A1 버튼은 voca.html로 연결
+    if (lessonName === "A1") {
+      const link = document.createElement("a");
+
+      link.className = "lesson-button";
+      link.textContent = lessonName;
+      link.href = "./voca.html";
+
+      lessonGrid.appendChild(link);
+
+    } else {
+      // 나머지 버튼은 페이지 연결 전까지 준비 중 안내
+      const button = document.createElement("button");
+
+      button.className = "lesson-button";
+      button.textContent = lessonName;
+      button.type = "button";
+
+      button.addEventListener("click", function() {
+        alert(lessonName + " 학습은 아직 연결되지 않았습니다.");
+      });
+
+      lessonGrid.appendChild(button);
+    }
+
+  }
+});
+</script>
+
 </body>
 </html>
-```
