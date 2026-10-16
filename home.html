@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VOCA 영어 학습</title>
+<style>
+  :root{
+    --ink:#243044; --muted:#788397; --line:#e8edf4;
+    --blue:#5279d8; --blue-light:#edf3ff; --paper:#ffffff;
+    --bg:#f5f7fb; --shadow:0 8px 24px rgba(36,48,68,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Malgun Gothic",sans-serif}
+  .wrap{width:min(1050px,100%);margin:0 auto;padding:28px 22px 48px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}
+  .brand{font-weight:800;letter-spacing:.08em;font-size:15px;color:var(--blue)}
+  .progress{font-size:13px;color:var(--muted)}
+  .hero{background:var(--paper);border:1px solid var(--line);border-radius:28px;padding:30px 28px;margin-bottom:26px;box-shadow:var(--shadow)}
+  .eyebrow{font-size:12px;letter-spacing:.14em;color:var(--blue);font-weight:800;margin-bottom:10px}
+  h1{font-size:clamp(28px,5vw,42px);margin:0 0 10px;letter-spacing:-.04em}
+  .hero p{margin:0;color:var(--muted);line-height:1.65;font-size:15px}
+  .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:30px 2px 14px}
+  h2{font-size:21px;margin:0;letter-spacing:-.03em}
+  .hint{font-size:13px;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .unit{min-height:108px;border:1px solid var(--line);border-radius:20px;background:white;box-shadow:0 4px 14px rgba(36,48,68,.035);padding:18px;text-align:left;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;color:var(--ink)}
+  .unit:hover,.unit:focus-visible{transform:translateY(-2px);border-color:#b9caff;box-shadow:var(--shadow);outline:none}
+  .unit.active{background:var(--blue-light);border-color:#a9bfff}
+  .unit-label{font-size:20px;font-weight:800;letter-spacing:-.03em}
+  .unit-sub{display:block;font-size:12px;color:var(--muted);margin-top:9px}
+  .lesson-panel{display:none;margin-top:28px;background:white;border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+  .lesson-panel.show{display:block}
+  .panel-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .panel-title{font-size:23px;font-weight:800}
+  .back{border:0;background:#f0f3f8;color:#4c5a70;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+  .lesson-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+  .lesson{display:flex;align-items:center;justify-content:center;min-height:62px;padding:12px 8px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);text-decoration:none;font-weight:800;transition:background .15s,border-color .15s}
+  .lesson:hover{background:var(--blue-light);border-color:#b9caff}
+  .lesson.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+  .lesson.primary:hover{background:#4168c6}
+  .footnote{font-size:12px;line-height:1.6;color:var(--muted);margin:16px 2px 0}
+  @media(max-width:760px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.lesson-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  @media(max-width:520px){.wrap{padding:18px 14px 32px}.hero{padding:24px 20px;border-radius:22px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.unit{min-height:96px;padding:15px;border-radius:17px}.lesson-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.lesson{min-height:56px}.section-head{align-items:start;flex-direction:column}.panel-title{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">ENGLISH · VOCA</div>
+    <div class="progress">나만의 영어 학습 공간</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">MY LEARNING</div>
+    <h1>오늘도 한 단계씩,<br>영어 말하기 연습</h1>
+    <p>학습 단계를 선택한 다음, 연습할 번호를 눌러 들어가세요.</p>
+  </section>
+
+  <div class="section-head">
+    <h2>학습 단계 선택</h2>
+    <span class="hint">VOCA 1–12</span>
+  </div>
+  <main class="grid" id="unitGrid" aria-label="학습 단계"></main>
+
+  <section class="lesson-panel" id="lessonPanel" aria-live="polite">
+    <div class="panel-top">
+      <div class="panel-title" id="panelTitle">VOCA1</div>
+      <button class="back" id="backButton" type="button">단계 목록으로</button>
+    </div>
+    <div class="lesson-grid" id="lessonGrid"></div>
+    <p class="footnote">VOCA1의 NO.1은 현재 저장소의 <b>index.html</b>로 연결됩니다. 다른 번호는 나중에 각 폴더의 주소로 연결할 수 있도록 경로 이름을 따로 지정해 두었습니다.</p>
+  </section>
+</div>
+<script>
+const unitGrid = document.getElementById('unitGrid');
+const lessonPanel = document.getElementById('lessonPanel');
+const lessonGrid = document.getElementById('lessonGrid');
+const panelTitle = document.getElementById('panelTitle');
+let activeUnit = null;
+
+for (let i = 1; i <= 12; i++) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'unit';
+  button.innerHTML = `<span class="unit-label">VOCA${i}</span><span class="unit-sub">학습 단계 ${String(i).padStart(2,'0')}</span>`;
+  button.addEventListener('click', () => showUnit(i, button));
+  unitGrid.appendChild(button);
+}
+
+function showUnit(unitNumber, selectedButton) {
+  activeUnit = unitNumber;
+  document.querySelectorAll('.unit').forEach(b => b.classList.remove('active'));
+  selectedButton.classList.add('active');
+  panelTitle.textContent = `VOCA${unitNumber} · 학습 목록`;
+  lessonGrid.innerHTML = '';
+
+  for (let n = 1; n <= 20; n++) {
+    const link = document.createElement('a');
+    link.className = 'lesson' + (unitNumber === 1 && n === 1 ? ' primary' : '');
+    link.textContent = `NO.${n}`;
+    if (unitNumber === 1 && n === 1) {
+      link.href = './index.html';
+      link.title = '현재 index.html 학습 화면 열기';
+    } else {
+      // 추후 해당 폴더에 학습 파일을 만들면 아래 경로로 연결할 수 있습니다.
+      link.href = `./VOCA${unitNumber}/NO${n}/index.html`;
+      link.title = `추후 연결할 경로: VOCA${unitNumber}/NO${n}/index.html`;
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        alert(`아직 연결 전입니다.\n나중에 이 경로에 학습 파일을 만들면 연결할 수 있어요:\nVOCA${unitNumber}/NO${n}/index.html`);
+      });
+    }
+    lessonGrid.appendChild(link);
+  }
+
+  lessonPanel.classList.add('show');
+  lessonPanel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+document.getElementById('backButton').addEventListener('click', () => {
+  lessonPanel.classList.remove('show');
+  document.querySelectorAll('.unit').forEach(b => b.classList.remove('active'));
+  activeUnit = null;
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+</script>
+</body>
+</html>
