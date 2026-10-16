@@ -322,9 +322,9 @@ function playFeedbackAudio(level) {
     currentFeedbackAudio.currentTime = 0;
   }
   const audioFiles = {
-    perfect: "https://snowj205.github.io/effect-file/perfect.mp3",
-    goodjob: "https://snowj205.github.io/effect-file/goodjob.mp3",
-    tryagain: "https://snowj205.github.io/effect-file/tryagain.mp3"
+    perfect: "perfect.mp3",
+    goodjob: "goodjob.mp3",
+    tryagain: "tryagain.mp3"
   };
   const audio = new Audio(soundBase + audioFiles[level]);
   currentFeedbackAudio = audio;
