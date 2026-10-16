@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="ko">
 <head>
@@ -57,7 +55,7 @@
     <button class="arrow" id="prev" aria-label="이전 문제">‹</button>
     <section class="card">
       <div class="mascot-wrap" id="mascotWrap" aria-live="polite">
-        <img class="mascot" id="mascot" src="https://raw.githubusercontent.com/snowj205/english-speaking-test/main/perfect.png" alt="정답 응원 캐릭터">
+        <img class="mascot" id="mascot" src="https://snowj205.github.io/effect-file/perfect.png" alt="정답 응원 캐릭터">
         <div class="mascot-caption" id="mascotCaption"></div>
       </div>
       <div class="prompt" id="prompt">나는 사과를 좋아해요.</div>
@@ -98,7 +96,6 @@ const questions = [
   { type: "sentence", english: "I bought a stamp album.", korean: "나는 우표 앨범을 샀다.", answer: "I bought a stamp album." },
   { type: "blank", prompt: We can't live without _____.", korean: "공기.", answer: "air" },
   { type: "meaning", korean: "모든 소년들", answer: "all boys" }
-
 ];
 
 let index = 0;
@@ -297,7 +294,7 @@ function showMascot(level) {
   const isPerfect = level === "perfect";
   wrap.className = `mascot-wrap show ${isTry ? "try" : "happy"}`;
   const mascot = document.getElementById("mascot");
-  const base = "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/";
+  const base = "https://snowj205.github.io/effect-file/";
   const imageFiles = {
     perfect: "perfect.png",
     goodjob: "goodjob.png",
@@ -308,7 +305,7 @@ function showMascot(level) {
   document.getElementById("mascotCaption").textContent =
     isPerfect ? "PERFECT!" : (isTry ? "TRY AGAIN!" : "GOOD JOB!");
 }
-const soundBase = "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/";
+const soundBase = "https://snowj205.github.io/effect-file/";
 let currentFeedbackAudio = null;
 function playFeedbackAudio(level) {
   if (currentFeedbackAudio) {
