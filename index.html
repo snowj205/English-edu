@@ -4,405 +4,179 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>초등영단어800</title>
+<title>나만의 영어 학습 공간</title>
 
 <style>
-:root {
-  --ink: #243044;
-  --muted: #788397;
-  --line: #e8edf4;
-  --blue: #5279d8;
-  --blue-light: #edf3ff;
-  --paper: #ffffff;
-  --bg: #f5f7fb;
-  --shadow: 0 8px 24px rgba(36,48,68,.07);
-}
-
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
+  background: #f5f7fb;
+  color: #243044;
   font-family: Arial, "Malgun Gothic", sans-serif;
 }
 
 .wrap {
-  width: min(1050px, 100%);
-  margin: 0 auto;
-  padding: 28px 22px 48px;
+  max-width: 1050px;
+  margin: auto;
+  padding: 28px 22px;
 }
 
 header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 26px;
-}
-
-.brand {
-  font-weight: 800;
-  letter-spacing: .08em;
-  font-size: 15px;
-  color: var(--blue);
-}
-
-.home-link {
-  font-size: 13px;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.home-link:hover {
-  color: var(--blue);
+  margin-bottom: 28px;
+  color: #5279d8;
+  font-weight: bold;
 }
 
 .hero {
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 28px;
-  padding: 30px 28px;
+  background: white;
+  border: 1px solid #e8edf4;
+  border-radius: 25px;
+  padding: 32px 28px;
   margin-bottom: 30px;
-  box-shadow: var(--shadow);
 }
 
 .eyebrow {
+  color: #5279d8;
   font-size: 12px;
-  letter-spacing: .14em;
-  color: var(--blue);
-  font-weight: 800;
-  margin-bottom: 10px;
+  font-weight: bold;
+  letter-spacing: 2px;
 }
 
 h1 {
   font-size: clamp(28px, 5vw, 42px);
-  margin: 0 0 10px;
-  letter-spacing: -.04em;
+  line-height: 1.35;
+  margin: 12px 0;
 }
 
-.hero p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.65;
-  font-size: 15px;
+p {
+  color: #788397;
+  line-height: 1.7;
 }
 
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 12px;
-  margin: 30px 2px 14px;
-}
-
-h2 {
-  font-size: 21px;
-  margin: 0;
-  letter-spacing: -.03em;
-}
-
-.hint {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-/* 알파벳 버튼 26개 */
-.alphabet-grid {
+.menu {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
-.letter-button {
-  min-height: 100px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: white;
-  box-shadow: 0 4px 14px rgba(36,48,68,.035);
-  color: var(--ink);
-  cursor: pointer;
-  font-size: 28px;
-  font-weight: 800;
-  transition: .15s;
-}
-
-.letter-button:hover,
-.letter-button:focus-visible {
-  transform: translateY(-3px);
-  border-color: #b9caff;
-  background: var(--blue-light);
-  outline: none;
-}
-
-.letter-button.active {
-  background: var(--blue);
-  border-color: var(--blue);
-  color: white;
-}
-
-/* A1~A4 학습 버튼 */
-.lesson-panel {
-  display: none;
-  margin-top: 30px;
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: 22px;
-  box-shadow: var(--shadow);
-}
-
-.lesson-panel.show {
-  display: block;
-}
-
-.panel-top {
+.card {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.panel-title {
-  font-size: 23px;
-  font-weight: 800;
-}
-
-.back-button {
-  border: 0;
-  background: #f0f3f8;
-  color: #4c5a70;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.back-button:hover {
-  background: #e4eaf4;
-}
-
-.lesson-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.lesson-button {
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 85px;
-  padding: 12px 8px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
+  min-height: 190px;
+  padding: 20px 8px;
   background: white;
-  color: var(--ink);
-  font-size: 21px;
-  font-weight: 800;
+  border: 1px solid #e8edf4;
+  border-radius: 22px;
   text-decoration: none;
-  cursor: pointer;
-  transition: .15s;
+  color: #243044;
+  text-align: center;
+  box-shadow: 0 5px 18px #2430440d;
+  transition: .2s;
 }
 
-.lesson-button:hover {
-  background: var(--blue-light);
+.card:hover {
+  background: #edf3ff;
   border-color: #b9caff;
+  transform: translateY(-3px);
 }
 
-.footnote {
+.icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: clamp(14px, 2vw, 21px);
+  font-weight: bold;
+  word-break: keep-all;
+}
+
+.desc {
   font-size: 12px;
+  color: #788397;
+  margin-top: 10px;
   line-height: 1.6;
-  color: var(--muted);
-  margin: 16px 2px 0;
 }
 
-/* 태블릿 */
-@media(max-width: 760px) {
-  .alphabet-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-/* 휴대폰 */
 @media(max-width: 520px) {
   .wrap {
-    padding: 18px 14px 32px;
+    padding: 18px 12px;
   }
 
   .hero {
-    padding: 24px 20px;
-    border-radius: 22px;
+    padding: 24px 18px;
   }
 
-  .alphabet-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 9px;
+  .menu {
+    gap: 8px;
   }
 
-  .letter-button {
-    min-height: 76px;
+  .card {
+    min-height: 150px;
+    padding: 14px 4px;
     border-radius: 16px;
-    font-size: 24px;
   }
 
-  .lesson-panel {
-    padding: 16px;
+  .icon {
+    font-size: 27px;
+    margin-bottom: 12px;
   }
 
-  .lesson-grid {
-    gap: 9px;
+  .title {
+    font-size: 14px;
   }
 
-  .lesson-button {
-    min-height: 65px;
-    font-size: 18px;
-  }
-
-  .panel-title {
-    font-size: 20px;
-  }
-
-  .section-head {
-    align-items: start;
-    flex-direction: column;
+  .desc {
+    font-size: 10px;
   }
 }
 </style>
 </head>
 
 <body>
-
 <div class="wrap">
 
   <header>
-    <div class="brand">ENGLISH · VOCA 800</div>
-    <a class="home-link" href="./home.html">← 메인 화면</a>
+    <span>MY ENGLISH</span>
+    <span>나만의 영어 학습 공간</span>
   </header>
 
   <section class="hero">
-    <div class="eyebrow">ELEMENTARY VOCABULARY</div>
-    <h1>초등영단어 800</h1>
-    <p>
-      학습할 알파벳을 선택하세요.<br>
-      알파벳마다 4개의 학습 단계가 준비되어 있습니다.
-    </p>
+    <div class="eyebrow">MY LEARNING</div>
+    <h1>오늘도 한 단계씩,<br>영어를 즐겁게 배워요!</h1>
+    <p>원하는 학습 메뉴를 선택해 영어 공부를 시작하세요.</p>
   </section>
 
-  <div class="section-head">
-    <h2>알파벳 선택</h2>
-    <span class="hint">A–Z · 총 26개</span>
-  </div>
+  <main class="menu">
 
-  <!-- A~Z 버튼 -->
-  <main class="alphabet-grid" id="alphabetGrid"></main>
+    <a class="card" href="./">
+      <span class="icon">📚</span>
+      <span class="title">초등영단어800</span>
+      <span class="desc">알파벳별 단어 학습</span>
+    </a>
 
-  <!-- 알파벳을 누르면 나타나는 학습 단계 -->
-  <section class="lesson-panel" id="lessonPanel" aria-live="polite">
+    <a class="card" href="#" onclick="alert('영어표현익힘은 준비 중입니다.'); return false;">
+      <span class="icon">💬</span>
+      <span class="title">영어표현익힘</span>
+      <span class="desc">유용한 영어 표현 익히기</span>
+    </a>
 
-    <div class="panel-top">
-      <div class="panel-title" id="panelTitle">A 학습 목록</div>
-      <button class="back-button" id="backButton" type="button">
-        알파벳 목록
-      </button>
-    </div>
+    <a class="card" href="#" onclick="alert('스토리영어는 준비 중입니다.'); return false;">
+      <span class="icon">📖</span>
+      <span class="title">스토리영어</span>
+      <span class="desc">이야기로 배우는 영어</span>
+    </a>
 
-    <div class="lesson-grid" id="lessonGrid"></div>
-
-    <p class="footnote">
-      원하는 번호를 선택하세요. 학습 파일은 각 단계별로 연결할 수 있습니다.
-    </p>
-
-  </section>
+  </main>
 
 </div>
-
-<script>
-const alphabetGrid = document.getElementById('alphabetGrid');
-const lessonPanel = document.getElementById('lessonPanel');
-const lessonGrid = document.getElementById('lessonGrid');
-const panelTitle = document.getElementById('panelTitle');
-const backButton = document.getElementById('backButton');
-
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
-// A부터 Z까지 버튼 생성
-alphabet.forEach(letter => {
-  const button = document.createElement('button');
-
-  button.type = 'button';
-  button.className = 'letter-button';
-  button.textContent = letter;
-
-  button.addEventListener('click', () => {
-    showLessons(letter, button);
-  });
-
-  alphabetGrid.appendChild(button);
-});
-
-// 알파벳을 누르면 해당 알파벳의 학습 버튼 4개 표시
-function showLessons(letter, selectedButton) {
-
-  document.querySelectorAll('.letter-button').forEach(button => {
-    button.classList.remove('active');
-  });
-
-  selectedButton.classList.add('active');
-
-  panelTitle.textContent = `${letter} 학습 목록`;
-
-  lessonGrid.innerHTML = '';
-
-  for (let i = 1; i <= 4; i++) {
-
-    const link = document.createElement('a');
-
-    link.className = 'lesson-button';
-    link.textContent = `${letter}${i}`;
-
-    // 나중에 각 학습 파일을 만들면 이 주소로 연결
-    link.href = `./${letter}/${letter}${i}/index.html`;
-
-    link.addEventListener('click', event => {
-      event.preventDefault();
-
-      alert(
-        `${letter}${i} 학습 페이지는 아직 연결되지 않았습니다.\n\n` +
-        `추후 연결할 파일 경로:\n${letter}/${letter}${i}/index.html`
-      );
-    });
-
-    lessonGrid.appendChild(link);
-  }
-
-  lessonPanel.classList.add('show');
-
-  lessonPanel.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  });
-}
-
-// 알파벳 목록으로 돌아가기
-backButton.addEventListener('click', () => {
-
-  lessonPanel.classList.remove('show');
-
-  document.querySelectorAll('.letter-button').forEach(button => {
-    button.classList.remove('active');
-  });
-
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-});
-</script>
-
 </body>
 </html>
 ```
