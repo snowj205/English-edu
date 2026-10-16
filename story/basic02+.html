@@ -659,7 +659,7 @@ button:disabled {
     <img
       class="celebration-character"
       id="celebrationCharacter"
-      src="perfect.png"
+      src="https://snowj205.github.io/effect-file/perfect.png"
       alt="축하하는 토끼"
     >
 
@@ -938,15 +938,15 @@ function showCelebration(correct, percent) {
   if (correct && percent >= 95) {
     title = "PERFECT!";
     subtitle = "완벽해요! 최고예요! ⭐";
-    imageFile = "perfect.png";
+    imageFile = "https://snowj205.github.io/effect-file/perfect.png";
   } else if (correct) {
     title = "GOOD JOB!";
     subtitle = "정말 잘했어요! 🎉";
-    imageFile = "goodjob.png";
+    imageFile = "https://snowj205.github.io/effect-file/goodjob.png";
   } else {
     title = "TRY AGAIN!";
     subtitle = "괜찮아요! 다시 해 봐요! 💪";
-    imageFile = "tryagain.png";
+    imageFile = "https://snowj205.github.io/effect-file/tryagain.png";
   }
 
   $("celebrationTitle").textContent = title;
@@ -964,8 +964,8 @@ function showCelebration(correct, percent) {
   // 직접 녹음해 GitHub에 올린 음성 파일을 재생합니다.
   // 파일은 speaking-practice.html과 같은 폴더에 있어야 합니다.
   const encouragementFile = correct
-    ? (percent >= 95 ? "perfect.mp3" : "goodjob.mp3")
-    : "tryagain.mp3";
+    ? (percent >= 95 ? "https://snowj205.github.io/effect-file/perfect.mp3" : "https://snowj205.github.io/effect-file/goodjob.mp3")
+    : "https://snowj205.github.io/effect-file/tryagain.mp3";
   playEncouragement(encouragementFile);
 
   // 효과음은 기존처럼 별도로 재생합니다.
