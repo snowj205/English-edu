@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ko">
 <head>
@@ -56,7 +55,7 @@
     <button class="arrow" id="prev" aria-label="이전 문제">‹</button>
     <section class="card">
       <div class="mascot-wrap" id="mascotWrap" aria-live="polite">
-        <img class="mascot" id="mascot" src="https://raw.githubusercontent.com/snowj205/english-speaking-test/main/perfect.png" alt="정답 응원 캐릭터">
+        <img class="mascot" id="mascot" src="https://snowj205.github.io/effect-file/perfect.png" alt="정답 응원 캐릭터">
         <div class="mascot-caption" id="mascotCaption"></div>
       </div>
       <div class="prompt" id="prompt">나는 사과를 좋아해요.</div>
@@ -81,23 +80,31 @@
   문제를 추가하거나 삭제해도 전체 문제 수와 진행 표시가 자동으로 바뀝니다.
 */
 const questions = [
-  { type: "meaning", korean: "하나의", answer: "a" },
-  { type: "blank", prompt: "THis is _____  animals.", korean: "이 책은 동물에 대한 내용이다.", answer: "about" },
-  { type: "meaning", korean: "~건너편에,~을 가로질러", answer: "across" },
-  { type: "sentence", english: "The boy act like a baby.", korean: "그 소년은 아기처럼 행동했다.", answer: "The boy act like a baby.." },
-  { type: "blank", prompt: "I konw her _____", korean: "나는 그녀의 주소를 안다.", answer: "address" },
-  { type: "meaning", korean: "두려워하는", answer: "afraid" },
-  { type: "blank", prompt: "July comes _____ June.", korean: "7월은 6월 다음에 온다.", answer: "after" },
-  { type: "meaning", korean: "오후", answer: "afternoon" },
-  { type: "sentence", english: "Once again.", korean: "다시 한번.", answer: "Once again." },
-  { type: "blank", prompt: "at the _____ of ten", korean: "열 살 때에", answer: "age" },
-  { type: "meaning", korean: "she is your age.", answer: "그녀는 너와 나이가 같다" },
-  { type: "blank", prompt: "It is a nice sunday _____.", korean: "화창한 일요일 오후다", answer: "afternoon" },
-  { type: "meaning", korean: "1주일간", answer: "for a week" },
-  { type: "sentence", english: "run across the street.", korean: "거리를 가로질러 달리다.", answer: "run across the street." },
-  { type: "blank", prompt: "Don't be _____.", korean: "두려워하지마.", answer: "afraid" },
-  { type: "meaning", korean: "다시,또", answer: "again" }
-
+  { type: "meaning", korean: "만나다", answer: "meet" },
+  { type: "blank", prompt: "five _____ past three", korean: "3시 5분", answer: "minute" },
+  { type: "meaning", korean: "멜론", answer: "melon" },
+  { type: "sentence", english: "milk is healthy food", korean: "우유는 건강에 좋은 음식이다.", answer: "milk is healthy food." },
+  { type: "blank", prompt: "fresh _____", korean: "신선한 우유", answer: "milk" },
+  { type: "meaning", korean: "미터", answer: "meter" },
+  { type: "blank", prompt: "middle _____", korean: "중학교", answer: "school" },
+  { type: "meaning", korean: "중앙, 가운데", answer: "middle" },
+  { type: "sentence", english: "The model is tall and handsome.", korean: "그 모델은 키가 크고 잘생겼다.", answer: "The model is tall and handsome." },
+  { type: "blank", prompt: "one _____ dollars", korean: "100만 달러", answer: "million" },
+  { type: "meaning", korean: "우유", answer: "milk" },
+  { type: "blank", prompt: "look in a _____", korean: "거울을 보다", answer: "mirror" },
+  { type: "meaning", korean: "100만", answer: "million" },
+  { type: "sentence", english: "The snow is one meter deep.", korean: "눈이 1미터나 쌓였다.", answer: "The snow is one meter deep." },
+  { type: "blank", prompt: "I _____ you.", korean: "나는 네가 그리워.", answer: "miss" },
+  { type: "meaning", korean: "모형, 모델", answer: "model" },
+  { type: "blank", prompt: "pocket _____", korean: "용돈", answer: "money" },
+  { type: "meaning", korean: "원숭이", answer: "monkey" },
+  { type: "sentence", english: "We often meet", korean: "우리는 종종 만난다.", answer: "We often meet." },
+  { type: "blank", prompt: "this _____", korean: "이번 달", answer: "month" },
+  { type: "meaning", korean: "달", answer: "moon" },
+  { type: "blank", prompt: "good _____", korean: "아침 인사", answer: "morning" },
+  { type: "meaning", korean: "입", answer: "mouth" },
+  { type: "sentence", english: "I get up early everyday.", korean: "나는 매일 아침 일찍 일어난다.", answer: "I get up early everyday." },
+  { type: "blank", prompt: "_____ your mouth", korean: "입을 움직여 보세요", answer: "move" }
 ];
 
 let index = 0;
@@ -296,7 +303,7 @@ function showMascot(level) {
   const isPerfect = level === "perfect";
   wrap.className = `mascot-wrap show ${isTry ? "try" : "happy"}`;
   const mascot = document.getElementById("mascot");
-  const base = "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/";
+  const base = "https://snowj205.github.io/effect-file/";
   const imageFiles = {
     perfect: "perfect.png",
     goodjob: "goodjob.png",
@@ -307,7 +314,7 @@ function showMascot(level) {
   document.getElementById("mascotCaption").textContent =
     isPerfect ? "PERFECT!" : (isTry ? "TRY AGAIN!" : "GOOD JOB!");
 }
-const soundBase = "https://raw.githubusercontent.com/snowj205/english-speaking-test/main/";
+const soundBase = "https://snowj205.github.io/effect-file/";
 let currentFeedbackAudio = null;
 function playFeedbackAudio(level) {
   if (currentFeedbackAudio) {
