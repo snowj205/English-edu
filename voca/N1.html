@@ -406,7 +406,7 @@ body {
 
   <div class="top">
     <span>영어 말하기 연습</span>
-    <span id="counter">1 / 25</span>
+    <span id="counter">1 / 15</span>
   </div>
 
   <div class="progress">
@@ -495,6 +495,7 @@ let index = 0;
 let recognition = null;
 let listening = false;
 let finalTranscript = "";
+let finalAlternatives = [];
 
 const promptEl = document.getElementById("prompt");
 const meaningEl = document.getElementById("meaning");
@@ -830,59 +831,7 @@ function similarityPercent(spoken, expected) {
     ) * 100
   );
 }
-  const said = normalize(spoken);
-  const answer = normalize(expected);
-
-  if (!said || !answer) return 0;
-  if (said === answer) return 100;
-
-  const charScore =
-    1 - levenshtein(said, answer) /
-    Math.max(said.length, answer.length);
-
-  const sw = said.split(" ").filter(Boolean);
-  const aw = answer.split(" ").filter(Boolean);
-
-  let matched = 0;
-  const used = new Set();
-
-  for (const word of sw) {
-    let bestIndex = -1;
-    let bestScore = 0;
-
-    aw.forEach((target, i) => {
-      if (used.has(i)) return;
-
-      const score =
-        1 - levenshtein(word, target) /
-        Math.max(word.length, target.length);
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestIndex = i;
-      }
-    });
-
-    if (
-      bestIndex >= 0 &&
-      bestScore >= (
-        Math.min(word.length, aw[bestIndex].length) <= 3
-          ? 0.67
-          : 0.72
-      )
-    ) {
-      matched++;
-      used.add(bestIndex);
-    }
-  }
-
-  const precision = matched / Math.max(sw.length, 1);
-  const recall = matched / Math.max(aw.length, 1);
-
-  const wordScore =
-    precision + recall
-      ? 2 * precision * recall / (precision + recall)
-      : 0;
+  
 
   return Math.round(Math.max(charScore, wordScore) * 100);
 }
@@ -923,7 +872,7 @@ function checkAnswer(spoken) {
     feedbackEl.className = "feedback good"; 
     
     // 한글 뜻 대신 영어 정답 문장 표시 
-    statusEl.textContent = `정답: ${answer}`;
+    statusEl.textContent = `정답: ${q.answer}`;
     
     playFeedbackAudio("goodjob");
 
