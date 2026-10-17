@@ -825,7 +825,7 @@ function checkAnswer(spoken) {
         meaningEl.textContent = q.korean;
     }
 
-    showMascot();
+    showMascot("perfect");
 
     feedbackEl.textContent =
       `Perfect! 아주 잘했어요! (${score}%) 🎉`;
@@ -835,7 +835,7 @@ function checkAnswer(spoken) {
     playFeedbackAudio("perfect");
 
   } else if (score >= 65) {
-    showMascot();
+    showMascot("goodjob");
 
     feedbackEl.className = "feedback good"; 
     
@@ -845,7 +845,7 @@ function checkAnswer(spoken) {
     playFeedbackAudio("goodjob");
 
   } else {
-    showMascot();
+    showMascot("tryagain");
 
     feedbackEl.textContent =
       `한 번 더 도전해 봐요! (${score}%) 🙂`;
@@ -901,12 +901,7 @@ function showMascot(level) {
 
   mascot.src = imageFiles[level];
 
-  document.getElementById("mascotCaption").textContent =
-    isPerfect
-      ? "PERFECT!"
-      : isTry
-        ? "TRY AGAIN!"
-        : "GOOD JOB!";
+  document.getElementById("mascotCaption").textContent = "";
 }
 
 /* 채점 효과음 */
