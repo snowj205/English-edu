@@ -622,7 +622,7 @@ function startListening() {
 
   recognition.lang = "en-US";
   recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
+  recognition.maxAlternatives = 3;
   recognition.continuous = false;
 
   /* 듣기 시작: 분홍 마이크 이미지 */
@@ -649,18 +649,36 @@ function startListening() {
   };
 
   recognition.onresult = event => {
-    let transcript = "";
+  let interim = "";
+  const q = questions[index];
 
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      transcript += event.results[i][0].transcript;
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const result = event.results[i];
+
+    if (result.isFinal) {
+      const alternatives = [];
+
+      for (let a = 0; a < result.length; a++) {
+        const candidate = result[a].transcript.trim();
+
+        if (candidate) alternatives.push(candidate);
+      }
+
+      if (alternatives.length) {
+        finalAlternatives = alternatives;
+        finalTranscript = alternatives[0];
+      }
+    } else {
+      interim += result[0].transcript;
     }
+  }
 
-    finalTranscript = transcript.trim();
+  const display = (finalTranscript || interim).trim();
 
-    statusEl.textContent = finalTranscript
-      ? `인식한 문장: “${finalTranscript}”`
-      : "듣고 있어요…";
-  };
+  statusEl.textContent = display
+    ? `인식한 문장: “${display}”`
+    : "듣고 있어요…";
+};
 
   recognition.onerror = event => {
     let message = "음성을 인식하지 못했어요. 다시 시도해 보세요.";
@@ -690,10 +708,30 @@ function startListening() {
     /* 듣기 종료: 검정 마이크 이미지 */
     setMicImage(false);
 
-    if (finalTranscript) {
-      const transcriptToCheck = finalTranscript;
-      finalTranscript = "";
-      checkAnswer(transcriptToCheck);
+    if (finalAlternatives.length || finalTranscript) {
+  const q = questions[index];
+
+  const candidates = [
+    ...new Set(
+      finalAlternatives.length
+        ? finalAlternatives
+        : [finalTranscript]
+    )
+  ];
+
+  candidates.sort(
+    (a, b) =>
+      similarityPercent(b, q.answer) -
+      similarityPercent(a, q.answer)
+  );
+
+  const transcriptToCheck = candidates[0];
+
+  finalTranscript = "";
+  finalAlternatives = [];
+
+  checkAnswer(transcriptToCheck);
+}
     } else if (
       !statusEl.textContent.includes("권한") &&
       !statusEl.textContent.includes("연결에 실패")
@@ -747,6 +785,51 @@ function levenshtein(a, b) {
 
 /* 정답과 음성 인식 결과 비교 */
 function similarityPercent(spoken, expected) {
+  const said = normalize(spoken);
+  const answer = normalize(expected);
+
+  if (!said || !answer) return 0;
+  if (said === answer) return 100;
+
+  const sw = said.split(" ").filter(Boolean);
+  const aw = answer.split(" ").filter(Boolean);
+
+  const rows = Array.from(
+    { length: sw.length + 1 },
+    (_, i) => i
+  );
+
+  for (let i = 1; i <= sw.length; i++) {
+    let previous = rows[0];
+    rows[0] = i;
+
+    for (let j = 1; j <= aw.length; j++) {
+      const old = rows[j];
+
+      rows[j] = Math.min(
+        rows[j] + 1,
+        rows[j - 1] + 1,
+        previous + (sw[i - 1] === aw[j - 1] ? 0 : 1)
+      );
+
+      previous = old;
+    }
+  }
+
+  const wordScore =
+    1 - rows[aw.length] / Math.max(sw.length, aw.length, 1);
+
+  const charScore =
+    1 - levenshtein(said, answer) /
+    Math.max(said.length, answer.length, 1);
+
+  return Math.round(
+    Math.max(
+      0,
+      Math.min(1, wordScore * 0.75 + charScore * 0.25)
+    ) * 100
+  );
+}
   const said = normalize(spoken);
   const answer = normalize(expected);
 
@@ -817,7 +900,7 @@ function checkAnswer(spoken) {
   answerEl.textContent =
     `인식한 내용: ${spoken} · 일치도 ${score}%`;
 
-  if (score >= 75) {
+  if (score >= 85) {
 
     // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
     if (q.type === "meaning") {
