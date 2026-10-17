@@ -480,7 +480,7 @@ const questions = [
   { type: "sentence", english: "Try not to talk too much.", korean: "말을 너무 많이 하지 마세요.", answer: "Try not to talk too much." },
   { type: "meaning", korean: "클래식 음악", answer: "classical music" },
   { type: "sentence", english: "we must conserve forest.", korean: "우리는 숲을 반드시 보존해야한다.", answer: "we must conserve forest." },
-  { type: "meaning", korean: "그녀는 자기 이름을 썼다.", answer: "she worte her name" },
+  { type: "meaning", korean: "그녀는 자기 이름을 썼다.", answer: "she wrote her name" },
   { type: "meaning", korean: "좁은 강", answer: "narrow river" },
   { type: "sentence", english: "His house is very near.", korean: "그의 집은 아주 가깝다.", answer: "His house is very near." },
   { type: "sentence", english: "a giraffe has a long neck.", korean: "기린의 목은 길다.", answer: "a giraffe has a long neck." },
@@ -830,10 +830,6 @@ function similarityPercent(spoken, expected) {
       Math.min(1, wordScore * 0.75 + charScore * 0.25)
     ) * 100
   );
-}
-  
-
-  return Math.round(Math.max(charScore, wordScore) * 100);
 }
 
 /* 채점 결과 */
