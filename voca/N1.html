@@ -701,46 +701,46 @@ function startListening() {
   };
 
   recognition.onend = () => {
-    listening = false;
+  listening = false;
 
-    micEl.classList.remove("listening");
-    micEl.setAttribute("aria-label", "말하기 시작");
+  micEl.classList.remove("listening");
+  micEl.setAttribute("aria-label", "말하기 시작");
 
-    /* 듣기 종료: 검정 마이크 이미지 */
-    setMicImage(false);
+  // 듣기 종료: 검정 마이크 이미지
+  setMicImage(false);
 
-    if (finalAlternatives.length || finalTranscript) {
-  const q = questions[index];
+  if (finalAlternatives.length || finalTranscript) {
+    const q = questions[index];
 
-  const candidates = [
-    ...new Set(
-      finalAlternatives.length
-        ? finalAlternatives
-        : [finalTranscript]
-    )
-  ];
+    const candidates = [
+      ...new Set(
+        finalAlternatives.length
+          ? finalAlternatives
+          : [finalTranscript]
+      )
+    ];
 
-  candidates.sort(
-    (a, b) =>
-      similarityPercent(b, q.answer) -
-      similarityPercent(a, q.answer)
-  );
+    candidates.sort(
+      (a, b) =>
+        similarityPercent(b, q.answer) -
+        similarityPercent(a, q.answer)
+    );
 
-  const transcriptToCheck = candidates[0];
+    const transcriptToCheck = candidates[0];
 
-  finalTranscript = "";
-  finalAlternatives = [];
+    finalTranscript = "";
+    finalAlternatives = [];
 
-  checkAnswer(transcriptToCheck);
-}
-    } else if (
-      !statusEl.textContent.includes("권한") &&
-      !statusEl.textContent.includes("연결에 실패")
-    ) {
-      statusEl.textContent =
-        "다시 말하려면 마이크를 눌러 주세요.";
-    }
-  };
+    checkAnswer(transcriptToCheck);
+
+  } else if (
+    !statusEl.textContent.includes("권한") &&
+    !statusEl.textContent.includes("연결에 실패")
+  ) {
+    statusEl.textContent =
+      "다시 말하려면 마이크를 눌러 주세요.";
+  }
+};
 
   try {
     recognition.start();
