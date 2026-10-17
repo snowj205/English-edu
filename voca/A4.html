@@ -97,7 +97,7 @@ body {
 .prompt {
   margin: 0 0 8px;
   font-size: 85px;
-  font-weight: 750;
+  font-weight: 600;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
@@ -474,21 +474,21 @@ body {
 
 <script>
 const questions = [
-  { type: "meaning", korean: "아주머니,이모,고모", answer: "aunt" },
-  { type: "blank", prompt: "she is _____ the front door.", korean: "그녀는 현관에 있다.", answer: "at" },
-  { type: "meaning", korean: "가을", answer: "autumm" },
+  { type: "meaning", korean: "이 분은 제 이모에요.", answer: "This is my aunt." },
+  { type: "meaning", korean: "그녀는 현관에 있다.", answer: "she is at the front door." },
+  { type: "meaning", korean: "어느 고요한 가을날", answer: "a calm autumm day" },
   { type: "sentence", english: "Leaves fall in autumm.", korean: "가을에는 낙엽이 진다.", answer: "Leaves fall in autumm." },
-  { type: "blank", prompt: "a ship far _________", korean: "멀리 떨어진 배", answer: "away" },
-  { type: "meaning", korean: "아기", answer: "baby" },
-  { type: "blank", prompt: "jim is my _____.", korean: "짐은 제 아기에요.", answer: "baby" },
+  { type: "meaning", korean: "멀리 떨어진 배", answer: "a ship far away" },
+  { type: "meaning", korean: "아기에게 미소짓다", answer: "a smile at baby" },
+  { type: "meaning", korean: "짐은 제 아기에요.", answer: "jim ism my baby." },
   { type: "meaning", korean: "등,뒤쪽", answer: "back" },
   { type: "sentence", english: "He scratched his back.", korean: "그는 등을 긁었다.", answer: "He scratched his back." },
-  { type: "blank", prompt: "He is a _____ monster.", korean: "그는 나쁜 괴물이에요.", answer: "bad" },
+  { type: "meaning", prompt: korean: "그는 나쁜 괴물이에요.", answer: "He is a bad monster." },
   { type: "sentence", english: "The dog is in the bag.", korean: "개가 가방 안에 있다.", answer: "The dog is in the bag." },
-  { type: "blank", prompt: "throw a _____.", korean: "공을 던지다.", answer: "ball" },
+  { type: "meaning", korean: "공을 던지다.", answer: "throw a ball" },
   { type: "meaning", korean: "풍선", answer: "ballon" },
   { type: "sentence", english: "That is my new ball.", korean: "저건 나의 새 공이에요.", answer: "That is my new ball." },
-  { type: "blank", prompt: "Andy's _____ is long.", korean: "앤디의 풍선은 길다.", answer: "ballon" },
+  { type: "sentence", english: "Andy's ballon is long.", korean: "앤디의 풍선은 길다.", answer: "Andy's ballon is long." },
   { type: "meaning", korean: "나쁜 소식", answer: "bad news" }
 ];
 
@@ -818,7 +818,14 @@ function checkAnswer(spoken) {
   answerEl.textContent =
     `인식한 내용: ${spoken} · 일치도 ${score}%`;
 
-  if (score >= 90) {
+  if (score >= 80) {
+
+    // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
+    if (q.type === "meaning") {
+        promptEl.textContent = q.answer;
+        meaningEl.textContent = q.korean;
+    }
+
     showMascot("perfect");
 
     feedbackEl.textContent =
@@ -829,7 +836,7 @@ function checkAnswer(spoken) {
 
     playFeedbackAudio("perfect");
 
-  } else if (score >= 70) {
+  } else if (score >= 60) {
     showMascot("goodjob");
 
     feedbackEl.textContent =
