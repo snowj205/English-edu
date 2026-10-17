@@ -842,13 +842,12 @@ function checkAnswer(spoken) {
   }
 
   const score = Number(similarityPercent(spoken, q.answer));
-
   const safeScore = Number.isFinite(score) ? score : 0;
 
   answerEl.textContent =
     `인식한 내용: ${spoken} · 일치도 ${safeScore}%`;
 
-  if (score >= 85) {
+  if (safeScore >= 85) {
 
     // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
     if (q.type === "meaning") {
