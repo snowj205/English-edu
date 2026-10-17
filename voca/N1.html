@@ -786,8 +786,9 @@ function levenshtein(a, b) {
 
 /* 정답과 음성 인식 결과 비교 */
 function similarityPercent(spoken, expected) {
-  const said = normalize(spoken);
-  const answer = normalize(expected);
+  // 음성 인식 결과와 정답을 문자열로 변환
+  const said = normalize(String(spoken ?? ""));
+  const answer = normalize(String(expected ?? ""));
 
   if (!said || !answer) return 0;
   if (said === answer) return 100;
@@ -840,10 +841,12 @@ function checkAnswer(spoken) {
     fillBlank(spoken);
   }
 
-  const score = similarityPercent(spoken, q.answer);
+  const score = Number(similarityPercent(spoken, q.answer));
+
+  const safeScore = Number.isFinite(score) ? score : 0;
 
   answerEl.textContent =
-    `인식한 내용: ${spoken} · 일치도 ${score}%`;
+    `인식한 내용: ${spoken} · 일치도 ${safeScore}%`;
 
   if (score >= 85) {
 
@@ -856,13 +859,13 @@ function checkAnswer(spoken) {
     showMascot("perfect");
 
     feedbackEl.textContent =
-      `Perfect! 아주 잘했어요! (${score}%) 🎉`;
+      `Perfect! 아주 잘했어요! (${safeScore}%) 🎉`;
     feedbackEl.className = "feedback good";
     statusEl.textContent = "일치도 75% 이상이에요!";
 
     playFeedbackAudio("perfect");
 
-  } else if (score >= 65) {
+  } else if (safeScore >= 65) {
     showMascot("goodjob");
 
     feedbackEl.className = "feedback good"; 
@@ -876,7 +879,7 @@ function checkAnswer(spoken) {
     showMascot("tryagain");
 
     feedbackEl.textContent =
-      `한 번 더 도전해 봐요! (${score}%) 🙂`;
+      `한 번 더 도전해 봐요! (${safeScore}%) 🙂`;
 
     feedbackEl.className = "feedback try";
     statusEl.textContent =
