@@ -392,10 +392,10 @@ body {
   }
 
   .answer {
-    font-size: 60px !important;
+    font-size: 20px !important;
 }
   .prompt {
-    font-size: 50px !important;
+    font-size: 20px !important;
   }
 }
 </style>
@@ -817,7 +817,7 @@ function checkAnswer(spoken) {
   answerEl.textContent =
     `인식한 내용: ${spoken} · 일치도 ${score}%`;
 
-  if (score >= 70) {
+  if (score >= 75) {
 
     // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
     if (q.type === "meaning") {
@@ -830,11 +830,11 @@ function checkAnswer(spoken) {
     feedbackEl.textContent =
       `Perfect! 아주 잘했어요! (${score}%) 🎉`;
     feedbackEl.className = "feedback good";
-    statusEl.textContent = "일치도 70% 이상이에요!";
+    statusEl.textContent = "일치도 75% 이상이에요!";
 
     playFeedbackAudio("perfect");
 
-  } else if (score >= 50) {
+  } else if (score >= 65) {
     showMascot("goodjob");
 
     feedbackEl.textContent =
@@ -842,7 +842,7 @@ function checkAnswer(spoken) {
 
     feedbackEl.className = "feedback good";
     statusEl.textContent =
-      "일치도 50% 이상이에요. 조금만 더 연습해 봐요!";
+      "일치도 65% 이상이에요. 조금만 더 연습해 봐요!";
 
     playFeedbackAudio("goodjob");
 
