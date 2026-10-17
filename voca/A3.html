@@ -97,7 +97,7 @@ body {
 .prompt {
   margin: 0 0 8px;
   font-size: 85px;
-  font-weight: 750;
+  font-weight: 600;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
@@ -475,20 +475,20 @@ body {
 <script>
 const questions = [
   { type: "meaning", korean: "동물", answer: "animal" },
-  { type: "blank", prompt: "a wild _____.", korean: "야생 동물", answer: "animal" },
+  { type: "meaning", korean: "야생 동물", answer: "wild animal" },
   { type: "meaning", korean: "아파트", answer: "apartment" },
   { type: "sentence", english: "Bill doesn't have any questions.", korean: "빌은 아무 질문도 없어.", answer: "Bill doesn't have any questions." },
-  { type: "blank", prompt: "This is an _________", korean: "이것은 맛있는 사과이다.", answer: "delicious apple" },
+  { type: "sentence", english: "This is an delicious apple.", korean: "이것은 맛있는 사과이다.", answer: "This is an delicious apple." },
   { type: "meaning", korean: "팔", answer: "arm" },
-  { type: "blank", prompt: "Bees are flying _____ the flowers.", korean: "벌들이 꽃 주변을 날고 있다.", answer: "around" },
+  { type: "sentence", english: "Bees are flying around the flowers.", korean: "벌들이 꽃 주변을 날고 있다.", answer: "Bees are flying around the flowers." },
   { type: "meaning", korean: "도착하다", answer: "arrive" },
   { type: "sentence", english: "He always arrive first.", korean: "그는 항상 첫 번째로 도착해요.", answer: "THe always arrive first." },
-  { type: "blank", prompt: "  _____ a friend.", korean: "친구로서.", answer: "as" },
+  { type: "sentence", english: "as a friend.", korean: "친구로서.", answer: "as a friend." },
   { type: "sentence", english: "His arm is long.", korean: "그의 팔은 길다.", answer: "His arm is long." },
-  { type: "blank", prompt: "He _____.", korean: "그가 대답했어.", answer: "answers" },
+  { type: "meaning", prompt: "He answers.", korean: "그가 대답했어.", answer: "He answers." },
   { type: "meaning", korean: "묻다", answer: "ask" },
   { type: "sentence", english: "Can I ask you a question?", korean: "뭐 물어봐도 돼요?", answer: "Can I ask you a question?" },
-  { type: "blank", prompt: "I respect her _____ my teacher.", korean: "나는 선생님으로서 그녀를 존경한다.", answer: "as" },
+  { type: "sentence", english: "I respect her as my teacher.", korean: "나는 선생님으로서 그녀를 존경한다.", answer: "I respect her as my teacher." },
   { type: "meaning", korean: "마을에 도착하다", answer: "arrive at a village" }
 ];
 
