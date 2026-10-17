@@ -97,7 +97,7 @@ body {
 .prompt {
   margin: 0 0 8px;
   font-size: 85px;
-  font-weight: 750;
+  font-weight: 600;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
@@ -475,20 +475,20 @@ body {
 <script>
 const questions = [
   { type: "meaning", korean: "because it rained", answer: "비가 왔기 때문에" },
-  { type: "blank", prompt: "I want to _____ a doctor.", korean: "나는 의사가 되고 싶다.", answer: "become" },
+  { type: "meaning", korean: "나는 의사가 되고 싶다.", answer: "I want to become a doctor." },
   { type: "meaning", korean: "침대에서 자다", answer: "sleep on bed" },
-  { type: "sentence", english: "____ your hands before lunch.", korean: "점심 먹기 전에 손을 씻어라.", answer: "Wash your hands before lunch." },
-  { type: "blank", prompt: "begin a _________", korean: "시험을 시작하다", answer: "test" },
+  { type: "sentence", english: "wash your hands before lunch.", korean: "점심 먹기 전에 손을 씻어라.", answer: "Wash your hands before lunch." },
+  { type: "meaning", korean: "시험을 시작하다", answer: "begin a test" },
   { type: "meaning", korean: "문 뒤에 숨다", answer: "hide behind the door" },
-  { type: "blank", prompt: "ring a _____", korean: "벨이 울리다", answer: "bell" },
+  { type: "meaning", korean: "벨이 울리다", answer: "ring a bell" },
   { type: "meaning", korean: "아래를 참고하세요.", answer: "See below" },
   { type: "sentence", english: "The boy is sitting on the bench.", korean: "소년이 벤치에 앉아 있다.", answer: "The boy is sitting on the bench." },
-  { type: "blank", prompt: "Ally is _____ the desk.", korean: "엘리는 책상 옆에 있다", answer: "beside" },
+  { type: "sentence", english: "Ally is beside the desk.", korean: "엘리는 책상 옆에 있다", answer: "Ally is beside the desk." },
   { type: "sentence", english: "The bell is ringing.", korean: "종이 울린다.", answer: "The bell is ringing." },
-  { type: "blank", prompt: "a _____ in the park.", korean: "공원의 벤치", answer: "bench" },
+  { type: "meaning", korean: "공원의 벤치", answer: "bench in the park" },
   { type: "meaning", korean: "해가 뜨기 전에", answer: "before sunrise" },
   { type: "sentence", english: "School begin at 9 a.m.", korean: "학교는 오전9시에 시작한다.", answer: "School begin at 9 a.m." },
-  { type: "blank", prompt: "The boy is _____ the tree.", korean: "소년이 나무 뒤에 있다.", answer: "behind" },
+  { type: "sentence", english: "The boy is behind the tree.", korean: "소년이 나무 뒤에 있다.", answer: "The boy is behind the tree." },
   { type: "meaning", korean: "내 옆에 앉다", answer: "sit down beside me." }
 ];
 
@@ -818,18 +818,25 @@ function checkAnswer(spoken) {
   answerEl.textContent =
     `인식한 내용: ${spoken} · 일치도 ${score}%`;
 
-  if (score >= 90) {
+  if (score >= 70) {
+
+    // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
+    if (q.type === "meaning") {
+        promptEl.textContent = q.answer;
+        meaningEl.textContent = q.korean;
+    }
+
     showMascot("perfect");
 
     feedbackEl.textContent =
       `Perfect! 아주 잘했어요! (${score}%) 🎉`;
 
     feedbackEl.className = "feedback good";
-    statusEl.textContent = "일치도 90% 이상이에요!";
+    statusEl.textContent = "일치도 70% 이상이에요!";
 
     playFeedbackAudio("perfect");
 
-  } else if (score >= 70) {
+  } else if (score >= 50) {
     showMascot("goodjob");
 
     feedbackEl.textContent =
@@ -837,7 +844,7 @@ function checkAnswer(spoken) {
 
     feedbackEl.className = "feedback good";
     statusEl.textContent =
-      "일치도 70% 이상이에요. 조금만 더 연습해 봐요!";
+      "일치도 50% 이상이에요. 조금만 더 연습해 봐요!";
 
     playFeedbackAudio("goodjob");
 
