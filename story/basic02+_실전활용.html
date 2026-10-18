@@ -169,6 +169,15 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
+.translation {
+  margin-top: 7px; padding: 0 4px; color: #667788;
+  font-size: 16px; line-height: 1.5; overflow-wrap: anywhere;
+}
+.answer-line {
+  margin-bottom: 8px; font-weight: bold; color: #2459bd;
+  font-size: 20px; line-height: 1.5; overflow-wrap: anywhere;
+}
+
 .left .bubble {
   background: #eaf0ff;
   border-top-left-radius: 4px;
@@ -415,6 +424,7 @@ button:disabled {
     <div class="bubble" id="englishBubble">
       Hello! How are you?
     </div>
+    <div class="translation" id="englishKoreanTranslation"></div>
   </div>
 </div>
 
@@ -425,8 +435,12 @@ button:disabled {
       My turn · 영어로 대답하기
     </div>
 
+    <div class="answer-line" id="answerText">I am fine.</div>
     <div class="bubble" id="koreanBubble">
       나는 잘 지내. 너는 어때?
+    </div>
+    <div style="text-align:right; margin-top:10px">
+      <button id="answerAudioBtn" type="button">🔊 정답 영어 듣기</button>
     </div>
   </div>
 
@@ -454,21 +468,9 @@ button:disabled {
 <div class="feedback" id="feedback" aria-live="polite"></div>
 <div class="recognized" id="recognized"></div>
 
-<div class="answer-box hidden" id="answerBox">
-  <div>정답 영어 문장</div>
-  <strong id="answerText"></strong>
-  <div style="margin-top:10px">
-    <button id="answerAudioBtn" type="button">🔊 정답 듣기</button>
-  </div>
-</div>
-
 <div class="controls">
   <button id="replayBtn" type="button" disabled>
     🔊 영어 다시 듣기
-  </button>
-
-  <button id="showAnswerBtn" type="button" disabled>
-    정답 확인
   </button>
 
   <button class="primary" id="nextBtn" type="button" disabled>
@@ -493,8 +495,7 @@ button:disabled {
 <h2 class="edit-title">✏️ 대화 내용 편집</h2>
 
 <p class="edit-help">
-  왼쪽 칸에는 상대방이 말할 영어 문장,
-  오른쪽 칸에는 아이가 영어로 바꿔 말할 한글 뜻을 입력하세요.
+  상대방의 영어 문장과 그 한글 해석, 아이에게 보여 줄 한글 뜻, 정답 영어 문장을 입력하세요.
   아래의 저장 버튼을 누르면 연습 화면에 적용됩니다.
 </p>
 
@@ -532,68 +533,80 @@ button:disabled {
 
 /* ==================================
    1. 기본 대화
-   영어: 상대방이 먼저 말하는 문장
-   한글: 아이가 영어로 대답할 내용
+   en: 상대방 영어 문장 / enKo: 상대방 문장의 한글 해석
+   ko: 아이가 영어로 대답할 한글 / answer: 정답 영어 문장
 ================================== */
 
 const defaultDialogues = [
   {
     en: "Hello! where is mommy?",
+    enKo: "엄마, 어디 있어?",
     ko: "엄마는 나갔어요.",
     answer: "she goes out."
   },
   {
     en: "where is mom going?",
+    enKo: "엄마는 어디에 가요?",
     ko: "엄마는 쇼핑몰에 가요.",
     answer: "she goes to the shopping mall."
   },
   {
     en: "How mom is going?",
+    enKo: "엄마는 어떻게 가요?",
     ko: "엄마는 항상 차로 걸어가요.",
     answer: "she walks to the car all the time."
   },
   {
     en: "Where are your dogs?",
+    enKo: "너의 강아지들은 어디에 있어?",
     ko: "내 작은 강아지들은 집 안에 있어요.",
     answer: "My little dogs are in the house."
   },
   {
     en: "Is cat here?",
+    enKo: "고양이가 여기 있어?",
     ko: "아뇨, 고양이는 여기 없어요.",
     answer: "No, the cat is not here."
   },
   {
     en: "Are you hungry now?",
+    enKo: "지금 배고프니?",
     ko: "네, 나는 지금 여기서 점심을 먹고 싶어요.",
     answer: "Yes, I want to have lunch here now."
   },
   {
     en: "me, too",
+    enKo: "나도 그래.",
     ko: "오늘은 내가 당신의 엄마에요!",
     answer: "Today, I am your mommy!"
   },
   {
     en: "Where are you?",
+    enKo: "너는 어디에 있어?",
     ko: "나 여기에 있어요.",
     answer: "I am here."
   },
   {
     en: "who's that?",
+    enKo: "저 사람은 누구야?",
     ko: "보세요. 내 엄마에요.",
     answer: "look, It is mommy."
   },
   {
     en: "who's hand?",
+    enKo: "누구의 손이야?",
     ko: "그것은 엄마의 작은 손이에요.",
     answer: "It is mommy's small hand."
   },
   {
     en: "Is she back?",
+    enKo: "그녀가 돌아왔니?",
     ko: "그녀가 지금 돌아왔어요!",
     answer: "she is back now!"
   },
   {
     en: "Let's have lunch now!",
+    enKo: "이제 점심을 먹자!",
     ko: "좋아요. 같이 요리해요.",
     answer: "good. Let's cook."
   }
@@ -617,10 +630,10 @@ const voiceSelect = document.getElementById("voiceType");
 const startBtn = document.getElementById("startBtn");
 const micBtn = document.getElementById("micBtn");
 const replayBtn = document.getElementById("replayBtn");
-const showAnswerBtn = document.getElementById("showAnswerBtn");
 const nextBtn = document.getElementById("nextBtn");
 
 const englishBubble = document.getElementById("englishBubble");
+const englishKoreanTranslation = document.getElementById("englishKoreanTranslation");
 const koreanBubble = document.getElementById("koreanBubble");
 const koreanRow = document.getElementById("koreanRow");
 const waitHint = document.getElementById("waitHint");
@@ -630,7 +643,6 @@ const micCaption = document.getElementById("micCaption");
 const feedback = document.getElementById("feedback");
 const recognized = document.getElementById("recognized");
 
-const answerBox = document.getElementById("answerBox");
 const answerText = document.getElementById("answerText");
 const answerAudioBtn = document.getElementById("answerAudioBtn");
 
@@ -698,7 +710,9 @@ function renderCurrentDialogue() {
   stopRecording();
 
   englishBubble.textContent = item.en;
+  englishKoreanTranslation.textContent = item.enKo || "";
   koreanBubble.textContent = item.ko;
+  answerText.textContent = item.answer;
 
   koreanRow.classList.add("hidden");
   waitHint.classList.remove("hidden");
@@ -707,14 +721,12 @@ function renderCurrentDialogue() {
   feedback.className = "feedback";
   recognized.textContent = "";
 
-  answerBox.classList.add("hidden");
 
   progress.textContent =
     `대화 ${currentIndex + 1} / ${activeDialogues.length}`;
 
   micBtn.disabled = true;
   replayBtn.disabled = false;
-  showAnswerBtn.disabled = false;
   nextBtn.disabled = true;
 
   micCaption.textContent = "먼저 영어를 들어 보세요.";
@@ -761,7 +773,7 @@ startBtn.addEventListener("click", function() {
   );
 
   if (validDialogues.length === 0) {
-    alert("영어 문장, 한글 뜻, 정답을 입력해 주세요.");
+    alert("영어 문장, 아이가 볼 한글 뜻, 정답 영어 문장을 입력해 주세요.");
     return;
   }
 
@@ -959,26 +971,12 @@ replayBtn.addEventListener("click", function() {
   micBtn.disabled = true;
   nextBtn.disabled = true;
   feedback.textContent = "";
-  answerBox.classList.add("hidden");
 
   micCaption.textContent = "영어를 다시 듣고 있어요.";
 
   speakEnglish(item.en, function() {
     showKoreanPrompt();
   });
-});
-
-/* ==================================
-   10. 정답 확인
-================================== */
-
-showAnswerBtn.addEventListener("click", function() {
-  if (!activeDialogues.length) return;
-
-  const item = activeDialogues[currentIndex];
-
-  answerText.textContent = item.answer;
-  answerBox.classList.remove("hidden");
 });
 
 answerAudioBtn.addEventListener("click", function() {
@@ -1013,7 +1011,6 @@ nextBtn.addEventListener("click", function() {
 
     micBtn.disabled = true;
     replayBtn.disabled = true;
-    showAnswerBtn.disabled = true;
     nextBtn.disabled = true;
 
     micCaption.textContent = "다시 연습하려면 연습 시작을 눌러 주세요.";
@@ -1037,6 +1034,11 @@ function renderEditor() {
     enArea.value = item.en;
     enArea.setAttribute("aria-label", `${index + 1}번 영어 문장`);
 
+    const enKoArea = document.createElement("textarea");
+    enKoArea.value = item.enKo || "";
+    enKoArea.placeholder = "영어 문장의 한글 해석";
+    enKoArea.setAttribute("aria-label", `${index + 1}번 상대방 영어 문장의 한글 해석`);
+
     const koArea = document.createElement("textarea");
     koArea.value = item.ko;
     koArea.setAttribute("aria-label", `${index + 1}번 한글 뜻`);
@@ -1049,23 +1051,27 @@ function renderEditor() {
     enArea.dataset.index = index;
     enArea.dataset.type = "en";
 
+    enKoArea.dataset.index = index;
+    enKoArea.dataset.type = "enKo";
+
     koArea.dataset.index = index;
     koArea.dataset.type = "ko";
 
     answerArea.dataset.index = index;
     answerArea.dataset.type = "answer";
 
-    // 각 대화의 정답도 함께 수정할 수 있도록 세 번째 칸을 추가
+    // 각 대화의 영어 문장, 해석, 아이의 한글 문장, 정답을 수정
     const row = document.createElement("div");
     row.className = "dialogue-editor";
     row.style.gridTemplateColumns = "35px minmax(0,1fr)";
 
     const fields = document.createElement("div");
     fields.style.display = "grid";
-    fields.style.gridTemplateColumns = "repeat(3,minmax(0,1fr))";
+    fields.style.gridTemplateColumns = "repeat(4,minmax(0,1fr))";
     fields.style.gap = "8px";
 
     fields.appendChild(enArea);
+    fields.appendChild(enKoArea);
     fields.appendChild(koArea);
     fields.appendChild(answerArea);
 
@@ -1073,7 +1079,7 @@ function renderEditor() {
     row.appendChild(fields);
 
     // 편집기 안의 각 칸을 반응형으로 배치
-    fields.style.gridTemplateColumns = "repeat(3,minmax(0,1fr))";
+    fields.style.gridTemplateColumns = "repeat(4,minmax(0,1fr))";
 
     dialogueEditor.appendChild(row);
   });
@@ -1083,8 +1089,9 @@ function renderEditor() {
   labels.style.gridTemplateColumns = "35px minmax(0,1fr)";
   labels.innerHTML = `
     <div>번호</div>
-    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
-      <div>영어 음성 문장</div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+      <div>상대방 영어 문장</div>
+      <div>상대방 말의 한글 해석</div>
       <div>아이에게 보여 줄 한글</div>
       <div>정답 영어 문장</div>
     </div>
@@ -1096,7 +1103,7 @@ function renderEditor() {
       fields.style.gridTemplateColumns =
         window.innerWidth <= 600
           ? "1fr"
-          : "repeat(3,minmax(0,1fr))";
+          : "repeat(4,minmax(0,1fr))";
     });
 }
 
@@ -1115,14 +1122,15 @@ saveEditBtn.addEventListener("click", function() {
 
   rows.forEach(row => {
     const en = row.querySelector('[data-type="en"]').value.trim();
+    const enKo = row.querySelector('[data-type="enKo"]').value.trim();
     const ko = row.querySelector('[data-type="ko"]').value.trim();
     const answer = row.querySelector('[data-type="answer"]').value.trim();
 
-    updated.push({en, ko, answer});
+    updated.push({en, enKo, ko, answer});
   });
 
   if (updated.some(item => !item.en || !item.ko || !item.answer)) {
-    alert("모든 대화에 영어 문장, 한글 뜻, 정답 영어 문장을 입력해 주세요.");
+    alert("모든 대화에 영어 문장, 아이가 볼 한글 뜻, 정답 영어 문장을 입력해 주세요.");
     return;
   }
 
@@ -1149,6 +1157,7 @@ addDialogueBtn.addEventListener("click", function() {
 
   dialogues.push({
     en: "What do you like?",
+    enKo: "너는 무엇을 좋아하니?",
     ko: "나는 음악을 좋아해.",
     answer: "I like music."
   });
@@ -1163,7 +1172,6 @@ addDialogueBtn.addEventListener("click", function() {
 
 micBtn.disabled = true;
 replayBtn.disabled = true;
-showAnswerBtn.disabled = true;
 nextBtn.disabled = true;
 
 </script>
