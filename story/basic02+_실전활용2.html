@@ -380,8 +380,6 @@ button:disabled {
 
   <section class="panel">
     <div class="settings">
-
-```
   <div class="field">
     <label for="dialogueCount">연습할 대화 개수</label>
     <input id="dialogueCount" type="number" min="1" max="50" value="12">
@@ -399,18 +397,18 @@ button:disabled {
     연습 시작
   </button>
 
+  <button id="switchRoleBtn" type="button">
+    🔄 역할 바꾸기: 기본 모드
+  </button>
+
   <button id="editToggleBtn" type="button">
     대화 내용 수정
   </button>
 
 </div>
-```
-
   </section>
 
   <section class="panel chat-panel">
-
-```
 <div class="progress" id="progress">
   연습 시작 버튼을 눌러 주세요.
 </div>
@@ -483,15 +481,11 @@ button:disabled {
   음성 인식 결과를 정답과 비교합니다.
   기기나 브라우저에 따라 음성 인식이 지원되지 않을 수 있습니다.
 </div>
-```
-
   </section>
 
   <!-- 대화 내용 편집 -->
 
   <section class="panel hidden" id="editorPanel">
-
-```
 <h2 class="edit-title">✏️ 대화 내용 편집</h2>
 
 <p class="edit-help">
@@ -522,8 +516,6 @@ button:disabled {
   페이지를 새로 열면 기본 예시로 돌아가므로,
   수정한 내용은 별도로 보관해 주세요.
 </div>
-```
-
   </section>
 
 </div>
@@ -552,33 +544,33 @@ const defaultDialogues = [
   },
   {
     en: "look! there are cats!",
-    enKo: "봐! 저기에 고양이가 있어.",
-    ko: "고양이가 공원에서 자고 있네",
+    enKo: "봐! 저기에 고양이들이 있어!",
+    ko: "고양이가 공원에서 자고 있네.",
     answer: "The cat sleeps in the park."
   },
   {
     en: "Yes. she likes sleeping.",
-    enKo: "맞아. 그녀는 잠자는걸 좋아해.",
-    ko: "고양이가 하루종일 자네.",
+    enKo: "맞아. 그녀는 잠자는 걸 좋아해.",
+    ko: "고양이가 하루 종일 자네.",
     answer: "The cat sleeps all day long."
   },
   {
     en: "where are other cats?",
-    enKo: "다른 고양이들은 어디있지?",
-    ko: "그들은 지금 집으로 가고 있어",
-    answer: "they go home now."
+    enKo: "다른 고양이들은 어디 있지?",
+    ko: "그들은 지금 집으로 가고 있어.",
+    answer: "They go home now."
   },
   {
     en: "watch out!",
     enKo: "조심해!",
-    ko: "the mommy cat saves her babies.",
-    answer: "엄마 고양이가 그녀의 아기들을 구해."
+    ko: "엄마 고양이가 아기들을 구해.",
+    answer: "The mommy cat saves her babies."
   },
   {
     en: "look! so funny!",
-    enKo: "봐! 너무 재밌다!",
+    enKo: "봐! 정말 웃기다!",
     ko: "고양이들이 차례대로 점프하네!",
-    answer: "the cats jump one by one!"
+    answer: "The cats jump one by one!"
   },
   {
     en: "Where are you?",
@@ -587,9 +579,9 @@ const defaultDialogues = [
     answer: "I am here."
   },
   {
-    en: "여기 큰 나무들이 있다.",
-    enKo: "Here are big tress.",
-    ko: "여기는 큰 돌들이 있어.",
+    en: "Here are big trees.",
+    enKo: "여기 큰 나무들이 있다.",
+    ko: "여기 큰 돌들이 있어.",
     answer: "Here are big rocks."
   },
   {
@@ -600,20 +592,20 @@ const defaultDialogues = [
   },
   {
     en: "where is he going?",
-    enKo: "그가 어디가니?",
+    enKo: "그는 어디로 가고 있어?",
     ko: "그가 우물로 가!",
-    answer: "he goes to the well!"
+    answer: "He goes to the well!"
   },
   {
     en: "what's wrong?",
-    enKo: "왜그래?",
+    enKo: "왜 그래?",
     ko: "나 목이 말라.",
     answer: "I am thirsty."
   },
   {
     en: "what do you want?",
     enKo: "뭘 원해?",
-    ko: "나 지금 물 마시고 싶어.",
+    ko: "나 지금 물을 마시고 싶어.",
     answer: "I want to drink some water now."
   }
 ];
@@ -625,6 +617,7 @@ let isRecording = false;
 let recognition = null;
 let speechRunId = 0;
 let waitingForAnswer = false;
+let reverseRole = false;
 
 /* ==================================
    2. 화면 요소
@@ -634,6 +627,7 @@ const countInput = document.getElementById("dialogueCount");
 const voiceSelect = document.getElementById("voiceType");
 
 const startBtn = document.getElementById("startBtn");
+const switchRoleBtn = document.getElementById("switchRoleBtn");
 const micBtn = document.getElementById("micBtn");
 const replayBtn = document.getElementById("replayBtn");
 const nextBtn = document.getElementById("nextBtn");
@@ -704,7 +698,41 @@ function stopSpeech() {
 }
 
 /* ==================================
-   4. 현재 대화 표시
+   4. 역할 전환
+================================== */
+
+function getCurrentTurn(item) {
+  if (reverseRole) {
+    return {
+      aiEnglish: item.answer,
+      aiKorean: item.ko,
+      childKorean: item.enKo,
+      childAnswer: item.en
+    };
+  }
+
+  return {
+    aiEnglish: item.en,
+    aiKorean: item.enKo,
+    childKorean: item.ko,
+    childAnswer: item.answer
+  };
+}
+
+switchRoleBtn.addEventListener("click", function() {
+  reverseRole = !reverseRole;
+  switchRoleBtn.textContent = reverseRole
+    ? "🔄 역할 바꾸기: 반대 모드"
+    : "🔄 역할 바꾸기: 기본 모드";
+
+  if (activeDialogues.length > 0) {
+    currentIndex = 0;
+    renderCurrentDialogue();
+  }
+});
+
+/* ==================================
+   5. 현재 대화 표시
 ================================== */
 
 function renderCurrentDialogue() {
@@ -715,10 +743,11 @@ function renderCurrentDialogue() {
   stopSpeech();
   stopRecording();
 
-  englishBubble.textContent = item.en;
-  englishKoreanTranslation.textContent = item.enKo || "";
-  koreanBubble.textContent = item.ko;
-  answerText.textContent = item.answer;
+  const turn = getCurrentTurn(item);
+  englishBubble.textContent = turn.aiEnglish;
+  englishKoreanTranslation.textContent = turn.aiKorean || "";
+  koreanBubble.textContent = turn.childKorean || "";
+  answerText.textContent = turn.childAnswer;
 
   koreanRow.classList.add("hidden");
   waitHint.classList.remove("hidden");
@@ -740,7 +769,7 @@ function renderCurrentDialogue() {
   waitingForAnswer = false;
 
   // 영어가 한 번 끝까지 재생되면 한글 말풍선을 표시
-  speakEnglish(item.en, function() {
+  speakEnglish(turn.aiEnglish, function() {
     showKoreanPrompt();
   });
 }
@@ -775,11 +804,11 @@ startBtn.addEventListener("click", function() {
   }
 
   const validDialogues = dialogues.filter(item =>
-    item.en.trim() && item.ko.trim() && item.answer.trim()
+    item.en.trim() && item.enKo.trim() && item.ko.trim() && item.answer.trim()
   );
 
   if (validDialogues.length === 0) {
-    alert("영어 문장, 아이가 볼 한글 뜻, 정답 영어 문장을 입력해 주세요.");
+    alert("상대방 영어 문장, 한글 해석, 아이가 볼 한글 뜻, 정답 영어 문장을 입력해 주세요.");
     return;
   }
 
@@ -939,8 +968,9 @@ function checkAnswer(spokenText) {
   if (!activeDialogues.length) return;
 
   const item = activeDialogues[currentIndex];
+  const turn = getCurrentTurn(item);
   const spoken = normalize(spokenText);
-  const answer = normalize(item.answer);
+  const answer = normalize(turn.childAnswer);
 
   if (!spoken) return;
 
@@ -980,7 +1010,8 @@ replayBtn.addEventListener("click", function() {
 
   micCaption.textContent = "영어를 다시 듣고 있어요.";
 
-  speakEnglish(item.en, function() {
+  const turn = getCurrentTurn(item);
+  speakEnglish(turn.aiEnglish, function() {
     showKoreanPrompt();
   });
 });
@@ -988,7 +1019,8 @@ replayBtn.addEventListener("click", function() {
 answerAudioBtn.addEventListener("click", function() {
   if (!activeDialogues.length) return;
 
-  speakEnglish(activeDialogues[currentIndex].answer);
+  const turn = getCurrentTurn(activeDialogues[currentIndex]);
+  speakEnglish(turn.childAnswer);
 });
 
 /* ==================================
@@ -1007,6 +1039,8 @@ nextBtn.addEventListener("click", function() {
 
     progress.textContent = "연습 완료!";
     englishBubble.textContent = "Great job!";
+    englishKoreanTranslation.textContent = "정말 잘했어요!";
+    answerText.textContent = "Great job!";
     koreanBubble.textContent = "정말 잘했어요!";
 
     koreanRow.classList.remove("hidden");
@@ -1135,8 +1169,8 @@ saveEditBtn.addEventListener("click", function() {
     updated.push({en, enKo, ko, answer});
   });
 
-  if (updated.some(item => !item.en || !item.ko || !item.answer)) {
-    alert("모든 대화에 영어 문장, 아이가 볼 한글 뜻, 정답 영어 문장을 입력해 주세요.");
+  if (updated.some(item => !item.en || !item.enKo || !item.ko || !item.answer)) {
+    alert("모든 대화에 상대방 영어 문장, 한글 해석, 아이가 볼 한글 뜻, 정답 영어 문장을 입력해 주세요.");
     return;
   }
 
