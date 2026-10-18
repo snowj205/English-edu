@@ -152,6 +152,8 @@ p {
   font-size: 20px;
   font-weight: bold;
   text-decoration: none;
+  text-align: center;
+  overflow-wrap: anywhere;
   cursor: pointer;
   transition: .2s;
   box-shadow: 0 4px 12px #24304408;
@@ -202,6 +204,7 @@ p {
 
   .lesson-button {
     min-height: 60px;
+    padding: 8px 3px;
     font-size: 16px;
   }
 }
@@ -229,7 +232,7 @@ p {
 
     <main class="menu">
 
-      <!-- 첫 번째 메뉴 -->
+      <!-- 초등영단어800 -->
       <a class="card"
          href="#vocabulary"
          onclick="openVocaMenu(); return false;">
@@ -240,7 +243,7 @@ p {
 
       </a>
 
-      <!-- 두 번째 메뉴 -->
+      <!-- 영어표현익힘 -->
       <a class="card"
          href="#"
          onclick="alert('영어표현익힘은 준비 중입니다.'); return false;">
@@ -251,7 +254,7 @@ p {
 
       </a>
 
-      <!-- 세 번째 메뉴 -->
+      <!-- 스토리영어 -->
       <a class="card"
          href="#story"
          onclick="openStoryMenu(); return false;">
@@ -309,6 +312,7 @@ p {
 
 
 <script>
+
 /* ==========================================
    초등영단어800
    A1부터 Z4까지 104개 버튼 생성
@@ -320,6 +324,7 @@ const lessonGrid = document.getElementById("lessonGrid");
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 letters.split("").forEach(letter => {
+
   for (let number = 1; number <= 4; number++) {
 
     const lessonName = letter + number;
@@ -329,50 +334,77 @@ letters.split("").forEach(letter => {
     link.className = "lesson-button";
     link.textContent = lessonName;
 
-    // 예: ./voca/A1.html
+    // 기존 파일 연결 유지
     link.href = "./voca/" + lessonName + ".html";
 
     lessonGrid.appendChild(link);
   }
+
 });
 
 
 /* ==========================================
    스토리영어
-   basic01부터 basic08+까지 16개 버튼 생성
+   버튼 이름을 각각 직접 지정
    파일 위치: story 폴더
+
+   이름 변경 방법:
+   name 안의 글자만 원하는 이름으로 수정하세요.
+   url은 실제 파일 이름이므로 그대로 두세요.
    ========================================== */
 
 const storyGrid = document.getElementById("storyGrid");
 
-const storyLinks = [];
+const storyLinks = [
 
-for (let number = 1; number <= 8; number++) {
+  // 1~2번
+  { name: "첫 번째 버튼 이름", url: "./story/basic01.html" },
+  { name: "두 번째 버튼 이름", url: "./story/basic01+.html" },
 
-  const basicNumber = String(number).padStart(2, "0");
+  // 3~4번
+  { name: "세 번째 버튼 이름", url: "./story/basic02.html" },
+  { name: "네 번째 버튼 이름", url: "./story/basic02+.html" },
 
-  // basic01, basic02, ... basic08
-  storyLinks.push({
-    name: "basic" + basicNumber,
-    url: "./story/basic" + basicNumber + ".html"
-  });
+  // 5~6번
+  { name: "다섯 번째 버튼 이름", url: "./story/basic02_실전활용.html" },
+  { name: "여섯 번째 버튼 이름", url: "./story/basic03+.html" },
 
-  // basic01+, basic02+, ... basic08+
-  storyLinks.push({
-    name: "basic" + basicNumber + "+",
-    url: "./story/basic" + basicNumber + "+.html"
-  });
-}
+  // 7~8번
+  { name: "일곱 번째 버튼 이름", url: "./story/basic04.html" },
+  { name: "여덟 번째 버튼 이름", url: "./story/basic04+.html" },
+
+  // 9~10번
+  { name: "아홉 번째 버튼 이름", url: "./story/basic05.html" },
+  { name: "열 번째 버튼 이름", url: "./story/basic05+.html" },
+
+  // 11~12번
+  { name: "열한 번째 버튼 이름", url: "./story/basic06.html" },
+  { name: "열두 번째 버튼 이름", url: "./story/basic06+.html" },
+
+  // 13~14번
+  { name: "열세 번째 버튼 이름", url: "./story/basic07.html" },
+  { name: "열네 번째 버튼 이름", url: "./story/basic07+.html" },
+
+  // 15~16번
+  { name: "열다섯 번째 버튼 이름", url: "./story/basic08.html" },
+  { name: "열여섯 번째 버튼 이름", url: "./story/basic08+.html" }
+
+];
 
 storyLinks.forEach(item => {
 
   const link = document.createElement("a");
 
   link.className = "lesson-button";
+
+  // 화면에 표시할 이름
   link.textContent = item.name;
+
+  // 기존 HTML 파일로 이동
   link.href = item.url;
 
   storyGrid.appendChild(link);
+
 });
 
 
@@ -411,6 +443,7 @@ function backToHome() {
 
   window.scrollTo(0, 0);
 }
+
 </script>
 
 </body>
