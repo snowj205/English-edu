@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -109,12 +108,14 @@ p {
 }
 
 /* 학습 메뉴 화면 */
+
 #vocaSection,
 #storySection {
   display: none;
 }
 
 /* 메인 화면으로 돌아가기 */
+
 .back-button {
   display: inline-block;
   margin-bottom: 22px;
@@ -133,6 +134,7 @@ p {
 }
 
 /* 학습 버튼 배치 */
+
 .lesson-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -212,6 +214,7 @@ p {
 </head>
 
 <body>
+
 <div class="wrap">
 
   <header>
@@ -220,6 +223,7 @@ p {
   </header>
 
   <!-- 메인 화면 -->
+
   <section id="homeSection">
 
     <section class="hero">
@@ -233,6 +237,7 @@ p {
     <main class="menu">
 
       <!-- 초등영단어800 -->
+
       <a class="card"
          href="#vocabulary"
          onclick="openVocaMenu(); return false;">
@@ -244,6 +249,7 @@ p {
       </a>
 
       <!-- 영어표현익힘 -->
+
       <a class="card"
          href="#"
          onclick="alert('영어표현익힘은 준비 중입니다.'); return false;">
@@ -255,6 +261,7 @@ p {
       </a>
 
       <!-- 스토리영어 -->
+
       <a class="card"
          href="#story"
          onclick="openStoryMenu(); return false;">
@@ -266,10 +273,12 @@ p {
       </a>
 
     </main>
+
   </section>
 
 
   <!-- 초등영단어800 메뉴 -->
+
   <section id="vocaSection">
 
     <button class="back-button" onclick="backToHome()">
@@ -281,7 +290,7 @@ p {
 
       <h1>초등영단어800</h1>
 
-      <p>알파벳과 번호를 선택해 학습을 시작하세요.</p>
+      <p>학습할 단계를 선택하세요.</p>
     </section>
 
     <div class="lesson-grid" id="lessonGrid"></div>
@@ -290,6 +299,7 @@ p {
 
 
   <!-- 스토리영어 메뉴 -->
+
   <section id="storySection">
 
     <button class="back-button" onclick="backToHome()">
@@ -313,45 +323,214 @@ p {
 
 <script>
 
-/* ==========================================
-   초등영단어800
-   A1부터 Z4까지 104개 버튼 생성
-   파일 위치: voca 폴더
-   ========================================== */
+/* ==================================================
+   초등영단어800 버튼 설정
+
+   버튼 이름과 연결 파일을 각각 직접 수정할 수 있습니다.
+
+   name : 화면에 표시할 버튼 이름
+   url  : 버튼을 눌렀을 때 열리는 HTML 파일
+
+   버튼 이름만 바꾸려면 name만 수정하세요.
+   연결 파일을 바꾸려면 url을 수정하세요.
+   ================================================== */
+
+const vocaLinks = [
+
+  // A
+  { name: "A1", url: "./voca/A1.html" },
+  { name: "A2", url: "./voca/A2.html" },
+  { name: "A3", url: "./voca/A3.html" },
+  { name: "A4", url: "./voca/A4.html" },
+
+  // B
+  { name: "B1", url: "./voca/B1.html" },
+  { name: "B2", url: "./voca/B2.html" },
+  { name: "B3", url: "./voca/B3.html" },
+  { name: "B4", url: "./voca/B4.html" },
+
+  // C
+  { name: "C1", url: "./voca/C1.html" },
+  { name: "C2", url: "./voca/C2.html" },
+  { name: "C3", url: "./voca/C3.html" },
+  { name: "C4", url: "./voca/C4.html" },
+
+  // D
+  { name: "D1", url: "./voca/D1.html" },
+  { name: "D2", url: "./voca/D2.html" },
+  { name: "D3", url: "./voca/D3.html" },
+  { name: "D4", url: "./voca/D4.html" },
+
+  // E
+  { name: "E1", url: "./voca/E1.html" },
+  { name: "E2", url: "./voca/E2.html" },
+  { name: "E3", url: "./voca/E3.html" },
+  { name: "E4", url: "./voca/E4.html" },
+
+  // F
+  { name: "F1", url: "./voca/F1.html" },
+  { name: "F2", url: "./voca/F2.html" },
+  { name: "F3", url: "./voca/F3.html" },
+  { name: "F4", url: "./voca/F4.html" },
+
+  // G
+  { name: "G1", url: "./voca/G1.html" },
+  { name: "G2", url: "./voca/G2.html" },
+  { name: "G3", url: "./voca/G3.html" },
+  { name: "G4", url: "./voca/G4.html" },
+
+  // H
+  { name: "H1", url: "./voca/H1.html" },
+  { name: "H2", url: "./voca/H2.html" },
+  { name: "H3", url: "./voca/H3.html" },
+  { name: "H4", url: "./voca/H4.html" },
+
+  // I
+  { name: "I1", url: "./voca/I1.html" },
+  { name: "I2", url: "./voca/I2.html" },
+  { name: "I3", url: "./voca/I3.html" },
+  { name: "I4", url: "./voca/I4.html" },
+
+  // J
+  { name: "J1", url: "./voca/J1.html" },
+  { name: "J2", url: "./voca/J2.html" },
+  { name: "J3", url: "./voca/J3.html" },
+  { name: "J4", url: "./voca/J4.html" },
+
+  // K
+  { name: "K1", url: "./voca/K1.html" },
+  { name: "K2", url: "./voca/K2.html" },
+  { name: "K3", url: "./voca/K3.html" },
+  { name: "K4", url: "./voca/K4.html" },
+
+  // L
+  { name: "L1", url: "./voca/L1.html" },
+  { name: "L2", url: "./voca/L2.html" },
+  { name: "L3", url: "./voca/L3.html" },
+  { name: "L4", url: "./voca/L4.html" },
+
+  // M
+  { name: "M1", url: "./voca/M1.html" },
+  { name: "M2", url: "./voca/M2.html" },
+  { name: "M3", url: "./voca/M3.html" },
+  { name: "M4", url: "./voca/M4.html" },
+
+  // N
+  { name: "N1", url: "./voca/N1.html" },
+  { name: "N2", url: "./voca/N2.html" },
+  { name: "N3", url: "./voca/N3.html" },
+  { name: "N4", url: "./voca/N4.html" },
+
+  // O
+  { name: "O1", url: "./voca/O1.html" },
+  { name: "O2", url: "./voca/O2.html" },
+  { name: "O3", url: "./voca/O3.html" },
+  { name: "O4", url: "./voca/O4.html" },
+
+  // P
+  { name: "P1", url: "./voca/P1.html" },
+  { name: "P2", url: "./voca/P2.html" },
+  { name: "P3", url: "./voca/P3.html" },
+  { name: "P4", url: "./voca/P4.html" },
+
+  // Q
+  { name: "Q1", url: "./voca/Q1.html" },
+  { name: "Q2", url: "./voca/Q2.html" },
+  { name: "Q3", url: "./voca/Q3.html" },
+  { name: "Q4", url: "./voca/Q4.html" },
+
+  // R
+  { name: "R1", url: "./voca/R1.html" },
+  { name: "R2", url: "./voca/R2.html" },
+  { name: "R3", url: "./voca/R3.html" },
+  { name: "R4", url: "./voca/R4.html" },
+
+  // S
+  { name: "S1", url: "./voca/S1.html" },
+  { name: "S2", url: "./voca/S2.html" },
+  { name: "S3", url: "./voca/S3.html" },
+  { name: "S4", url: "./voca/S4.html" },
+  { name: "S5", url: "./voca/S5.html" },
+  { name: "S6", url: "./voca/S6.html" },
+  { name: "S7", url: "./voca/S7.html" },
+  { name: "S8", url: "./voca/S8.html" },
+  { name: "S9", url: "./voca/S9.html" },
+  { name: "S10", url: "./voca/S10.html" },
+  { name: "S11", url: "./voca/S11.html" },
+  { name: "S12", url: "./voca/S12.html" },
+
+  // T
+  { name: "T1", url: "./voca/T1.html" },
+  { name: "T2", url: "./voca/T2.html" },
+  { name: "T3", url: "./voca/T3.html" },
+  { name: "T4", url: "./voca/T4.html" },
+
+  // U
+  { name: "U1", url: "./voca/U1.html" },
+  { name: "U2", url: "./voca/U2.html" },
+  { name: "U3", url: "./voca/U3.html" },
+  { name: "U4", url: "./voca/U4.html" },
+
+  // V
+  { name: "V1", url: "./voca/V1.html" },
+  { name: "V2", url: "./voca/V2.html" },
+  { name: "V3", url: "./voca/V3.html" },
+  { name: "V4", url: "./voca/V4.html" },
+
+  // W
+  { name: "W1", url: "./voca/W1.html" },
+  { name: "W2", url: "./voca/W2.html" },
+  { name: "W3", url: "./voca/W3.html" },
+  { name: "W4", url: "./voca/W4.html" },
+
+  // X
+  { name: "X1", url: "./voca/X1.html" },
+  { name: "X2", url: "./voca/X2.html" },
+  { name: "X3", url: "./voca/X3.html" },
+  { name: "X4", url: "./voca/X4.html" },
+
+  // Y
+  { name: "Y1", url: "./voca/Y1.html" },
+  { name: "Y2", url: "./voca/Y2.html" },
+  { name: "Y3", url: "./voca/Y3.html" },
+  { name: "Y4", url: "./voca/Y4.html" },
+
+  // Z
+  { name: "Z1", url: "./voca/Z1.html" },
+  { name: "Z2", url: "./voca/Z2.html" },
+  { name: "Z3", url: "./voca/Z3.html" },
+  { name: "Z4", url: "./voca/Z4.html" }
+
+];
+
+
+/* 초등영단어800 버튼 만들기 */
 
 const lessonGrid = document.getElementById("lessonGrid");
 
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+vocaLinks.forEach(item => {
 
-letters.split("").forEach(letter => {
+  const link = document.createElement("a");
 
-  for (let number = 1; number <= 4; number++) {
+  link.className = "lesson-button";
 
-    const lessonName = letter + number;
+  // 화면에 표시할 버튼 이름
+  link.textContent = item.name;
 
-    const link = document.createElement("a");
+  // 버튼을 눌렀을 때 열릴 HTML 파일
+  link.href = item.url;
 
-    link.className = "lesson-button";
-    link.textContent = lessonName;
-
-    // 기존 파일 연결 유지
-    link.href = "./voca/" + lessonName + ".html";
-
-    lessonGrid.appendChild(link);
-  }
+  lessonGrid.appendChild(link);
 
 });
 
 
-/* ==========================================
-   스토리영어
-   버튼 이름을 각각 직접 지정
-   파일 위치: story 폴더
+/* ==================================================
+   스토리영어 버튼 설정
 
-   이름 변경 방법:
-   name 안의 글자만 원하는 이름으로 수정하세요.
-   url은 실제 파일 이름이므로 그대로 두세요.
-   ========================================== */
+   name : 화면에 표시할 버튼 이름
+   url  : 연결할 HTML 파일
+   ================================================== */
 
 const storyGrid = document.getElementById("storyGrid");
 
@@ -391,16 +570,19 @@ const storyLinks = [
 
 ];
 
+
+/* 스토리영어 버튼 만들기 */
+
 storyLinks.forEach(item => {
 
   const link = document.createElement("a");
 
   link.className = "lesson-button";
 
-  // 화면에 표시할 이름
+  // 화면에 표시할 버튼 이름
   link.textContent = item.name;
 
-  // 기존 HTML 파일로 이동
+  // 연결할 HTML 파일
   link.href = item.url;
 
   storyGrid.appendChild(link);
@@ -408,11 +590,12 @@ storyLinks.forEach(item => {
 });
 
 
-/* ==========================================
+/* ==================================================
    화면 전환
-   ========================================== */
+   ================================================== */
 
 // 초등영단어800 메뉴 열기
+
 function openVocaMenu() {
 
   document.getElementById("homeSection").style.display = "none";
@@ -424,6 +607,7 @@ function openVocaMenu() {
 
 
 // 스토리영어 메뉴 열기
+
 function openStoryMenu() {
 
   document.getElementById("homeSection").style.display = "none";
@@ -435,6 +619,7 @@ function openStoryMenu() {
 
 
 // 메인 화면으로 돌아가기
+
 function backToHome() {
 
   document.getElementById("vocaSection").style.display = "none";
@@ -448,4 +633,3 @@ function backToHome() {
 
 </body>
 </html>
-```
