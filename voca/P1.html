@@ -485,7 +485,7 @@ const questions = [
   { type: "meaning", korean: "평화를 사랑하다", answer: "love peace" },
   { type: "meaning", korean: "이 배들은 정말 달다.", answer: "These pear are very sweet." },
   { type: "meaning", korean: "만년필", answer: "a fountain pen" },
-  { type: "sentence", english: "May I use your pen?", korean: "펜을 써도 되겠습니까?", answer: "May I use your pen?" }
+  { type: "sentence", english: "May I use your pen?", korean: "펜을 써도 되겠습니까?", answer: "May I use your pen?" },
   { type: "meaning", korean: "연필로 쓰다", answer: "write with a pencil" },
   { type: "meaning", korean: "많은 사람들", answer: "many people" }
 ];
@@ -864,6 +864,13 @@ function checkAnswer(spoken) {
     playFeedbackAudio("perfect");
 
   } else if (safeScore >= 65) {
+
+    // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
+    if (q.type === "meaning") {
+        promptEl.textContent = q.answer;
+        meaningEl.textContent = q.korean;
+    }
+
     showMascot("goodjob");
 
     feedbackEl.className = "feedback good"; 
