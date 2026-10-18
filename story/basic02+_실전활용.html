@@ -1,11 +1,10 @@
-```html
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>영어 말풍선 대화 연습</title>
+<title>영어 대화 말하기 연습</title>
 
 <style>
 * {
@@ -14,803 +13,1160 @@
 
 body {
   margin: 0;
-  padding: 20px;
-  background: #f5f7fb;
-  color: #243044;
+  padding: 16px;
   font-family: Arial, "Malgun Gothic", sans-serif;
+  background: #f5f7fb;
+  color: #263238;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 .container {
-  max-width: 900px;
-  margin: auto;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
+  text-align: center;
+  font-size: 30px;
+  margin: 10px 0;
 }
 
-.description {
-  color: #788397;
-  line-height: 1.7;
+.subtitle {
+  text-align: center;
+  color: #687782;
   margin-bottom: 24px;
 }
 
 .panel {
   background: white;
-  border: 1px solid #e0e7f2;
   border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
 }
 
-h2 {
-  font-size: 20px;
-  margin-top: 0;
+.settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: end;
 }
 
-label {
+.field {
+  flex: 1;
+  min-width: 150px;
+}
+
+.field label {
   display: block;
-  font-size: 14px;
   font-weight: bold;
   margin-bottom: 7px;
 }
 
-input,
-textarea,
-select {
+input, select, textarea {
   width: 100%;
   padding: 11px;
-  border: 1px solid #dce4f2;
-  border-radius: 9px;
-  font-family: inherit;
-  font-size: 16px;
-  color: #243044;
+  border: 1px solid #cbd5df;
+  border-radius: 10px;
   background: white;
-}
-
-textarea {
-  min-height: 65px;
-  resize: vertical;
-}
-
-.settings {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 18px;
 }
 
 button {
-  border: 1px solid #dce4f2;
-  border-radius: 10px;
-  padding: 12px 16px;
-  background: white;
-  color: #243044;
-  font-size: 15px;
+  border: none;
+  border-radius: 11px;
+  padding: 12px 18px;
   font-weight: bold;
-  cursor: pointer;
+  background: #e9eef5;
+  color: #263238;
 }
 
-button:hover {
-  background: #edf3ff;
-  border-color: #5279d8;
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .primary {
-  background: #5279d8;
-  color: white;
-  border-color: #5279d8;
-}
-
-.primary:hover {
-  background: #3e65c2;
+  background: #3978ed;
   color: white;
 }
 
-.button-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
+.success {
+  background: #e1f5e8;
+  color: #187345;
 }
 
-.button-row button {
-  flex: 1;
-  min-width: 120px;
+.warning {
+  background: #fff0d6;
+  color: #8a5700;
 }
 
-.editor {
-  border-top: 1px solid #e8edf4;
-  padding-top: 18px;
-  margin-top: 18px;
+.danger {
+  background: #ffebee;
+  color: #b42332;
 }
 
-.editor-title {
+.chat-panel {
+  min-height: 390px;
+  padding: 22px;
+}
+
+.progress {
+  text-align: center;
+  color: #667788;
   font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.editor-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.field {
-  min-width: 0;
-}
-
-.help {
-  font-size: 13px;
-  line-height: 1.6;
-  color: #788397;
-  margin-top: 10px;
-}
-
-#chatArea {
-  background: #f5f7fb;
-  border-radius: 15px;
-  border: 1px solid #e0e7f2;
-  padding: 16px;
-  min-height: 180px;
+  margin-bottom: 22px;
 }
 
 .chat-row {
   display: flex;
-  margin: 14px 0;
-}
-
-.chat-row.left {
-  justify-content: flex-start;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 24px;
 }
 
 .chat-row.right {
   justify-content: flex-end;
 }
 
-.bubble-wrap {
-  max-width: 85%;
-  min-width: 0;
+.avatar {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e8edff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
 }
 
-.speaker {
-  color: #788397;
-  font-size: 12px;
-  margin: 0 7px 5px;
+.right .avatar {
+  background: #fff0d9;
+}
+
+.bubble-wrap {
+  max-width: 78%;
+}
+
+.speaker-name {
+  color: #6b7785;
+  font-size: 13px;
+  margin-bottom: 6px;
 }
 
 .bubble {
-  padding: 13px 16px;
+  padding: 17px 19px;
   border-radius: 17px;
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 22px;
+  line-height: 1.55;
   overflow-wrap: anywhere;
-  white-space: pre-wrap;
 }
 
 .left .bubble {
-  background: white;
-  border: 1px solid #dce4f2;
-  border-bottom-left-radius: 4px;
+  background: #eaf0ff;
+  border-top-left-radius: 4px;
 }
 
 .right .bubble {
-  background: #dce8ff;
-  border-bottom-right-radius: 4px;
+  background: #fff0d9;
+  border-top-right-radius: 4px;
 }
 
-.current .bubble {
-  outline: 2px solid #5279d8;
-  outline-offset: 2px;
+.hidden {
+  display: none !important;
 }
 
-.progress {
-  color: #5279d8;
+.bubble-hint {
+  font-size: 15px;
+  color: #7b8794;
+  padding: 15px;
+  background: #f3f5f8;
+  border-radius: 12px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.mic-button {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  font-size: 38px;
+  background: #3978ed;
+  color: white;
+  padding: 0;
+  box-shadow: 0 5px 0 #2459bd;
+}
+
+.mic-button.recording {
+  background: #e74758;
+  box-shadow: 0 5px 0 #b52b3a;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.mic-area {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.mic-caption {
+  margin-top: 12px;
+  color: #526171;
   font-weight: bold;
+}
+
+.feedback {
+  min-height: 32px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 20px;
+  overflow-wrap: anywhere;
+}
+
+.recognized {
+  margin-top: 10px;
+  text-align: center;
+  color: #536273;
+  overflow-wrap: anywhere;
+}
+
+.answer-box {
+  margin: 16px auto 0;
+  padding: 15px;
+  background: #e9f7ee;
+  border-radius: 12px;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.answer-box strong {
+  font-size: 21px;
+}
+
+.edit-title {
+  font-size: 20px;
+  margin-top: 0;
+}
+
+.edit-help {
+  color: #6b7785;
+  line-height: 1.6;
   font-size: 14px;
 }
 
-.status {
-  color: #788397;
-  font-size: 14px;
-  line-height: 1.7;
+.dialogue-editor {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
   margin-top: 12px;
 }
 
-@media (max-width: 550px) {
-  body {
-    padding: 12px;
-  }
+.dialogue-number {
+  padding-top: 12px;
+  font-weight: bold;
+  color: #607080;
+  text-align: center;
+}
 
-  .panel {
-    padding: 15px;
+.dialogue-editor textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.editor-labels {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #536273;
+}
+
+.note {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #6b7785;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 9px;
   }
 
   h1 {
     font-size: 24px;
   }
 
-  .settings,
-  .editor-grid {
-    grid-template-columns: 1fr;
+  .panel {
+    padding: 13px;
+  }
+
+  .chat-panel {
+    padding: 14px 10px;
   }
 
   .bubble {
-    font-size: 16px;
+    font-size: 19px;
+    padding: 13px;
   }
 
-  .button-row button {
-    min-width: 100px;
+  .bubble-wrap {
+    max-width: 82%;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 23px;
+  }
+
+  .dialogue-editor,
+  .editor-labels {
+    grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .dialogue-editor textarea {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .mic-button {
+    width: 85px;
+    height: 85px;
   }
 }
 </style>
+
 </head>
 
 <body>
-
 <div class="container">
 
-  <h1>💬 영어 말풍선 대화 연습</h1>
+  <h1>🗣️ 영어 대화 말하기 연습</h1>
+  <div class="subtitle">
+    영어를 듣고, 한글을 보고, 영어로 대답해 보세요!
+  </div>
 
-  <p class="description">
-    영어 문장을 듣고 따라 말하며 대화를 연습해 보세요.
-    영어 문장과 한글 뜻을 직접 입력할 수 있습니다.
-  </p>
-
-
-  <!-- 대화 설정 -->
   <section class="panel">
-
-    <h2>① 대화 설정</h2>
-
     <div class="settings">
 
-      <div>
-        <label for="chatCount">대화 개수</label>
-        <input
-          type="number"
-          id="chatCount"
-          min="1"
-          max="50"
-          value="12">
-      </div>
+```
+  <div class="field">
+    <label for="dialogueCount">연습할 대화 개수</label>
+    <input id="dialogueCount" type="number" min="1" max="50" value="12">
+  </div>
 
-      <div>
-        <label for="voiceType">영어 발음</label>
-        <select id="voiceType">
-          <option value="en-US">미국식 영어</option>
-          <option value="en-GB">영국식 영어</option>
-        </select>
-      </div>
+  <div class="field">
+    <label for="voiceType">영어 발음</label>
+    <select id="voiceType">
+      <option value="en-US">미국식 영어</option>
+      <option value="en-GB">영국식 영어</option>
+    </select>
+  </div>
 
-    </div>
+  <button class="primary" id="startBtn" type="button">
+    연습 시작
+  </button>
 
-    <div class="button-row">
+  <button id="editToggleBtn" type="button">
+    대화 내용 수정
+  </button>
 
-      <button type="button" id="createInputs" class="primary">
-        입력칸 만들기
-      </button>
-
-      <button type="button" id="loadExample">
-        예시 대화 불러오기
-      </button>
-
-    </div>
-
-    <p class="help">
-      대화 개수를 정한 뒤 입력칸 만들기를 누르세요.
-      예시 대화를 불러오면 연습용 문장 12개가 입력됩니다.
-    </p>
-
-    <div id="editors"></div>
-
-    <div class="button-row">
-
-      <button type="button" id="startPractice" class="primary">
-        대화 연습 시작
-      </button>
-
-    </div>
+</div>
+```
 
   </section>
 
+  <section class="panel chat-panel">
 
-  <!-- 대화 연습 -->
-  <section class="panel">
+```
+<div class="progress" id="progress">
+  연습 시작 버튼을 눌러 주세요.
+</div>
 
-    <div style="display:flex;justify-content:space-between;
-                align-items:center;gap:10px;margin-bottom:15px;">
+<!-- 왼쪽: 영어를 말하는 사람 -->
+<div class="chat-row left">
+  <div class="avatar">🧑‍🏫</div>
 
-      <h2 style="margin:0;">② 대화 연습</h2>
+  <div class="bubble-wrap">
+    <div class="speaker-name">Teacher · 영어 듣기</div>
+    <div class="bubble" id="englishBubble">
+      Hello! How are you?
+    </div>
+  </div>
+</div>
 
-      <span class="progress" id="progress">
-        준비 전
-      </span>
-
+<!-- 오른쪽: 아이가 보고 영어로 대답할 한글 -->
+<div class="chat-row right hidden" id="koreanRow">
+  <div class="bubble-wrap">
+    <div class="speaker-name" style="text-align:right">
+      My turn · 영어로 대답하기
     </div>
 
-    <div id="chatArea">
-
-      <p class="help">
-        대화문을 입력한 뒤 대화 연습 시작을 눌러 주세요.
-      </p>
-
+    <div class="bubble" id="koreanBubble">
+      나는 잘 지내. 너는 어때?
     </div>
+  </div>
 
-    <p class="status" id="status" aria-live="polite">
-      영어 문장을 듣고 따라 말해 보세요.
-    </p>
+  <div class="avatar">👧</div>
+</div>
 
-    <div class="button-row">
+<div class="bubble-hint" id="waitHint">
+  왼쪽의 영어 음성을 들은 후 한글 말풍선이 나타납니다.
+</div>
 
-      <button type="button" id="replay">
-        🔊 영어 다시 듣기
-      </button>
+<div class="mic-area">
+  <button
+    class="mic-button"
+    id="micBtn"
+    type="button"
+    aria-label="영어로 말하기"
+    disabled
+  >🎤</button>
 
-      <button type="button" id="showMeaning">
-        한글 뜻 보기
-      </button>
+  <div class="mic-caption" id="micCaption">
+    연습을 시작해 주세요.
+  </div>
+</div>
 
-    </div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="recognized" id="recognized"></div>
 
-    <div class="button-row">
+<div class="answer-box hidden" id="answerBox">
+  <div>정답 영어 문장</div>
+  <strong id="answerText"></strong>
+  <div style="margin-top:10px">
+    <button id="answerAudioBtn" type="button">🔊 정답 듣기</button>
+  </div>
+</div>
 
-      <button type="button" id="repeat">
-        ▶ 따라 말하기
-      </button>
+<div class="controls">
+  <button id="replayBtn" type="button" disabled>
+    🔊 영어 다시 듣기
+  </button>
 
-      <button type="button" id="next" class="primary">
-        다음 대화 →
-      </button>
+  <button id="showAnswerBtn" type="button" disabled>
+    정답 확인
+  </button>
 
-    </div>
+  <button class="primary" id="nextBtn" type="button" disabled>
+    다음 대화 →
+  </button>
+</div>
+
+<div class="note">
+  마이크 버튼을 누르고 영어로 말하세요.
+  음성 인식 결과를 정답과 비교합니다.
+  기기나 브라우저에 따라 음성 인식이 지원되지 않을 수 있습니다.
+</div>
+```
+
+  </section>
+
+  <!-- 대화 내용 편집 -->
+
+  <section class="panel hidden" id="editorPanel">
+
+```
+<h2 class="edit-title">✏️ 대화 내용 편집</h2>
+
+<p class="edit-help">
+  왼쪽 칸에는 상대방이 말할 영어 문장,
+  오른쪽 칸에는 아이가 영어로 바꿔 말할 한글 뜻을 입력하세요.
+  아래의 저장 버튼을 누르면 연습 화면에 적용됩니다.
+</p>
+
+<div class="editor-labels">
+  <div>번호</div>
+  <div>영어 문장</div>
+  <div>한글 뜻</div>
+</div>
+
+<div id="dialogueEditor"></div>
+
+<div class="controls">
+  <button class="primary" id="saveEditBtn" type="button">
+    대화 저장 및 적용
+  </button>
+
+  <button id="addDialogueBtn" type="button">
+    + 대화 추가
+  </button>
+</div>
+
+<div class="note">
+  대화 내용은 이 페이지를 사용하는 동안 편집 화면에 유지됩니다.
+  페이지를 새로 열면 기본 예시로 돌아가므로,
+  수정한 내용은 별도로 보관해 주세요.
+</div>
+```
 
   </section>
 
 </div>
 
-
 <script>
-/* =========================================
-   영어 말풍선 대화 연습
-   ========================================= */
+"use strict";
 
-const chatCount = document.getElementById("chatCount");
-const voiceType = document.getElementById("voiceType");
-const editors = document.getElementById("editors");
-const chatArea = document.getElementById("chatArea");
-const progress = document.getElementById("progress");
-const statusText = document.getElementById("status");
+/* ==================================
+   1. 기본 대화
+   영어: 상대방이 먼저 말하는 문장
+   한글: 아이가 영어로 대답할 내용
+================================== */
 
-let dialogues = [];
-let currentIndex = 0;
-let meaningVisible = false;
-let availableVoices = [];
-
-
-/* =========================================
-   예시 대화
-   ========================================= */
-
-const exampleDialogues = [
-
-  ["Hello! How are you?", "안녕! 어떻게 지내?"],
-
-  ["I am fine, thank you.", "잘 지내, 고마워."],
-
-  ["What do you want to do today?", "오늘 뭐 하고 싶어?"],
-
-  ["I want to play outside.", "밖에서 놀고 싶어."],
-
-  ["That sounds fun!", "재미있겠다!"],
-
-  ["Can you play with me?", "나랑 같이 놀 수 있어?"],
-
-  ["Of course!", "물론이지!"],
-
-  ["Let's play catch.", "캐치볼 하자."],
-
-  ["Great idea!", "좋은 생각이야!"],
-
-  ["Are you ready?", "준비됐어?"],
-
-  ["Yes, let's go!", "응, 가자!"],
-
-  ["We are going to have fun!", "우리 정말 재미있게 놀 거야!"]
-
+const defaultDialogues = [
+  {
+    en: "Hello! How are you?",
+    ko: "나는 잘 지내. 너는 어때?",
+    answer: "I'm fine. How are you?"
+  },
+  {
+    en: "What is your name?",
+    ko: "내 이름은 민지야.",
+    answer: "My name is Minji."
+  },
+  {
+    en: "How old are you?",
+    ko: "나는 아홉 살이야.",
+    answer: "I'm nine years old."
+  },
+  {
+    en: "What do you like?",
+    ko: "나는 고양이를 좋아해.",
+    answer: "I like cats."
+  },
+  {
+    en: "What do you want to eat?",
+    ko: "나는 피자를 먹고 싶어.",
+    answer: "I want to eat pizza."
+  },
+  {
+    en: "Do you like apples?",
+    ko: "응, 나는 사과를 좋아해.",
+    answer: "Yes, I like apples."
+  },
+  {
+    en: "Where are you going?",
+    ko: "나는 학교에 가고 있어.",
+    answer: "I'm going to school."
+  },
+  {
+    en: "What are you doing?",
+    ko: "나는 책을 읽고 있어.",
+    answer: "I'm reading a book."
+  },
+  {
+    en: "Can you swim?",
+    ko: "응, 나는 수영할 수 있어.",
+    answer: "Yes, I can swim."
+  },
+  {
+    en: "What is the weather like?",
+    ko: "오늘은 날씨가 맑아.",
+    answer: "It's sunny today."
+  },
+  {
+    en: "What did you do today?",
+    ko: "나는 오늘 공원에 갔어.",
+    answer: "I went to the park today."
+  },
+  {
+    en: "See you tomorrow!",
+    ko: "내일 만나!",
+    answer: "See you tomorrow!"
+  }
 ];
 
+let dialogues = defaultDialogues.map(item => ({...item}));
+let activeDialogues = [];
+let currentIndex = 0;
+let isRecording = false;
+let recognition = null;
+let speechRunId = 0;
+let waitingForAnswer = false;
 
-/* =========================================
-   영어 음성 준비
-   ========================================= */
+/* ==================================
+   2. 화면 요소
+================================== */
 
-function loadVoices() {
+const countInput = document.getElementById("dialogueCount");
+const voiceSelect = document.getElementById("voiceType");
 
-  if ("speechSynthesis" in window) {
+const startBtn = document.getElementById("startBtn");
+const micBtn = document.getElementById("micBtn");
+const replayBtn = document.getElementById("replayBtn");
+const showAnswerBtn = document.getElementById("showAnswerBtn");
+const nextBtn = document.getElementById("nextBtn");
 
-    availableVoices = window.speechSynthesis.getVoices();
+const englishBubble = document.getElementById("englishBubble");
+const koreanBubble = document.getElementById("koreanBubble");
+const koreanRow = document.getElementById("koreanRow");
+const waitHint = document.getElementById("waitHint");
 
-  }
+const progress = document.getElementById("progress");
+const micCaption = document.getElementById("micCaption");
+const feedback = document.getElementById("feedback");
+const recognized = document.getElementById("recognized");
 
-}
+const answerBox = document.getElementById("answerBox");
+const answerText = document.getElementById("answerText");
+const answerAudioBtn = document.getElementById("answerAudioBtn");
 
-if ("speechSynthesis" in window) {
+const editToggleBtn = document.getElementById("editToggleBtn");
+const editorPanel = document.getElementById("editorPanel");
+const dialogueEditor = document.getElementById("dialogueEditor");
+const saveEditBtn = document.getElementById("saveEditBtn");
+const addDialogueBtn = document.getElementById("addDialogueBtn");
 
-  loadVoices();
+/* ==================================
+   3. 음성 재생
+================================== */
 
-  window.speechSynthesis.addEventListener(
-    "voiceschanged",
-    loadVoices
-  );
-
-}
-
-
-/* =========================================
-   영어 음성 재생
-   ========================================= */
-
-function speakEnglish(text) {
-
-  if (!text) return;
+function speakEnglish(text, onFinished) {
+  speechRunId++;
+  const thisRun = speechRunId;
 
   if (!("speechSynthesis" in window)) {
-
-    statusText.textContent =
-      "이 브라우저에서는 영어 음성 재생을 지원하지 않습니다.";
-
+    feedback.textContent = "이 브라우저에서는 영어 음성 재생을 지원하지 않습니다.";
+    feedback.className = "feedback";
+    if (onFinished) onFinished();
     return;
-
   }
 
   window.speechSynthesis.cancel();
 
-  const speech = new SpeechSynthesisUtterance(text);
-
-  speech.lang = voiceType.value;
-  speech.rate = 0.82;
-  speech.pitch = 1;
-
-  const prefix = voiceType.value.toLowerCase();
-
-  const matchingVoice = availableVoices.find(voice =>
-    voice.lang.toLowerCase() === prefix
-  ) || availableVoices.find(voice =>
-    voice.lang.toLowerCase().startsWith(prefix)
-  );
-
-  if (matchingVoice) {
-
-    speech.voice = matchingVoice;
-
-  }
-
-  window.speechSynthesis.speak(speech);
-
-}
-
-
-/* =========================================
-   입력칸 생성
-   ========================================= */
-
-function createInputs(useExamples = false) {
-
-  let count = Number(chatCount.value);
-
-  if (!Number.isFinite(count)) {
-    count = 12;
-  }
-
-  count = Math.max(1, Math.min(50, Math.floor(count)));
-
-  chatCount.value = count;
-
-  editors.replaceChildren();
-
-  for (let i = 0; i < count; i++) {
-
-    const example = useExamples
-      ? exampleDialogues[i] || ["", ""]
-      : ["", ""];
-
-    const editor = document.createElement("div");
-
-    editor.className = "editor";
-
-    const title = document.createElement("div");
-
-    title.className = "editor-title";
-    title.textContent = "대화 " + (i + 1);
-
-    const grid = document.createElement("div");
-
-    grid.className = "editor-grid";
-
-    // 영어 입력
-    const englishField = document.createElement("div");
-
-    englishField.className = "field";
-
-    const englishLabel = document.createElement("label");
-
-    englishLabel.textContent = "영어 문장";
-
-    const englishInput = document.createElement("textarea");
-
-    englishInput.className = "englishInput";
-    englishInput.placeholder = "예: Hello! How are you?";
-    englishInput.value = example[0];
-
-    // 한글 입력
-    const koreanField = document.createElement("div");
-
-    koreanField.className = "field";
-
-    const koreanLabel = document.createElement("label");
-
-    koreanLabel.textContent = "한글 뜻";
-
-    const koreanInput = document.createElement("textarea");
-
-    koreanInput.className = "koreanInput";
-    koreanInput.placeholder = "예: 안녕! 어떻게 지내?";
-    koreanInput.value = example[1];
-
-    englishField.append(englishLabel, englishInput);
-
-    koreanField.append(koreanLabel, koreanInput);
-
-    grid.append(englishField, koreanField);
-
-    editor.append(title, grid);
-
-    editors.appendChild(editor);
-
-  }
-
-}
-
-
-/* =========================================
-   대화 말풍선 표시
-   ========================================= */
-
-function createBubble(text, side, speaker, isCurrent = false) {
-
-  const row = document.createElement("div");
-
-  row.className = "chat-row " + side;
-
-  if (isCurrent) {
-
-    row.classList.add("current");
-
-  }
-
-  const wrap = document.createElement("div");
-
-  wrap.className = "bubble-wrap";
-
-  const speakerLabel = document.createElement("div");
-
-  speakerLabel.className = "speaker";
-  speakerLabel.textContent = speaker;
-
-  const bubble = document.createElement("div");
-
-  bubble.className = "bubble";
-  bubble.textContent = text;
-
-  wrap.append(speakerLabel, bubble);
-
-  row.appendChild(wrap);
-
-  chatArea.appendChild(row);
-
-}
-
-
-function renderChat() {
-
-  chatArea.replaceChildren();
-
-  if (dialogues.length === 0) {
-
-    chatArea.textContent = "먼저 대화문을 입력해 주세요.";
-
-    return;
-
-  }
-
-  // 이전 대화는 그대로 표시
-  for (let i = 0; i <= currentIndex; i++) {
-
-    const item = dialogues[i];
-
-    createBubble(
-      item.english,
-      "left",
-      "A · English",
-      i === currentIndex
-    );
-
-    // 이전 대화의 뜻은 표시
-    // 현재 대화의 뜻은 버튼을 눌러야 표시
-    if (item.korean && (i < currentIndex || meaningVisible)) {
-
-      createBubble(
-        item.korean,
-        "right",
-        "한글 뜻",
-        false
-      );
-
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = voiceSelect.value;
+  utterance.rate = 0.85;
+  utterance.pitch = 1;
+
+  utterance.onend = function() {
+    if (thisRun === speechRunId && onFinished) {
+      onFinished();
     }
+  };
 
+  utterance.onerror = function() {
+    if (thisRun === speechRunId && onFinished) {
+      onFinished();
+    }
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopSpeech() {
+  speechRunId++;
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
   }
+}
+
+/* ==================================
+   4. 현재 대화 표시
+================================== */
+
+function renderCurrentDialogue() {
+  if (!activeDialogues.length) return;
+
+  const item = activeDialogues[currentIndex];
+
+  stopSpeech();
+  stopRecording();
+
+  englishBubble.textContent = item.en;
+  koreanBubble.textContent = item.ko;
+
+  koreanRow.classList.add("hidden");
+  waitHint.classList.remove("hidden");
+
+  feedback.textContent = "";
+  feedback.className = "feedback";
+  recognized.textContent = "";
+
+  answerBox.classList.add("hidden");
 
   progress.textContent =
-    (currentIndex + 1) + " / " + dialogues.length;
+    `대화 ${currentIndex + 1} / ${activeDialogues.length}`;
 
-  document.getElementById("showMeaning").textContent =
-    meaningVisible ? "한글 뜻 숨기기" : "한글 뜻 보기";
+  micBtn.disabled = true;
+  replayBtn.disabled = false;
+  showAnswerBtn.disabled = false;
+  nextBtn.disabled = true;
 
-  document.getElementById("next").textContent =
-    currentIndex === dialogues.length - 1
-      ? "처음부터 다시 ↺"
-      : "다음 대화 →";
+  micCaption.textContent = "먼저 영어를 들어 보세요.";
 
-  chatArea.scrollTop = chatArea.scrollHeight;
+  waitingForAnswer = false;
 
+  // 영어가 한 번 끝까지 재생되면 한글 말풍선을 표시
+  speakEnglish(item.en, function() {
+    showKoreanPrompt();
+  });
 }
 
+/* ==================================
+   5. 한글 말풍선 표시
+================================== */
 
-/* =========================================
-   대화 연습 시작
-   ========================================= */
+function showKoreanPrompt() {
+  koreanRow.classList.remove("hidden");
+  waitHint.classList.add("hidden");
 
-function startPractice() {
+  micBtn.disabled = false;
+  micCaption.textContent = "한글을 보고 영어로 말해 보세요!";
 
-  const rows = Array.from(
-    editors.querySelectorAll(".editor")
+  waitingForAnswer = true;
+}
+
+/* ==================================
+   6. 연습 시작
+================================== */
+
+startBtn.addEventListener("click", function() {
+  const requestedCount = Number.parseInt(countInput.value, 10);
+
+  if (!Number.isFinite(requestedCount) ||
+      requestedCount < 1 ||
+      requestedCount > 50) {
+    alert("대화 개수는 1개부터 50개까지 입력해 주세요.");
+    countInput.value = "12";
+    return;
+  }
+
+  const validDialogues = dialogues.filter(item =>
+    item.en.trim() && item.ko.trim() && item.answer.trim()
   );
 
-  dialogues = rows.map(row => ({
-
-    english: row.querySelector(".englishInput").value.trim(),
-
-    korean: row.querySelector(".koreanInput").value.trim()
-
-  })).filter(item => item.english !== "");
-
-  if (dialogues.length === 0) {
-
-    statusText.textContent =
-      "영어 문장을 한 개 이상 입력해 주세요.";
-
+  if (validDialogues.length === 0) {
+    alert("영어 문장, 한글 뜻, 정답을 입력해 주세요.");
     return;
-
   }
 
+  const count = Math.min(requestedCount, validDialogues.length);
+
+  activeDialogues = validDialogues.slice(0, count);
   currentIndex = 0;
 
-  meaningVisible = false;
+  renderCurrentDialogue();
+});
 
-  renderChat();
+/* ==================================
+   7. 마이크 음성 인식
+================================== */
 
-  statusText.textContent =
-    "첫 번째 영어 문장을 듣고 따라 말해 보세요.";
+function createRecognition() {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  speakEnglish(dialogues[currentIndex].english);
+  if (!SpeechRecognition) {
+    return null;
+  }
 
+  const rec = new SpeechRecognition();
+  rec.lang = "en-US";
+  rec.continuous = false;
+  rec.interimResults = true;
+  rec.maxAlternatives = 5;
+
+  rec.onstart = function() {
+    isRecording = true;
+    micBtn.classList.add("recording");
+    micCaption.textContent = "듣고 있어요. 영어로 말해 보세요!";
+    feedback.textContent = "";
+    recognized.textContent = "";
+  };
+
+  rec.onresult = function(event) {
+    let finalTranscript = "";
+    let interimTranscript = "";
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const result = event.results[i];
+
+      if (result.isFinal) {
+        finalTranscript += result[0].transcript;
+      } else {
+        interimTranscript += result[0].transcript;
+      }
+    }
+
+    const displayed = (finalTranscript + " " + interimTranscript).trim();
+
+    if (displayed) {
+      recognized.textContent = "인식한 영어: " + displayed;
+    }
+
+    if (finalTranscript.trim()) {
+      checkAnswer(finalTranscript.trim());
+    }
+  };
+
+  rec.onerror = function(event) {
+    isRecording = false;
+    micBtn.classList.remove("recording");
+    micBtn.disabled = false;
+    micCaption.textContent = "마이크를 눌러 다시 말해 보세요.";
+
+    if (event.error === "not-allowed" ||
+        event.error === "service-not-allowed") {
+      feedback.textContent =
+        "마이크 권한을 허용해 주세요. 브라우저 설정도 확인해 보세요.";
+    } else if (event.error === "no-speech") {
+      feedback.textContent =
+        "음성이 들리지 않았어요. 마이크를 누르고 다시 말해 보세요.";
+    } else if (event.error === "network") {
+      feedback.textContent =
+        "음성 인식 연결에 문제가 있어요. 인터넷 연결을 확인해 주세요.";
+    } else if (event.error !== "aborted") {
+      feedback.textContent =
+        "음성을 인식하지 못했어요. 다시 시도해 보세요.";
+    }
+  };
+
+  rec.onend = function() {
+    isRecording = false;
+    micBtn.classList.remove("recording");
+
+    if (waitingForAnswer && !nextBtn.disabled) {
+      return;
+    }
+
+    if (waitingForAnswer && micCaption.textContent.includes("듣고 있어요")) {
+      micCaption.textContent = "마이크를 눌러 다시 말해 보세요.";
+      micBtn.disabled = false;
+    }
+  };
+
+  return rec;
 }
 
-
-/* =========================================
-   버튼 이벤트
-   ========================================= */
-
-document.getElementById("createInputs").addEventListener(
-  "click",
-  () => createInputs(false)
-);
-
-
-document.getElementById("loadExample").addEventListener(
-  "click",
-  () => createInputs(true)
-);
-
-
-document.getElementById("startPractice").addEventListener(
-  "click",
-  startPractice
-);
-
-
-document.getElementById("replay").addEventListener(
-  "click",
-  () => {
-
-    if (dialogues[currentIndex]) {
-
-      speakEnglish(dialogues[currentIndex].english);
-
+function stopRecording() {
+  if (recognition && isRecording) {
+    try {
+      recognition.stop();
+    } catch (e) {
+      // 이미 종료된 경우
     }
-
   }
-);
 
+  isRecording = false;
+  micBtn.classList.remove("recording");
+}
 
-document.getElementById("showMeaning").addEventListener(
-  "click",
-  () => {
+micBtn.addEventListener("click", function() {
+  if (!waitingForAnswer || !activeDialogues.length) return;
 
-    if (!dialogues.length) return;
-
-    meaningVisible = !meaningVisible;
-
-    renderChat();
-
+  if (isRecording) {
+    stopRecording();
+    return;
   }
-);
 
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-document.getElementById("repeat").addEventListener(
-  "click",
-  () => {
-
-    if (!dialogues[currentIndex]) return;
-
-    statusText.textContent =
-      "영어 음성을 듣고 같은 문장을 따라 말해 보세요.";
-
-    speakEnglish(dialogues[currentIndex].english);
-
+  if (!SpeechRecognition) {
+    feedback.textContent =
+      "이 브라우저는 음성 인식을 지원하지 않습니다. 최신 Chrome에서 열어 보세요.";
+    return;
   }
-);
 
-
-document.getElementById("next").addEventListener(
-  "click",
-  () => {
-
-    if (!dialogues.length) return;
-
-    if (currentIndex < dialogues.length - 1) {
-
-      currentIndex++;
-
-    } else {
-
-      currentIndex = 0;
-
-    }
-
-    meaningVisible = false;
-
-    renderChat();
-
-    statusText.textContent =
-      "영어 문장을 듣고 따라 말해 보세요.";
-
-    speakEnglish(dialogues[currentIndex].english);
-
+  try {
+    recognition = createRecognition();
+    micBtn.disabled = true;
+    recognition.start();
+  } catch (error) {
+    micBtn.disabled = false;
+    feedback.textContent =
+      "마이크를 시작하지 못했어요. 잠시 후 다시 눌러 주세요.";
   }
-);
+});
 
+/* ==================================
+   8. 정답 비교
+================================== */
 
-/* =========================================
-   처음 실행
-   ========================================= */
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[’‘]/g, "'")
+    .replace(/[^a-z0-9'\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
-createInputs(true);
+function checkAnswer(spokenText) {
+  if (!activeDialogues.length) return;
+
+  const item = activeDialogues[currentIndex];
+  const spoken = normalize(spokenText);
+  const answer = normalize(item.answer);
+
+  if (!spoken) return;
+
+  // 정답 문장과 비교. 구두점과 대소문자는 무시합니다.
+  if (spoken === answer) {
+    feedback.textContent = "🎉 Perfect! 아주 잘했어요!";
+    feedback.className = "feedback success";
+    micCaption.textContent = "정답이에요! 다음 대화로 넘어가세요.";
+
+    nextBtn.disabled = false;
+    micBtn.disabled = true;
+    waitingForAnswer = false;
+  } else {
+    feedback.textContent = "🔄 조금 달라요. 한 번 더 말해 보세요!";
+    feedback.className = "feedback warning";
+    micCaption.textContent = "다시 말하려면 마이크를 눌러 주세요.";
+
+    micBtn.disabled = false;
+  }
+}
+
+/* ==================================
+   9. 영어 다시 듣기
+================================== */
+
+replayBtn.addEventListener("click", function() {
+  if (!activeDialogues.length) return;
+
+  const item = activeDialogues[currentIndex];
+
+  koreanRow.classList.add("hidden");
+  waitHint.classList.remove("hidden");
+
+  micBtn.disabled = true;
+  nextBtn.disabled = true;
+  feedback.textContent = "";
+  answerBox.classList.add("hidden");
+
+  micCaption.textContent = "영어를 다시 듣고 있어요.";
+
+  speakEnglish(item.en, function() {
+    showKoreanPrompt();
+  });
+});
+
+/* ==================================
+   10. 정답 확인
+================================== */
+
+showAnswerBtn.addEventListener("click", function() {
+  if (!activeDialogues.length) return;
+
+  const item = activeDialogues[currentIndex];
+
+  answerText.textContent = item.answer;
+  answerBox.classList.remove("hidden");
+});
+
+answerAudioBtn.addEventListener("click", function() {
+  if (!activeDialogues.length) return;
+
+  speakEnglish(activeDialogues[currentIndex].answer);
+});
+
+/* ==================================
+   11. 다음 대화
+================================== */
+
+nextBtn.addEventListener("click", function() {
+  if (!activeDialogues.length) return;
+
+  if (currentIndex < activeDialogues.length - 1) {
+    currentIndex++;
+    renderCurrentDialogue();
+  } else {
+    stopSpeech();
+    stopRecording();
+
+    progress.textContent = "연습 완료!";
+    englishBubble.textContent = "Great job!";
+    koreanBubble.textContent = "정말 잘했어요!";
+
+    koreanRow.classList.remove("hidden");
+    waitHint.classList.add("hidden");
+
+    feedback.textContent = "🎉 모든 대화를 마쳤어요!";
+    feedback.className = "feedback success";
+
+    micBtn.disabled = true;
+    replayBtn.disabled = true;
+    showAnswerBtn.disabled = true;
+    nextBtn.disabled = true;
+
+    micCaption.textContent = "다시 연습하려면 연습 시작을 눌러 주세요.";
+    waitingForAnswer = false;
+  }
+});
+
+/* ==================================
+   12. 대화 편집기
+================================== */
+
+function renderEditor() {
+  dialogueEditor.innerHTML = "";
+
+  dialogues.forEach((item, index) => {
+    const number = document.createElement("div");
+    number.className = "dialogue-number";
+    number.textContent = index + 1;
+
+    const enArea = document.createElement("textarea");
+    enArea.value = item.en;
+    enArea.setAttribute("aria-label", `${index + 1}번 영어 문장`);
+
+    const koArea = document.createElement("textarea");
+    koArea.value = item.ko;
+    koArea.setAttribute("aria-label", `${index + 1}번 한글 뜻`);
+
+    const answerArea = document.createElement("textarea");
+    answerArea.value = item.answer;
+    answerArea.placeholder = "정답 영어 문장";
+    answerArea.setAttribute("aria-label", `${index + 1}번 정답 영어 문장`);
+
+    enArea.dataset.index = index;
+    enArea.dataset.type = "en";
+
+    koArea.dataset.index = index;
+    koArea.dataset.type = "ko";
+
+    answerArea.dataset.index = index;
+    answerArea.dataset.type = "answer";
+
+    // 각 대화의 정답도 함께 수정할 수 있도록 세 번째 칸을 추가
+    const row = document.createElement("div");
+    row.className = "dialogue-editor";
+    row.style.gridTemplateColumns = "35px minmax(0,1fr)";
+
+    const fields = document.createElement("div");
+    fields.style.display = "grid";
+    fields.style.gridTemplateColumns = "repeat(3,minmax(0,1fr))";
+    fields.style.gap = "8px";
+
+    fields.appendChild(enArea);
+    fields.appendChild(koArea);
+    fields.appendChild(answerArea);
+
+    row.appendChild(number);
+    row.appendChild(fields);
+
+    // 편집기 안의 각 칸을 반응형으로 배치
+    fields.style.gridTemplateColumns = "repeat(3,minmax(0,1fr))";
+
+    dialogueEditor.appendChild(row);
+  });
+
+  // 편집기 안내 라벨 업데이트
+  const labels = editorPanel.querySelector(".editor-labels");
+  labels.style.gridTemplateColumns = "35px minmax(0,1fr)";
+  labels.innerHTML = `
+    <div>번호</div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+      <div>영어 음성 문장</div>
+      <div>아이에게 보여 줄 한글</div>
+      <div>정답 영어 문장</div>
+    </div>
+  `;
+
+  // 모바일에서도 입력 칸이 보이도록 설정
+  dialogueEditor.querySelectorAll(".dialogue-editor > div:last-child")
+    .forEach(fields => {
+      fields.style.gridTemplateColumns =
+        window.innerWidth <= 600
+          ? "1fr"
+          : "repeat(3,minmax(0,1fr))";
+    });
+}
+
+editToggleBtn.addEventListener("click", function() {
+  editorPanel.classList.toggle("hidden");
+
+  if (!editorPanel.classList.contains("hidden")) {
+    renderEditor();
+    editorPanel.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+});
+
+saveEditBtn.addEventListener("click", function() {
+  const rows = dialogueEditor.querySelectorAll(".dialogue-editor");
+  const updated = [];
+
+  rows.forEach(row => {
+    const en = row.querySelector('[data-type="en"]').value.trim();
+    const ko = row.querySelector('[data-type="ko"]').value.trim();
+    const answer = row.querySelector('[data-type="answer"]').value.trim();
+
+    updated.push({en, ko, answer});
+  });
+
+  if (updated.some(item => !item.en || !item.ko || !item.answer)) {
+    alert("모든 대화에 영어 문장, 한글 뜻, 정답 영어 문장을 입력해 주세요.");
+    return;
+  }
+
+  if (updated.length > 50) {
+    alert("대화는 최대 50개까지 사용할 수 있어요.");
+    return;
+  }
+
+  dialogues = updated;
+  countInput.value = Math.min(
+    Number.parseInt(countInput.value, 10) || 12,
+    dialogues.length
+  );
+
+  alert("대화 내용이 적용되었어요. 연습 시작 버튼을 눌러 주세요.");
+  editorPanel.classList.add("hidden");
+});
+
+addDialogueBtn.addEventListener("click", function() {
+  if (dialogues.length >= 50) {
+    alert("대화는 최대 50개까지 추가할 수 있어요.");
+    return;
+  }
+
+  dialogues.push({
+    en: "What do you like?",
+    ko: "나는 음악을 좋아해.",
+    answer: "I like music."
+  });
+
+  countInput.value = dialogues.length;
+  renderEditor();
+});
+
+/* ==================================
+   13. 초기 화면
+================================== */
+
+micBtn.disabled = true;
+replayBtn.disabled = true;
+showAnswerBtn.disabled = true;
+nextBtn.disabled = true;
 
 </script>
 
 </body>
 </html>
-```
