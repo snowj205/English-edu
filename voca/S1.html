@@ -865,11 +865,16 @@ function checkAnswer(spoken) {
   } else if (safeScore >= 65) {
     showMascot("goodjob");
 
-    feedbackEl.className = "feedback good"; 
-    
-    // 한글 뜻 대신 영어 정답 문장 표시 
+    // 65점 이상이면 영어 정답과 한글 뜻 표시
+    if (q.type === "meaning" || q.type === "sentence") {
+        promptEl.textContent = q.answer;
+        meaningEl.textContent = q.korean;
+    }
+
+    feedbackEl.className = "feedback good";
+
     statusEl.textContent = `정답: ${q.answer}`;
-    
+
     playFeedbackAudio("goodjob");
 
   } else {
