@@ -1154,6 +1154,7 @@ answerText.textContent = reverseRole
   }
 });
 
+```javascript
 /* ==================================
    11. 영어 다시 듣기
 ================================== */
@@ -1163,8 +1164,37 @@ replayBtn.addEventListener("click", function() {
 
   const item = activeDialogues[currentIndex];
 
+  stopSpeech();
   stopRecording();
 
+  feedback.textContent = "";
+  recognized.textContent = "";
+
+  if (reverseRole) {
+    // 역할 바꾸기에서는 아이가 먼저 말합니다.
+    englishBubble.textContent = "";
+    englishKoreanTranslation.textContent = "";
+
+    showKoreanPrompt();
+
+    if (answerRevealed) {
+      answerText.textContent = item.en;
+      answerText.classList.remove("hidden");
+      showAnswerBtn.disabled = true;
+      showAnswerBtn.textContent = "정답 확인 완료";
+      nextBtn.disabled = false;
+    } else {
+      answerText.classList.add("hidden");
+      showAnswerBtn.disabled = false;
+      showAnswerBtn.textContent = "정답 확인";
+      nextBtn.disabled = true;
+    }
+
+    micCaption.textContent = "";
+    return;
+  }
+
+  // 기본 역할에서는 상대방 영어를 다시 재생합니다.
   koreanRow.classList.add("hidden");
   waitHint.classList.remove("hidden");
 
@@ -1172,32 +1202,22 @@ replayBtn.addEventListener("click", function() {
   showAnswerBtn.disabled = true;
   nextBtn.disabled = true;
 
-  feedback.textContent = "";
-  recognized.textContent = "";
-
   micCaption.textContent = "영어를 다시 듣고 있어요.";
 
-  if (reverseRole) {
-  // 역할 바꾸기에서는 아이가 먼저 말하므로
-  // 영어 다시 듣기 버튼으로 아이의 정답을 들을 수 있음
-  const childAnswer = item.en;
-  speakEnglish(childAnswer);
-  showKoreanPrompt();
-} else {
-  const partnerEnglish = item.en;
-
-  speakEnglish(partnerEnglish, function() {
+  speakEnglish(item.en, function() {
     showKoreanPrompt();
 
-    // 이미 정답을 공개했다면 그대로 유지
     if (answerRevealed) {
+      answerText.textContent = item.answer;
       answerText.classList.remove("hidden");
       showAnswerBtn.disabled = true;
       showAnswerBtn.textContent = "정답 확인 완료";
       nextBtn.disabled = false;
-    });
-}
+    }
+  });
 });
+```
+
 
 answerAudioBtn.addEventListener("click", function() {
   if (!activeDialogues.length) return;
