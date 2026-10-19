@@ -801,9 +801,16 @@ const partnerKorean = reverseRole ? item.ko : item.enKo;
 const childKorean = reverseRole ? item.enKo : item.ko;
 const childAnswer = reverseRole ? item.en : item.answer;
 
-// 상대방의 영어 문장과 한글 해석
-englishBubble.textContent = partnerEnglish;
-englishKoreanTranslation.textContent = partnerKorean || "";
+// 기본 역할과 반대 역할에 따라 왼쪽 말풍선 설정
+if (reverseRole) {
+  // 역할 바꾸기: 왼쪽 영어 말풍선은 숨기고 아이가 먼저 말함
+  englishBubble.textContent = "";
+  englishKoreanTranslation.textContent = "";
+} else {
+  // 기본 역할: 상대방의 영어 문장과 한글 해석 표시
+  englishBubble.textContent = partnerEnglish;
+  englishKoreanTranslation.textContent = partnerKorean || "";
+}
 
 // 아이가 보고 말할 한글 문장
 koreanBubble.textContent = childKorean;
@@ -840,8 +847,10 @@ answerText.textContent = childAnswer;
   // 기본 역할에서는 상대방이 먼저 말합니다.
 // 역할 바꾸기에서는 아이가 한글을 보고 먼저 말합니다.
 if (reverseRole) {
+  // 역할 바꾸기: 아이가 먼저 말하도록 한글 문장 표시
   showKoreanPrompt();
 } else {
+  // 기본 역할: 상대방이 영어로 먼저 말함
   speakEnglish(partnerEnglish, function() {
     showKoreanPrompt();
   });
@@ -1168,10 +1177,17 @@ replayBtn.addEventListener("click", function() {
 
   micCaption.textContent = "영어를 다시 듣고 있어요.";
 
-  const partnerEnglish = reverseRole ? item.answer : item.en;
-
-speakEnglish(partnerEnglish, function() {
+  if (reverseRole) {
+  // 역할 바꾸기에서는 아이가 먼저 말하므로
+  // 영어 다시 듣기 버튼으로 아이의 정답을 들을 수 있음
+  const childAnswer = item.en;
+  speakEnglish(childAnswer);
   showKoreanPrompt();
+} else {
+  const partnerEnglish = item.en;
+
+  speakEnglish(partnerEnglish, function() {
+    showKoreanPrompt();
 
     // 이미 정답을 공개했다면 그대로 유지
     if (answerRevealed) {
@@ -1179,8 +1195,8 @@ speakEnglish(partnerEnglish, function() {
       showAnswerBtn.disabled = true;
       showAnswerBtn.textContent = "정답 확인 완료";
       nextBtn.disabled = false;
-    }
-  });
+    });
+}
 });
 
 answerAudioBtn.addEventListener("click", function() {
