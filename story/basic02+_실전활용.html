@@ -808,7 +808,7 @@ englishKoreanTranslation.textContent = partnerKorean || "";
 // 아이가 보고 말할 한글 문장
 koreanBubble.textContent = childKorean;
 
-// 정답은 처음에 숨기기
+// 아이가 말해야 할 영어 정답
 answerText.textContent = childAnswer;
   answerText.classList.add("hidden");
   answerRevealed = false;
@@ -837,10 +837,15 @@ answerText.textContent = childAnswer;
 
   waitingForAnswer = false;
 
-  // 상대방 영어가 끝나면 아이의 한글 문장을 표시합니다.
-  speakEnglish(partnerEnglish, function() {
+  // 기본 역할에서는 상대방이 먼저 말합니다.
+// 역할 바꾸기에서는 아이가 한글을 보고 먼저 말합니다.
+if (reverseRole) {
   showKoreanPrompt();
-});
+} else {
+  speakEnglish(partnerEnglish, function() {
+    showKoreanPrompt();
+  });
+}
 }
 
 /* ==================================
