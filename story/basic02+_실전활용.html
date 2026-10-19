@@ -173,7 +173,16 @@ const saveEditBtn=$("saveEditBtn"), addDialogueBtn=$("addDialogueBtn");
   const chatShowAnswerBtn = $("chatShowAnswerBtn");
 
 chatShowAnswerBtn.addEventListener("click", () => {
-showAnswerBtn.click();
+if (!activeDialogues.length || completed) return;
+
+const item = activeDialogues[currentIndex];
+
+// 영어 정답을 공개하지 않고 한글 힌트만 표시
+feedback.textContent = "💡 힌트: " + item.ko;
+feedback.className = "feedback warning";
+
+// 정답 확인 버튼을 눌러도 다음 대화로 넘어가지 않음
+nextBtn.disabled = true;
 });
 
 
@@ -399,8 +408,7 @@ showAnswerBtn.addEventListener("click",()=>{
   // 정답을 확인해도 다시 말할 수 있게 유지
   showAnswerBtn.disabled=true;
   showAnswerBtn.textContent="정답 확인 완료";
-  chatShowAnswerBtn.disabled = true;
-chatShowAnswerBtn.textContent = "정답 확인 완료";
+  
   completed=false;
   waitingForAnswer=true;
   micBtn.disabled=false;
