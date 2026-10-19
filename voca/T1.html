@@ -140,13 +140,21 @@ body {
   color: #c13b4a;
 }
 
-/* 정답 캐릭터 */
+/* 정답 캐릭터: 문제 위에 겹쳐서 크게 표시 */
 .mascot-wrap {
   display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 4px;
+
+  width: 100%;
+  pointer-events: none;
 }
 
 .mascot-wrap.show {
@@ -154,8 +162,8 @@ body {
 }
 
 .mascot {
-  width: clamp(90px, 13vw, 125px);
-  height: clamp(90px, 13vw, 125px);
+  width: clamp(220px, 32vw, 380px);
+  height: clamp(220px, 32vw, 380px);
   object-fit: contain;
 }
 
