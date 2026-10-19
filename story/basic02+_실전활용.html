@@ -833,7 +833,7 @@ answerText.textContent = childAnswer;
   showAnswerBtn.disabled = true;
   nextBtn.disabled = true;
 
-  micCaption.textContent = "먼저 영어를 들어 보세요.";
+  micCaption.textContent = "";
 
   waitingForAnswer = false;
 
@@ -854,7 +854,7 @@ function showKoreanPrompt() {
   micBtn.disabled = false;
   showAnswerBtn.disabled = false;
 
-  micCaption.textContent = "한글을 보고 영어로 말해 보세요!";
+  micCaption.textContent = "";
 
   waitingForAnswer = true;
 }
