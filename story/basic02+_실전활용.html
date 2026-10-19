@@ -82,7 +82,11 @@ input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-ra
     <div class="bubble-wrap">
       <div class="answer-line hidden" id="answerText"></div>
       <div class="bubble" id="koreanBubble">나는 잘 지내. 너는 어때?</div>
-      <div style="text-align:right;margin-top:10px"><button id="answerAudioBtn" type="button">🔊 정답 영어 듣기</button></div>
+      <div style="text-align:right;margin-top:10px;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+  <button id="answerAudioBtn" type="button">🔊 정답 영어 듣기</button>
+  <button id="chatShowAnswerBtn" type="button" class="primary">정답 확인</button>
+</div>
+
     </div>
     <div class="avatar">👧</div>
   </div>
@@ -166,6 +170,12 @@ const progress=$("progress"), micCaption=$("micCaption"), feedback=$("feedback")
 const answerText=$("answerText"), answerAudioBtn=$("answerAudioBtn");
 const editToggleBtn=$("editToggleBtn"), editorPanel=$("editorPanel"), dialogueEditor=$("dialogueEditor");
 const saveEditBtn=$("saveEditBtn"), addDialogueBtn=$("addDialogueBtn");
+  const chatShowAnswerBtn = $("chatShowAnswerBtn");
+
+chatShowAnswerBtn.addEventListener("click", () => {
+showAnswerBtn.click();
+});
+
 
 const micDefaultImage="https://snowj205.github.io/effect-file/mike_bk.png";
 const micActiveImage="https://snowj205.github.io/effect-file/mike_pk.png";
@@ -213,6 +223,7 @@ function renderCurrentDialogue(){
   answerAudioBtn.classList.remove("hidden");
   showAnswerBtn.textContent="정답 확인";
   showAnswerBtn.disabled=true;
+  chatShowAnswerBtn.disabled = true;
   nextBtn.disabled=true;
   replayBtn.disabled=false;
   feedback.textContent="";
@@ -251,6 +262,7 @@ function showKoreanPrompt(){
   waitHint.classList.add("hidden");
   micBtn.disabled=false;
   showAnswerBtn.disabled=false;
+  chatShowAnswerBtn.disabled = false;
   micCaption.textContent="";
   waitingForAnswer=true;
 }
@@ -387,6 +399,8 @@ showAnswerBtn.addEventListener("click",()=>{
   // 정답을 확인해도 다시 말할 수 있게 유지
   showAnswerBtn.disabled=true;
   showAnswerBtn.textContent="정답 확인 완료";
+  chatShowAnswerBtn.disabled = true;
+chatShowAnswerBtn.textContent = "정답 확인 완료";
   completed=false;
   waitingForAnswer=true;
   micBtn.disabled=false;
