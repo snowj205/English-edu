@@ -373,30 +373,40 @@ function checkAnswer(spokenText){
   }
 }
 
+```javascript
 showAnswerBtn.addEventListener("click",()=>{
   if(!activeDialogues.length) return;
+
   const item=activeDialogues[currentIndex];
+
+  // 정답을 화면에 표시
   answerText.textContent=reverseRole?item.en:item.answer;
   answerText.classList.remove("hidden");
   answerRevealed=true;
+
   showAnswerBtn.disabled=true;
   showAnswerBtn.textContent="정답 확인 완료";
-  nextBtn.disabled=false;
-  completed=true;
-  waitingForAnswer=false;
-  micBtn.disabled=true;
-  feedback.textContent="모범 답안을 확인했어요. 다음 대화로 넘어갈 수 있어요.";
-  feedback.className="feedback success";
 
-  // 역할 바꾸기에서는 모범 답안을 확인한 경우에도 선생님 대사 표시 및 재생
+  // 정답을 확인해도 음성으로 다시 대답할 수 있도록 설정
+  completed=false;
+  waitingForAnswer=true;
+  micBtn.disabled=false;
+  nextBtn.disabled=true;
+
+  feedback.textContent="모범 답안을 확인했어요. 이제 마이크를 눌러 영어로 말해 보세요!";
+  feedback.className="feedback success";
+  micCaption.textContent="마이크를 눌러 영어로 말해 보세요.";
+
+  // 역할 바꾸기 모드에서는 선생님의 대사도 표시하고 음성 재생
   if(reverseRole){
-    const item=activeDialogues[currentIndex];
     replyTeacherBubble.textContent=item.answer;
     replyTeacherTranslation.textContent=item.ko||"";
     replyTeacherRow.classList.remove("hidden");
     speakEnglish(item.answer);
   }
 });
+```
+
 
 replayBtn.addEventListener("click",()=>{
   if(!activeDialogues.length||completed) return;
