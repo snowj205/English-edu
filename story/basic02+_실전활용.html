@@ -365,6 +365,9 @@ function checkAnswer(spokenText){
       replyTeacherRow.classList.remove("hidden");
       speakEnglish(item.answer);
     }
+
+    // 정답 처리 후 다음 대화 버튼을 확실히 활성화
+    nextBtn.disabled=false;
   }else{
     feedback.textContent="🔄 조금 달라요. 한 번 더 말해 보세요!";
     feedback.className="feedback warning";
@@ -373,31 +376,27 @@ function checkAnswer(spokenText){
   }
 }
 
-```javascript
 showAnswerBtn.addEventListener("click",()=>{
-  if(!activeDialogues.length) return;
-
+  if(!activeDialogues.length || completed) return;
   const item=activeDialogues[currentIndex];
 
-  // 정답을 화면에 표시
-  answerText.textContent=reverseRole?item.en:item.answer;
+  answerText.textContent=reverseRole ? item.en : item.answer;
   answerText.classList.remove("hidden");
   answerRevealed=true;
 
+  // 정답을 확인해도 다시 말할 수 있게 유지
   showAnswerBtn.disabled=true;
   showAnswerBtn.textContent="정답 확인 완료";
-
-  // 정답을 확인해도 음성으로 다시 대답할 수 있도록 설정
   completed=false;
   waitingForAnswer=true;
   micBtn.disabled=false;
   nextBtn.disabled=true;
 
-  feedback.textContent="모범 답안을 확인했어요. 이제 마이크를 눌러 영어로 말해 보세요!";
+  feedback.textContent="모범 답안을 확인했어요. 마이크를 눌러 영어로 말해 보세요!";
   feedback.className="feedback success";
   micCaption.textContent="마이크를 눌러 영어로 말해 보세요.";
 
-  // 역할 바꾸기 모드에서는 선생님의 대사도 표시하고 음성 재생
+  // 역할 바꾸기 모드에서는 선생님 답변을 아이 말풍선 아래에 표시하고 재생
   if(reverseRole){
     replyTeacherBubble.textContent=item.answer;
     replyTeacherTranslation.textContent=item.ko||"";
@@ -405,8 +404,6 @@ showAnswerBtn.addEventListener("click",()=>{
     speakEnglish(item.answer);
   }
 });
-```
-
 
 replayBtn.addEventListener("click",()=>{
   if(!activeDialogues.length||completed) return;
@@ -436,7 +433,8 @@ answerAudioBtn.addEventListener("click",()=>{
 });
 
 nextBtn.addEventListener("click",()=>{
-  if(!activeDialogues.length||nextBtn.disabled) return;
+  if(!activeDialogues.length) return;
+  if(nextBtn.disabled) return;
   stopSpeech();
   stopRecording();
   if(currentIndex<activeDialogues.length-1){
