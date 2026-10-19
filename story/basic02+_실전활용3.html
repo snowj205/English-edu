@@ -433,13 +433,18 @@ button:disabled {
       My turn · 영어로 대답하기
     </div>
 
-    <div class="answer-line" id="answerText">I am fine.</div>
-    <div class="bubble" id="koreanBubble">
-      나는 잘 지내. 너는 어때?
-    </div>
-    <div style="text-align:right; margin-top:10px">
-      <button id="answerAudioBtn" type="button">🔊 정답 영어 듣기</button>
-    </div>
+    <div class="answer-line hidden" id="answerText"></div>
+
+<div class="bubble" id="koreanBubble">
+  나는 잘 지내. 너는 어때?
+</div>
+
+<div style="text-align:right; margin-top:10px">
+  <button id="showAnswerBtn" type="button">정답 확인</button>
+  <button id="answerAudioBtn" class="hidden" type="button">
+    🔊 정답 영어 듣기
+  </button>
+</div>
   </div>
 
   <div class="avatar">👧</div>
@@ -633,7 +638,25 @@ const recognized = document.getElementById("recognized");
 
 const answerText = document.getElementById("answerText");
 const answerAudioBtn = document.getElementById("answerAudioBtn");
+const showAnswerBtn = document.getElementById("showAnswerBtn");
 
+// 정답 확인 버튼을 눌렀을 때만 정답 표시
+showAnswerBtn.addEventListener("click", function() {
+  if (!activeDialogues.length) return;
+
+  const item = activeDialogues[currentIndex];
+  const turn = getCurrentTurn(item);
+
+  answerText.textContent = "";
+  answerText.classList.add("hidden");
+
+  showAnswerBtn.classList.remove("hidden");
+  answerAudioBtn.classList.add("hidden");
+  answerText.classList.remove("hidden");
+
+  showAnswerBtn.classList.add("hidden");
+  answerAudioBtn.classList.remove("hidden");
+});
 const editToggleBtn = document.getElementById("editToggleBtn");
 const editorPanel = document.getElementById("editorPanel");
 const dialogueEditor = document.getElementById("dialogueEditor");
