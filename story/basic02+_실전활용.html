@@ -438,7 +438,7 @@ box-shadow: none;
     </div>
 
     <!-- 상대방의 영어 문장 -->
-    <div class="chat-row left">
+    <div class="chat-row left" id="teacherRow">
       <div class="avatar">🧑‍🏫</div>
 
       <div class="bubble-wrap">
@@ -687,6 +687,7 @@ const nextBtn = document.getElementById("nextBtn");
 const showAnswerBtn = document.getElementById("showAnswerBtn");
 
 const englishBubble = document.getElementById("englishBubble");
+  const teacherRow = document.getElementById("teacherRow");
 const englishKoreanTranslation =
   document.getElementById("englishKoreanTranslation");
 
@@ -803,11 +804,13 @@ const childAnswer = reverseRole ? item.en : item.answer;
 
 // 기본 역할과 반대 역할에 따라 왼쪽 말풍선 설정
 if (reverseRole) {
-  // 역할 바꾸기: 왼쪽 영어 말풍선은 숨기고 아이가 먼저 말함
+  // 역할 바꾸기: 선생님 채팅 줄 전체 숨기기
+  teacherRow.classList.add("hidden");
   englishBubble.textContent = "";
   englishKoreanTranslation.textContent = "";
 } else {
-  // 기본 역할: 상대방의 영어 문장과 한글 해석 표시
+  // 기본 역할: 선생님 채팅 줄 표시
+  teacherRow.classList.remove("hidden");
   englishBubble.textContent = partnerEnglish;
   englishKoreanTranslation.textContent = partnerKorean || "";
 }
@@ -1126,20 +1129,17 @@ const answer = normalize(correctAnswer);
 showAnswerBtn.addEventListener("click", function() {
   if (!activeDialogues.length) return;
 
-  // 버튼을 눌렀을 때만 정답 표시
   const item = activeDialogues[currentIndex];
 
-answerText.textContent = reverseRole
-  ? item.en
-  : item.answer;
-  answerText.classList.remove("hidden");
+  answerText.textContent = reverseRole
+    ? item.en
+    : item.answer;
 
+  answerText.classList.remove("hidden");
   answerRevealed = true;
 
   showAnswerBtn.disabled = true;
   showAnswerBtn.textContent = "정답 확인 완료";
-
-  // 정답 확인 후 다음 대화로 이동 가능
   nextBtn.disabled = false;
 
   feedback.textContent = "모범 답안을 확인해 보세요.";
@@ -1148,13 +1148,10 @@ answerText.textContent = reverseRole
   if (waitingForAnswer) {
     micCaption.textContent =
       "정답을 확인했어요. 필요하면 다시 말해 보세요.";
-
-    // 정답 확인 후에도 마이크 연습을 허용합니다.
-    micBtn.disabled = isRecording;
   }
 });
 
-```javascript
+
 /* ==================================
    11. 영어 다시 듣기
 ================================== */
@@ -1171,10 +1168,8 @@ replayBtn.addEventListener("click", function() {
   recognized.textContent = "";
 
   if (reverseRole) {
-    // 역할 바꾸기에서는 아이가 먼저 말합니다.
-    englishBubble.textContent = "";
-    englishKoreanTranslation.textContent = "";
-
+    // 아이가 먼저 말하는 모드에서는 영어 음성을 재생하지 않음
+    teacherRow.classList.add("hidden");
     showKoreanPrompt();
 
     if (answerRevealed) {
@@ -1194,7 +1189,9 @@ replayBtn.addEventListener("click", function() {
     return;
   }
 
-  // 기본 역할에서는 상대방 영어를 다시 재생합니다.
+  // 기본 모드에서는 선생님의 영어 문장을 다시 재생
+  teacherRow.classList.remove("hidden");
+
   koreanRow.classList.add("hidden");
   waitHint.classList.remove("hidden");
 
@@ -1216,18 +1213,23 @@ replayBtn.addEventListener("click", function() {
     }
   });
 });
-```
 
+
+/* ==================================
+   정답 영어 듣기
+================================== */
 
 answerAudioBtn.addEventListener("click", function() {
   if (!activeDialogues.length) return;
 
   const item = activeDialogues[currentIndex];
-  const correctAnswer = reverseRole ? item.en : item.answer;
 
-  // 정답을 화면에 표시하지 않고 소리로만 들을 수 있습니다.
+  const correctAnswer = reverseRole
+    ? item.en
+    : item.answer;
+
   speakEnglish(correctAnswer);
-});;
+});
 
 /* ==================================
    12. 다음 대화
