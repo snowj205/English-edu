@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -48,7 +49,7 @@ h1 {
   border-radius: 18px;
   padding: 18px;
   margin-bottom: 18px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
 }
 
 .settings {
@@ -216,6 +217,7 @@ button:disabled {
   margin-top: 22px;
 }
 
+/* 마이크 버튼 */
 .mic-button {
   width: 100px;
   height: 100px;
@@ -225,8 +227,21 @@ button:disabled {
   color: white;
   padding: 0;
   box-shadow: 0 5px 0 #2459bd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
+/* 마이크 이미지 */
+.mic-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 녹음 중 */
 .mic-button.recording {
   background: #e74758;
   box-shadow: 0 5px 0 #b52b3a;
@@ -380,15 +395,18 @@ button:disabled {
 <body>
 <div class="container">
 
-
-
   <section class="panel">
     <div class="settings">
 
       <div class="field">
         <label for="dialogueCount">연습할 대화 개수</label>
-        <input id="dialogueCount" type="number"
-               min="1" max="50" value="12">
+        <input
+          id="dialogueCount"
+          type="number"
+          min="1"
+          max="50"
+          value="12"
+        >
       </div>
 
       <div class="field">
@@ -417,7 +435,6 @@ button:disabled {
     </div>
 
     <!-- 상대방의 영어 문장 -->
-
     <div class="chat-row left">
       <div class="avatar">🧑‍🏫</div>
 
@@ -428,12 +445,14 @@ button:disabled {
           Hello! How are you?
         </div>
 
-        <div class="translation" id="englishKoreanTranslation"></div>
+        <div
+          class="translation"
+          id="englishKoreanTranslation"
+        ></div>
       </div>
     </div>
 
     <!-- 아이가 영어로 대답할 차례 -->
-
     <div class="chat-row right hidden" id="koreanRow">
 
       <div class="bubble-wrap">
@@ -441,7 +460,7 @@ button:disabled {
           My turn · 영어로 대답하기
         </div>
 
-        <!-- 정답은 버튼을 누르기 전까지 숨김 -->
+        <!-- 정답은 정답 확인 버튼을 누르기 전까지 숨김 -->
         <div class="answer-line hidden" id="answerText"></div>
 
         <div class="bubble" id="koreanBubble">
@@ -464,13 +483,20 @@ button:disabled {
 
     <div class="mic-area">
 
+      <!-- 기본 이미지와 녹음 중 이미지가 자동으로 전환됩니다. -->
       <button
         class="mic-button"
         id="micBtn"
         type="button"
         aria-label="영어로 말하기"
         disabled
-      >🎤</button>
+      >
+        <img
+          id="micImage"
+          src="https://snowj205.github.io/effect-file/mike_bk.png"
+          alt="마이크"
+        >
+      </button>
 
       <div class="mic-caption" id="micCaption">
         연습을 시작해 주세요.
@@ -506,7 +532,6 @@ button:disabled {
   </section>
 
   <!-- 대화 내용 편집 -->
-
   <section class="panel hidden" id="editorPanel">
 
     <h2 class="edit-title">✏️ 대화 내용 편집</h2>
@@ -519,6 +544,7 @@ button:disabled {
 
     <div class="editor-labels">
       <div>번호</div>
+
       <div class="editor-label-fields">
         <div>상대방 영어 문장</div>
         <div>상대방 말의 한글 해석</div>
@@ -631,7 +657,7 @@ const defaultDialogues = [
   }
 ];
 
-let dialogues = defaultDialogues.map(item => ({...item}));
+let dialogues = defaultDialogues.map(item => ({ ...item }));
 let activeDialogues = [];
 let currentIndex = 0;
 let isRecording = false;
@@ -649,6 +675,7 @@ const voiceSelect = document.getElementById("voiceType");
 
 const startBtn = document.getElementById("startBtn");
 const micBtn = document.getElementById("micBtn");
+const micImage = document.getElementById("micImage");
 const replayBtn = document.getElementById("replayBtn");
 const nextBtn = document.getElementById("nextBtn");
 const showAnswerBtn = document.getElementById("showAnswerBtn");
@@ -676,7 +703,21 @@ const saveEditBtn = document.getElementById("saveEditBtn");
 const addDialogueBtn = document.getElementById("addDialogueBtn");
 
 /* ==================================
-   3. 영어 음성 재생
+   3. 마이크 이미지 설정
+================================== */
+
+const micDefaultImage =
+  "https://snowj205.github.io/effect-file/mike_bk.png";
+
+const micActiveImage =
+  "https://snowj205.github.io/effect-file/mike_pk.png";
+
+function setMicImage(isActive) {
+  micImage.src = isActive ? micActiveImage : micDefaultImage;
+}
+
+/* ==================================
+   4. 영어 음성 재생
 ================================== */
 
 function speakEnglish(text, onFinished) {
@@ -722,7 +763,7 @@ function stopSpeech() {
 }
 
 /* ==================================
-   4. 현재 대화 표시
+   5. 현재 대화 표시
 ================================== */
 
 function renderCurrentDialogue() {
@@ -737,10 +778,13 @@ function renderCurrentDialogue() {
   englishKoreanTranslation.textContent = item.enKo || "";
   koreanBubble.textContent = item.ko;
 
-  // 정답은 처음에 숨김
+  // 정답은 처음에 숨깁니다.
   answerText.textContent = item.answer;
   answerText.classList.add("hidden");
   answerRevealed = false;
+
+  answerAudioBtn.classList.remove("hidden");
+  showAnswerBtn.textContent = "정답 확인";
 
   koreanRow.classList.add("hidden");
   waitHint.classList.remove("hidden");
@@ -753,6 +797,8 @@ function renderCurrentDialogue() {
     `대화 ${currentIndex + 1} / ${activeDialogues.length}`;
 
   micBtn.disabled = true;
+  setMicImage(false);
+
   replayBtn.disabled = false;
   showAnswerBtn.disabled = true;
   nextBtn.disabled = true;
@@ -761,14 +807,14 @@ function renderCurrentDialogue() {
 
   waitingForAnswer = false;
 
-  // 상대방 영어가 끝나면 아이의 한글 문장을 표시
+  // 상대방 영어가 끝나면 아이의 한글 문장을 표시합니다.
   speakEnglish(item.en, function() {
     showKoreanPrompt();
   });
 }
 
 /* ==================================
-   5. 아이가 대답할 화면 표시
+   6. 아이가 대답할 화면 표시
 ================================== */
 
 function showKoreanPrompt() {
@@ -784,7 +830,7 @@ function showKoreanPrompt() {
 }
 
 /* ==================================
-   6. 연습 시작
+   7. 연습 시작
 ================================== */
 
 startBtn.addEventListener("click", function() {
@@ -820,7 +866,7 @@ startBtn.addEventListener("click", function() {
 });
 
 /* ==================================
-   7. 마이크 음성 인식
+   8. 마이크 음성 인식
 ================================== */
 
 function createRecognition() {
@@ -834,7 +880,7 @@ function createRecognition() {
 
   const rec = new SpeechRecognition();
 
-  // 발음 선택 메뉴와 관계없이 음성 인식은 미국식 영어로 설정
+  // 음성 인식은 미국식 영어로 설정합니다.
   rec.lang = "en-US";
   rec.continuous = false;
   rec.interimResults = true;
@@ -843,6 +889,9 @@ function createRecognition() {
   rec.onstart = function() {
     isRecording = true;
     micBtn.classList.add("recording");
+
+    // 녹음 중 이미지로 변경
+    setMicImage(true);
 
     micCaption.textContent = "듣고 있어요. 영어로 말해 보세요!";
     feedback.textContent = "";
@@ -878,6 +927,10 @@ function createRecognition() {
   rec.onerror = function(event) {
     isRecording = false;
     micBtn.classList.remove("recording");
+
+    // 오류가 발생하면 기본 이미지로 복귀
+    setMicImage(false);
+
     micBtn.disabled = false;
 
     micCaption.textContent = "마이크를 눌러 다시 말해 보세요.";
@@ -904,6 +957,9 @@ function createRecognition() {
     isRecording = false;
     micBtn.classList.remove("recording");
 
+    // 녹음이 끝나면 기본 이미지로 복귀
+    setMicImage(false);
+
     if (waitingForAnswer && !nextBtn.disabled) {
       return;
     }
@@ -925,12 +981,15 @@ function stopRecording() {
     try {
       recognition.stop();
     } catch (e) {
-      // 이미 종료된 경우 무시
+      // 이미 종료된 경우 무시합니다.
     }
   }
 
   isRecording = false;
   micBtn.classList.remove("recording");
+
+  // 강제로 녹음을 끝내도 기본 이미지로 복귀
+  setMicImage(false);
 }
 
 micBtn.addEventListener("click", function() {
@@ -959,6 +1018,7 @@ micBtn.addEventListener("click", function() {
 
   } catch (error) {
     micBtn.disabled = false;
+    setMicImage(false);
 
     feedback.textContent =
       "마이크를 시작하지 못했어요. 잠시 후 다시 눌러 주세요.";
@@ -966,7 +1026,7 @@ micBtn.addEventListener("click", function() {
 });
 
 /* ==================================
-   8. 정답 비교
+   9. 정답 비교
 ================================== */
 
 function normalize(text) {
@@ -988,7 +1048,7 @@ function checkAnswer(spokenText) {
 
   if (!spoken) return;
 
-  // 대소문자와 구두점을 무시하고 비교
+  // 대소문자와 구두점을 무시하고 비교합니다.
   if (spoken === answer) {
     feedback.textContent = "🎉 Perfect! 아주 잘했어요!";
     feedback.className = "feedback success";
@@ -1015,7 +1075,7 @@ function checkAnswer(spokenText) {
 }
 
 /* ==================================
-   9. 정답 확인 버튼
+   10. 정답 확인 버튼
 ================================== */
 
 showAnswerBtn.addEventListener("click", function() {
@@ -1040,13 +1100,13 @@ showAnswerBtn.addEventListener("click", function() {
     micCaption.textContent =
       "정답을 확인했어요. 필요하면 다시 말해 보세요.";
 
-    // 정답 확인을 눌렀다고 마이크를 통한 연습을 막지 않음
+    // 정답 확인 후에도 마이크 연습을 허용합니다.
     micBtn.disabled = isRecording;
   }
 });
 
 /* ==================================
-   10. 영어 다시 듣기
+   11. 영어 다시 듣기
 ================================== */
 
 replayBtn.addEventListener("click", function() {
@@ -1084,12 +1144,12 @@ replayBtn.addEventListener("click", function() {
 answerAudioBtn.addEventListener("click", function() {
   if (!activeDialogues.length) return;
 
-  // 정답을 화면에 표시하지 않고 소리로만 들을 수 있음
+  // 정답을 화면에 표시하지 않고 소리로만 들을 수 있습니다.
   speakEnglish(activeDialogues[currentIndex].answer);
 });
 
 /* ==================================
-   11. 다음 대화
+   12. 다음 대화
 ================================== */
 
 nextBtn.addEventListener("click", function() {
@@ -1124,6 +1184,8 @@ nextBtn.addEventListener("click", function() {
     recognized.textContent = "";
 
     micBtn.disabled = true;
+    setMicImage(false);
+
     replayBtn.disabled = true;
     showAnswerBtn.disabled = true;
     nextBtn.disabled = true;
@@ -1139,7 +1201,7 @@ nextBtn.addEventListener("click", function() {
 });
 
 /* ==================================
-   12. 대화 편집기
+   13. 대화 편집기
 ================================== */
 
 function renderEditor() {
@@ -1205,6 +1267,8 @@ function renderEditor() {
 
     dialogueEditor.appendChild(row);
   });
+
+  updateEditorLayout();
 }
 
 editToggleBtn.addEventListener("click", function() {
@@ -1230,7 +1294,7 @@ saveEditBtn.addEventListener("click", function() {
     const ko = row.querySelector('[data-type="ko"]').value.trim();
     const answer = row.querySelector('[data-type="answer"]').value.trim();
 
-    updated.push({en, enKo, ko, answer});
+    updated.push({ en, enKo, ko, answer });
   });
 
   if (updated.some(item => !item.en || !item.ko || !item.answer)) {
@@ -1276,7 +1340,7 @@ addDialogueBtn.addEventListener("click", function() {
 });
 
 /* ==================================
-   13. 반응형 편집기 레이아웃
+   14. 반응형 편집기 레이아웃
 ================================== */
 
 function updateEditorLayout() {
@@ -1286,7 +1350,7 @@ function updateEditorLayout() {
     el.style.display = "grid";
     el.style.gridTemplateColumns = mobile
       ? "1fr"
-      : "repeat(4,minmax(0,1fr))";
+      : "repeat(4, minmax(0, 1fr))";
 
     el.style.gap = "8px";
   });
@@ -1295,7 +1359,7 @@ function updateEditorLayout() {
     el.style.display = "grid";
     el.style.gridTemplateColumns = mobile
       ? "1fr"
-      : "repeat(4,minmax(0,1fr))";
+      : "repeat(4, minmax(0, 1fr))";
 
     el.style.gap = "8px";
   });
@@ -1304,10 +1368,12 @@ function updateEditorLayout() {
 window.addEventListener("resize", updateEditorLayout);
 
 /* ==================================
-   14. 초기 화면
+   15. 초기 화면
 ================================== */
 
 micBtn.disabled = true;
+setMicImage(false);
+
 replayBtn.disabled = true;
 showAnswerBtn.disabled = true;
 nextBtn.disabled = true;
