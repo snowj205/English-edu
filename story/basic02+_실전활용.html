@@ -420,6 +420,9 @@ box-shadow: none;
       <button class="primary" id="startBtn" type="button">
         연습 시작
       </button>
+      <button id="roleToggleBtn" type="button">
+  🔄 역할 바꾸기: 기본
+</button>
 
       <button id="editToggleBtn" type="button">
         대화 내용 수정
@@ -665,6 +668,8 @@ let recognition = null;
 let speechRunId = 0;
 let waitingForAnswer = false;
 let answerRevealed = false;
+  // false: 기본 역할, true: 역할 바꾸기
+let reverseRole = false;
 
 /* ==================================
    2. 화면 요소
@@ -674,6 +679,7 @@ const countInput = document.getElementById("dialogueCount");
 const voiceSelect = document.getElementById("voiceType");
 
 const startBtn = document.getElementById("startBtn");
+const roleToggleBtn = document.getElementById("roleToggleBtn");  
 const micBtn = document.getElementById("micBtn");
 const micImage = document.getElementById("micImage");
 const replayBtn = document.getElementById("replayBtn");
@@ -761,7 +767,22 @@ function stopSpeech() {
     window.speechSynthesis.cancel();
   }
 }
+/* ==================================
+   역할 바꾸기 버튼
+================================== */
 
+roleToggleBtn.addEventListener("click", function() {
+  reverseRole = !reverseRole;
+
+  roleToggleBtn.textContent = reverseRole
+    ? "🔄 역할 바꾸기: 반대"
+    : "🔄 역할 바꾸기: 기본";
+
+  // 연습 중이면 현재 대화에 바로 적용
+  if (activeDialogues.length > 0) {
+    renderCurrentDialogue();
+  }
+});
 /* ==================================
    5. 현재 대화 표시
 ================================== */
@@ -774,12 +795,21 @@ function renderCurrentDialogue() {
 
   const item = activeDialogues[currentIndex];
 
-  englishBubble.textContent = item.en;
-  englishKoreanTranslation.textContent = item.enKo || "";
-  koreanBubble.textContent = item.ko;
+// 역할에 따라 상대방의 대사와 아이의 대사를 교환
+const partnerEnglish = reverseRole ? item.answer : item.en;
+const partnerKorean = reverseRole ? item.ko : item.enKo;
+const childKorean = reverseRole ? item.enKo : item.ko;
+const childAnswer = reverseRole ? item.en : item.answer;
 
-  // 정답은 처음에 숨깁니다.
-  answerText.textContent = item.answer;
+// 상대방의 영어 문장과 한글 해석
+englishBubble.textContent = partnerEnglish;
+englishKoreanTranslation.textContent = partnerKorean || "";
+
+// 아이가 보고 말할 한글 문장
+koreanBubble.textContent = childKorean;
+
+// 정답은 처음에 숨기기
+answerText.textContent = childAnswer;
   answerText.classList.add("hidden");
   answerRevealed = false;
 
@@ -808,9 +838,9 @@ function renderCurrentDialogue() {
   waitingForAnswer = false;
 
   // 상대방 영어가 끝나면 아이의 한글 문장을 표시합니다.
-  speakEnglish(item.en, function() {
-    showKoreanPrompt();
-  });
+  speakEnglish(partnerEnglish, function() {
+  showKoreanPrompt();
+});
 }
 
 /* ==================================
@@ -1044,7 +1074,8 @@ function checkAnswer(spokenText) {
   const item = activeDialogues[currentIndex];
 
   const spoken = normalize(spokenText);
-  const answer = normalize(item.answer);
+const correctAnswer = reverseRole ? item.en : item.answer;
+const answer = normalize(correctAnswer);
 
   if (!spoken) return;
 
@@ -1082,7 +1113,11 @@ showAnswerBtn.addEventListener("click", function() {
   if (!activeDialogues.length) return;
 
   // 버튼을 눌렀을 때만 정답 표시
-  answerText.textContent = activeDialogues[currentIndex].answer;
+  const item = activeDialogues[currentIndex];
+
+answerText.textContent = reverseRole
+  ? item.en
+  : item.answer;
   answerText.classList.remove("hidden");
 
   answerRevealed = true;
@@ -1128,8 +1163,10 @@ replayBtn.addEventListener("click", function() {
 
   micCaption.textContent = "영어를 다시 듣고 있어요.";
 
-  speakEnglish(item.en, function() {
-    showKoreanPrompt();
+  const partnerEnglish = reverseRole ? item.answer : item.en;
+
+speakEnglish(partnerEnglish, function() {
+  showKoreanPrompt();
 
     // 이미 정답을 공개했다면 그대로 유지
     if (answerRevealed) {
@@ -1144,9 +1181,12 @@ replayBtn.addEventListener("click", function() {
 answerAudioBtn.addEventListener("click", function() {
   if (!activeDialogues.length) return;
 
+  const item = activeDialogues[currentIndex];
+  const correctAnswer = reverseRole ? item.en : item.answer;
+
   // 정답을 화면에 표시하지 않고 소리로만 들을 수 있습니다.
-  speakEnglish(activeDialogues[currentIndex].answer);
-});
+  speakEnglish(correctAnswer);
+});;
 
 /* ==================================
    12. 다음 대화
