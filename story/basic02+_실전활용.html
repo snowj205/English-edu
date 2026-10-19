@@ -802,14 +802,15 @@ const childKorean = reverseRole ? item.enKo : item.ko;
 const childAnswer = reverseRole ? item.en : item.answer;
 
 // 기본 역할과 반대 역할에 따라 왼쪽 말풍선 설정
+// 두 역할 모두 상대방 채팅 영역을 사용할 수 있도록 설정
+teacherRow.classList.remove("hidden");
+
 if (reverseRole) {
-  // 역할 바꾸기: 선생님 채팅 줄 전체 숨기기
-  teacherRow.classList.add("hidden");
+  // 역할 바꾸기: 아이가 먼저 말하므로 처음에는 상대방 채팅을 비움
   englishBubble.textContent = "";
   englishKoreanTranslation.textContent = "";
 } else {
-  // 기본 역할: 선생님 채팅 줄 표시
-  teacherRow.classList.remove("hidden");
+  // 기본 역할: 상대방의 영어 문장과 한글 해석 표시
   englishBubble.textContent = partnerEnglish;
   englishKoreanTranslation.textContent = partnerKorean || "";
 }
@@ -1097,6 +1098,15 @@ const answer = normalize(correctAnswer);
 
   // 대소문자와 구두점을 무시하고 비교합니다.
   if (spoken === answer) {
+    // 역할 바꾸기에서는 아이가 말한 뒤 상대방의 대사 표시
+    if (reverseRole) {
+      const partnerItem = activeDialogues[currentIndex];
+
+      teacherRow.classList.remove("hidden");
+      englishBubble.textContent = partnerItem.answer;
+      englishKoreanTranslation.textContent = partnerItem.ko || "";
+    }
+
     feedback.textContent = "🎉 Perfect! 아주 잘했어요!";
     feedback.className = "feedback success";
 
