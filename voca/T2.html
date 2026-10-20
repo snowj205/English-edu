@@ -850,7 +850,9 @@ function checkAnswer(spoken) {
   const safeScore = Number.isFinite(score) ? score : 0;
 
   answerEl.textContent =
-    `인식한 내용: ${spoken} · 일치도 ${safeScore}%`;
+인식한 내용: ${spoken} · 일치도 ${safeScore}%;
+
+statusEl.textContent = "";
 
   if (safeScore >= 85) {
 
@@ -865,7 +867,7 @@ function checkAnswer(spoken) {
     feedbackEl.textContent =
       `Perfect! 아주 잘했어요! (${safeScore}%) 🎉`;
     feedbackEl.className = "feedback good";
-    statusEl.textContent = "일치도 75% 이상이에요!";
+   statusEl.textContent = "";
 
     playFeedbackAudio("perfect");
 
@@ -880,7 +882,7 @@ function checkAnswer(spoken) {
 
     feedbackEl.className = "feedback good";
 
-    statusEl.textContent = `정답: ${q.answer}`;
+    statusEl.textContent = "";
 
     playFeedbackAudio("goodjob");
 
@@ -891,8 +893,7 @@ function checkAnswer(spoken) {
       `한 번 더 도전해 봐요! (${safeScore}%) 🙂`;
 
     feedbackEl.className = "feedback try";
-    statusEl.textContent =
-      "인식 결과가 정답과 많이 달라요. 음성 인식 오류일 수도 있어요.";
+    statusEl.textContent = "";
 
     playFeedbackAudio("tryagain");
   }
