@@ -240,7 +240,7 @@ body {
   gap: 16px;
   width: 100%;
   max-width: 700px;
-  margin-top: 0;
+  margin-top: 20px;
 }
 
 /* 정답 확인 및 정답 듣기 버튼 확대 */
@@ -338,10 +338,7 @@ body {
 }
 
 .status {
-  color: var(--muted);
-  text-align: center;
-  font-size: 14px;
-  min-height: 21px;
+  display: none; /* 마이크 오류 및 안내 메시지 영역 숨김 */
 }
 
 .answer {
@@ -395,6 +392,7 @@ body {
     grid-template-columns: 1fr 64px 1fr;
     gap: 5px;
     max-width: 100%;
+    margin-top: 20px;
   }
 
   .mic {
