@@ -265,6 +265,32 @@ body {
   transform: scale(.97);
 }
 
+/* 아이콘 버튼: 글자와 테두리 없이 이미지 표시 */
+.icon-button {
+  width: 82px;
+  height: 82px;
+  min-height: 0;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.icon-button:hover {
+  background: transparent;
+}
+
+.icon-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /* 마이크 버튼: 배경색과 그림자 제거 */
 .mic {
   width: 104px;
@@ -383,6 +409,15 @@ body {
     border-radius: 11px;
   }
 
+  .icon-button {
+    width: 58px;
+    height: 58px;
+    min-height: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+  }
+
   .bottom {
     gap: 3px;
   }
@@ -438,8 +473,10 @@ body {
 
     <div class="controls">
 
-      <button class="side-button" id="showAnswer">
-        정답 확인
+      <button class="side-button icon-button" id="showAnswer" aria-label="정답 확인" title="정답 확인">
+        <img id="bulbImage"
+             src="https://snowj205.github.io/effect-file/bulb_gy.png"
+             alt="정답 확인">
       </button>
 
       <button
@@ -451,13 +488,15 @@ body {
         <img
           class="mic-image"
           id="micImage"
-          src="https://snowj205.github.io/effect-file/mike_bk.png"
+          src="https://snowj205.github.io/effect-file/mic_gy.png"
           alt="마이크"
         >
       </button>
 
-      <button class="side-button" id="listenAnswer">
-        🔊 정답 듣기
+      <button class="side-button icon-button" id="listenAnswer" aria-label="정답 듣기" title="정답 듣기">
+        <img id="speakerImage"
+             src="https://snowj205.github.io/effect-file/speaker_gy.png"
+             alt="정답 듣기">
       </button>
 
     </div>
@@ -507,12 +546,19 @@ const statusEl = document.getElementById("status");
 const answerEl = document.getElementById("answer");
 const micEl = document.getElementById("mic");
 const micImageEl = document.getElementById("micImage");
+const bulbImageEl = document.getElementById("bulbImage");
+const speakerImageEl = document.getElementById("speakerImage");
+
+const bulbIdleImage = "https://snowj205.github.io/effect-file/bulb_gy.png";
+const bulbPressedImage = "https://snowj205.github.io/effect-file/bulb_pk.png";
+const speakerIdleImage = "https://snowj205.github.io/effect-file/speaker_gy.png";
+const speakerPlayingImage = "https://snowj205.github.io/effect-file/speaker_pk.png";
 
 const micIdleImage =
-  "https://snowj205.github.io/effect-file/mike_bk.png";
+  "https://snowj205.github.io/effect-file/mic_gy.png";
 
 const micSpeakingImage =
-  "https://snowj205.github.io/effect-file/mike_pk.png";
+  "https://snowj205.github.io/effect-file/mic_pk.png";
 
 /* 마이크 이미지 변경 */
 function setMicImage(isSpeaking) {
@@ -569,6 +615,8 @@ function renderQuestion() {
 
   answerEl.textContent = "";
   statusEl.textContent = "";
+  bulbImageEl.src = bulbIdleImage;
+  speakerImageEl.src = speakerIdleImage;
 
   document.getElementById("counter").textContent =
     `${index + 1} / ${questions.length}`;
@@ -677,11 +725,8 @@ function startListening() {
     }
   }
 
-  const display = (finalTranscript || interim).trim();
-
-  statusEl.textContent = display
-    ? `인식한 문장: “${display}”`
-    : "";
+  // 안내 문구는 표시하지 않고, 채점이 끝난 뒤 인식 내용과 일치도를 표시합니다.
+  statusEl.textContent = "";
 };
 
   recognition.onerror = event => {
@@ -740,8 +785,7 @@ function startListening() {
     !statusEl.textContent.includes("권한") &&
     !statusEl.textContent.includes("연결에 실패")
   ) {
-    statusEl.textContent =
-      "다시 말하려면 마이크를 눌러 주세요.";
+    statusEl.textContent = "";
   }
 };
 
@@ -848,9 +892,9 @@ function checkAnswer(spoken) {
   const safeScore = Number.isFinite(score) ? score : 0;
 
   answerEl.textContent =
-인식한 내용: ${spoken} · 일치도 ${safeScore}%;
+    `인식한 내용: ${spoken} · 일치도 ${safeScore}%`;
 
-statusEl.textContent = "";
+  statusEl.textContent = "";
 
   if (safeScore >= 85) {
 
@@ -976,15 +1020,15 @@ function playFeedbackAudio(level) {
   });
 }
 
-/* 정답 듣기 */
+/* 정답 듣기: 재생 중 스피커 아이콘을 분홍색으로 변경 */
 function speakAnswer() {
   if (!("speechSynthesis" in window)) {
-    statusEl.textContent =
-      "이 브라우저에서는 정답 음성 재생을 지원하지 않아요.";
+    statusEl.textContent = "";
     return;
   }
 
   window.speechSynthesis.cancel();
+  speakerImageEl.src = speakerPlayingImage;
 
   const utterance =
     new SpeechSynthesisUtterance(questions[index].answer);
@@ -992,8 +1036,15 @@ function speakAnswer() {
   utterance.lang = "en-US";
   utterance.rate = 0.85;
 
-  window.speechSynthesis.speak(utterance);
+  utterance.onend = () => {
+    speakerImageEl.src = speakerIdleImage;
+  };
 
+  utterance.onerror = () => {
+    speakerImageEl.src = speakerIdleImage;
+  };
+
+  window.speechSynthesis.speak(utterance);
   statusEl.textContent = "";
 }
 
@@ -1056,17 +1107,23 @@ document.getElementById("next").addEventListener("click", () => {
   }
 });
 
-/* 정답 확인 */
+/* 정답 확인: 누르면 전구 아이콘을 잠깐 분홍색으로 변경 */
 document.getElementById("showAnswer").addEventListener("click", () => {
   const q = questions[index];
+
+  bulbImageEl.src = bulbPressedImage;
 
   if (q.type === "blank") {
     fillBlank(q.answer);
   }
 
   answerEl.textContent = `정답: ${q.answer}`;
-
+  statusEl.textContent = "";
   playNavigationTone();
+
+  setTimeout(() => {
+    bulbImageEl.src = bulbIdleImage;
+  }, 250);
 });
 
 /* 정답 듣기 */
