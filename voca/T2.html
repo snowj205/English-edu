@@ -911,17 +911,17 @@ function checkAnswer(spoken) {
         meaningEl.textContent = q.korean;
     }
 
-    showMascot("perfect");
+    showMascot("excellent");
 
     feedbackEl.textContent =
       `Perfect! 아주 잘했어요! (${safeScore}%) 🎉`;
     feedbackEl.className = "feedback good";
    statusEl.textContent = "";
 
-    playFeedbackAudio("perfect");
+    playFeedbackAudio("excellent");
 
   } else if (safeScore >= 65) {
-    showMascot("goodjob");
+    showMascot("good");
 
     // 65점 이상이면 영어 정답과 한글 뜻 표시
     if (q.type === "meaning" || q.type === "sentence") {
@@ -933,10 +933,10 @@ function checkAnswer(spoken) {
 
     statusEl.textContent = "";
 
-    playFeedbackAudio("goodjob");
+    playFeedbackAudio("good");
 
   } else {
-    showMascot("tryagain");
+    showMascot("onemore");
 
     feedbackEl.textContent =
       `한 번 더 도전해 봐요! (${safeScore}%) 🙂`;
@@ -944,7 +944,7 @@ function checkAnswer(spoken) {
     feedbackEl.className = "feedback try";
     statusEl.textContent = "";
 
-    playFeedbackAudio("tryagain");
+    playFeedbackAudio("onemore");
   }
 }
 
@@ -970,12 +970,12 @@ function showMascot(level) {
   const mascot = document.getElementById("mascot");
 
   const imageFiles = {
-    perfect:
-      "https://snowj205.github.io/effect-file/perfect.png",
-    goodjob:
-      "https://snowj205.github.io/effect-file/goodjob.png",
-    tryagain:
-      "https://snowj205.github.io/effect-file/tryagain.png"
+    excellent:
+      "https://snowj205.github.io/effect-file/excellent.png",
+    good:
+      "https://snowj205.github.io/effect-file/good.png",
+    onemore:
+      "https://snowj205.github.io/effect-file/onemore.png"
   };
 
   mascot.alt = isPerfect
@@ -1007,9 +1007,9 @@ function playFeedbackAudio(level) {
   }
 
   const files = {
-    perfect: "perfect.mp3",
-    goodjob: "goodjob.mp3",
-    tryagain: "tryagain.mp3"
+    excellent: "excellent.mp3",
+    good: "good.mp3",
+    onemore: "onemore.mp3"
   };
 
   const audio = new Audio(soundBase + files[level]);
