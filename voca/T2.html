@@ -235,12 +235,21 @@ body {
 
 .controls {
   display: grid;
-  grid-template-columns: 1fr 84px 1fr;
+  grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr);
   align-items: center;
   gap: 16px;
   width: 100%;
-  max-width: 700px;
+  max-width: 900px;
   margin-top: 20px;
+}
+
+/* 전구는 더 왼쪽으로, 스피커는 더 오른쪽으로 배치 */
+#showAnswer {
+  justify-self: start;
+}
+
+#listenAnswer {
+  justify-self: end;
 }
 
 /* 정답 확인 및 정답 듣기 버튼 확대 */
@@ -389,7 +398,7 @@ body {
   }
 
   .controls {
-    grid-template-columns: 1fr 64px 1fr;
+    grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
     gap: 5px;
     max-width: 100%;
     margin-top: 20px;
