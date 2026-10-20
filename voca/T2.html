@@ -1114,7 +1114,7 @@ document.getElementById("next").addEventListener("click", () => {
   }
 });
 
-/* 정답 확인: 누르면 전구 아이콘을 잠깐 분홍색으로 변경 */
+/* 정답 확인: 누르면 전구 아이콘이 분홍색으로 유지됨 */
 document.getElementById("showAnswer").addEventListener("click", () => {
   const q = questions[index];
 
@@ -1127,10 +1127,6 @@ document.getElementById("showAnswer").addEventListener("click", () => {
   answerEl.textContent = `정답: ${q.answer}`;
   statusEl.textContent = "";
   playNavigationTone();
-
-  setTimeout(() => {
-    bulbImageEl.src = bulbIdleImage;
-  }, 250);
 });
 
 /* 정답 듣기 */
