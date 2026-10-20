@@ -462,9 +462,7 @@ body {
 
     </div>
 
-    <div class="status" id="status">
-      마이크 버튼을 누르고 영어로 말해 보세요.
-    </div>
+    <div class="status" id="status"></div>
 
     <div class="answer" id="answer"></div>
 
@@ -570,7 +568,7 @@ function renderQuestion() {
   hideMascot();
 
   answerEl.textContent = "";
-  statusEl.textContent = "마이크 버튼을 누르고 영어로 말해 보세요.";
+  statusEl.textContent = "";
 
   document.getElementById("counter").textContent =
     `${index + 1} / ${questions.length}`;
@@ -644,13 +642,13 @@ function startListening() {
 
     if (q.type === "blank") {
       statusEl.textContent =
-        "빈칸에 들어갈 영어 단어를 말해 보세요.";
+        "";
     } else if (q.type === "sentence") {
       statusEl.textContent =
-        "영어 문장 전체를 읽어 보세요.";
+        "";
     } else {
       statusEl.textContent =
-        "한국어 뜻에 맞는 영어 단어를 말해 보세요.";
+        "";
     }
   };
 
@@ -683,7 +681,7 @@ function startListening() {
 
   statusEl.textContent = display
     ? `인식한 문장: “${display}”`
-    : "듣고 있어요…";
+    : "";
 };
 
   recognition.onerror = event => {
@@ -996,7 +994,7 @@ function speakAnswer() {
 
   window.speechSynthesis.speak(utterance);
 
-  statusEl.textContent = "정답을 영어로 들려드릴게요.";
+  statusEl.textContent = "";
 }
 
 /* 버튼 이동 효과음 */
