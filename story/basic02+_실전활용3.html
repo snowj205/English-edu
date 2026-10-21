@@ -62,8 +62,8 @@ const defaultDialogues=[
 let dialogues=defaultDialogues.map(x=>({...x})),activeDialogues=[],currentIndex=0,isRecording=false,recognition=null,speechRunId=0,waitingForAnswer=false,completed=false,reverseRole=false;
 let currentChild=null,currentReply=null,currentTeacher=null;
 const $=id=>document.getElementById(id);
-const countInput=$("dialogueCount"),voiceSelect=$("voiceType"),chatHistory=$("chatHistory"),progress=$("progress"),micBtn=$("micBtn"),micImage=$("micImage"),micCaption=$("micCaption"),feedback=$("feedback"),recognized=$("recognized"),replayBtn=$("replayBtn disabled"),showAnswerBtn=$("showAnswerBtn"),nextBtn=$("nextBtn");
-const micDefault="https://snowj205.github.io/effect-file/mic_bk.png",micActive="https://snowj205.github.io/effect-file/mic_pk.png";
+const countInput=$("dialogueCount"),voiceSelect=$("voiceType"),chatHistory=$("chatHistory"),progress=$("progress"),micBtn=$("micBtn"),micImage=$("micImage"),micCaption=$("micCaption"),feedback=$("feedback"),recognized=$("recognized"),replayBtn=$("replayBtn"),showAnswerBtn=$("showAnswerBtn"),nextBtn=$("nextBtn");
+const micDefault="https://snowj205.github.io/effect-file/mike_bk.png",micActive="https://snowj205.github.io/effect-file/mike_pk.png";
 function setMic(active){micImage.src=active?micActive:micDefault}
 function scrollBottom(){chatHistory.scrollTop=chatHistory.scrollHeight}
 function stopSpeech(){speechRunId++;if("speechSynthesis"in window)window.speechSynthesis.cancel()}
