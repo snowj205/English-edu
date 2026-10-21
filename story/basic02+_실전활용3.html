@@ -4,61 +4,378 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>영어 대화 말하기 연습</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;padding:13px;font-family:Arial,"Malgun Gothic",sans-serif;background:#f5f7fb;color:#263238}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer;border:0;border-radius:11px;padding:12px 18px;font-weight:bold;background:#e9eef5;color:#263238}
-button:disabled{opacity:.45;cursor:not-allowed}
-.container{max-width:1100px;margin:0 auto}
-.panel{background:#fff;border-radius:18px;padding:18px;margin-bottom:18px;box-shadow:0 3px 12px #0000000d}
-.settings{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
-.field{flex:1;min-width:150px}
-.field label{display:block;font-weight:bold;margin-bottom:7px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-radius:10px;background:#fff}
-.primary{background:#3978ed;color:#fff}
-.success{background:#e1f5e8;color:#187345}
-.warning{background:#fff0d6;color:#8a5700}
-.chat-panel{min-height:390px;padding:22px}
-.progress{text-align:center;color:#667788;font-weight:bold;margin-bottom:22px}
-.chat-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:24px}
-.chat-row.right{justify-content:flex-end}
-.avatar{width:48px;height:48px;flex-shrink:0;border-radius:50%;background:#e8edff;display:flex;align-items:center;justify-content:center;font-size:27px}
-.right .avatar{background:#fff0d9}
-.bubble-wrap{max-width:78%;min-width:0}
-.speaker-name{color:#6b7785;font-size:13px;margin-bottom:6px}
-.bubble{padding:17px 19px;border-radius:17px;font-size:22px;line-height:1.55;overflow-wrap:anywhere}
-.translation{margin-top:7px;padding:0 4px;color:#667788;font-size:16px;line-height:1.5;overflow-wrap:anywhere}
-.answer-line{margin-bottom:8px;font-weight:bold;color:#2459bd;font-size:20px;line-height:1.5;overflow-wrap:anywhere}
-.left .bubble{background:#eaf0ff;border-top-left-radius:4px}
-.right .bubble{background:#fff0d9;border-top-right-radius:4px}
-.hidden{display:none!important}
-.bubble-hint{font-size:15px;color:#7b8794;padding:15px;background:#f3f5f8;border-radius:12px}
-.controls{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:8px}
-.mic-button{margin:0 auto;width:100px;height:100px;border-radius:50%;font-size:38px;background:transparent;color:inherit;box-shadow:none;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0}
-.mic-button img{width:100%;height:100%;object-fit:contain;display:block}
-.mic-button.recording{animation:pulse 1s infinite}
-@keyframes pulse{50%{transform:scale(1.04)}}
-.mic-area{text-align:center;margin-top:8px}
-.mic-caption{margin-top:5px;color:#526171;font-weight:bold}
-.feedback{min-height:32px;text-align:center;font-weight:bold;font-size:18px;margin-top:8px;overflow-wrap:anywhere}
-.recognized{margin-top:5px;text-align:center;color:#536273;overflow-wrap:anywhere}
-.edit-title{font-size:20px;margin-top:0}
-.edit-help{color:#6b7785;line-height:1.6;font-size:14px}
-.dialogue-editor{display:grid;grid-template-columns:35px minmax(0,1fr);gap:10px;align-items:start;margin-top:12px}
-.dialogue-number{padding-top:12px;font-weight:bold;color:#607080;text-align:center}
-.dialogue-editor textarea{min-height:72px;resize:vertical}
-.editor-labels{display:grid;grid-template-columns:35px minmax(0,1fr);gap:10px;font-weight:bold;font-size:14px;color:#536273}
-.note{font-size:13px;line-height:1.7;color:#6b7785;margin-top:12px}
-@media(max-width:600px){body{padding:9px}.panel{padding:13px}.chat-panel{padding:14px 10px}.bubble{font-size:19px;padding:13px}.bubble-wrap{max-width:82%}.avatar{width:38px;height:38px;font-size:23px}.dialogue-editor,.editor-labels{grid-template-columns:28px minmax(0,1fr);gap:5px}.dialogue-editor textarea{font-size:14px;padding:8px}.mic-button{width:85px;height:85px}}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 13px;
+  font-family: Arial, "Malgun Gothic", sans-serif;
+  background: #f5f7fb;
+  color: #263238;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 11px;
+  padding: 12px 18px;
+  font-weight: bold;
+  background: #e9eef5;
+  color: #263238;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.panel {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #0000000d;
+}
+
+.settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: end;
+}
+
+.field {
+  flex: 1;
+  min-width: 150px;
+}
+
+.field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd5df;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.primary {
+  background: #3978ed;
+  color: #fff;
+}
+
+.success {
+  background: #e1f5e8;
+  color: #187345;
+}
+
+.warning {
+  background: #fff0d6;
+  color: #8a5700;
+}
+
+.chat-panel {
+  min-height: 390px;
+  padding: 22px;
+}
+
+.progress {
+  text-align: center;
+  color: #667788;
+  font-weight: bold;
+  margin-bottom: 22px;
+}
+
+.chat-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.chat-row.right {
+  justify-content: flex-end;
+}
+
+/* 선생님과 아이 이미지: 원형 배경과 테두리 없이 표시 */
+.avatar {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.bubble-wrap {
+  max-width: 78%;
+  min-width: 0;
+}
+
+.speaker-name {
+  color: #6b7785;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.bubble {
+  padding: 17px 19px;
+  border-radius: 17px;
+  font-size: 22px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.translation {
+  margin-top: 7px;
+  padding: 0 4px;
+  color: #667788;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.answer-line {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #2459bd;
+  font-size: 20px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.left .bubble {
+  background: #eaf0ff;
+  border-top-left-radius: 4px;
+}
+
+.right .bubble {
+  background: #fff0d9;
+  border-top-right-radius: 4px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.bubble-hint {
+  font-size: 15px;
+  color: #7b8794;
+  padding: 15px;
+  background: #f3f5f8;
+  border-radius: 12px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.mic-button {
+  margin: 0 auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 0;
+  font-size: 38px;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  padding: 0;
+}
+
+.mic-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.mic-button.recording {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.mic-area {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.mic-caption {
+  margin-top: 5px;
+  color: #526171;
+  font-weight: bold;
+}
+
+.feedback {
+  min-height: 32px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+
+.recognized {
+  margin-top: 5px;
+  text-align: center;
+  color: #536273;
+  overflow-wrap: anywhere;
+}
+
+.edit-title {
+  font-size: 20px;
+  margin-top: 0;
+}
+
+.edit-help {
+  color: #6b7785;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.dialogue-editor {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-top: 12px;
+}
+
+.dialogue-number {
+  padding-top: 12px;
+  font-weight: bold;
+  color: #607080;
+  text-align: center;
+}
+
+.dialogue-editor textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.editor-labels {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr);
+  gap: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #536273;
+}
+
+.note {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #6b7785;
+  margin-top: 12px;
+}
+
+@media(max-width: 600px) {
+  body {
+    padding: 9px;
+  }
+
+  .panel {
+    padding: 13px;
+  }
+
+  .chat-panel {
+    padding: 14px 10px;
+  }
+
+  .bubble {
+    font-size: 19px;
+    padding: 13px;
+  }
+
+  .bubble-wrap {
+    max-width: 82%;
+  }
+
+  .avatar {
+    width: 54px;
+    height: 54px;
+  }
+
+  .dialogue-editor,
+  .editor-labels {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .dialogue-editor textarea {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .mic-button {
+    width: 85px;
+    height: 85px;
+  }
+}
 </style>
 </head>
+
 <body>
 <div class="container">
+
 <section class="panel">
   <div class="settings">
-    <div class="field"><label for="dialogueCount">연습할 대화 개수</label><input id="dialogueCount" type="number" min="1" max="50" value="12"></div>
-    <div class="field"><label for="voiceType">영어 발음</label><select id="voiceType"><option value="en-US">미국식 영어</option><option value="en-GB">영국식 영어</option></select></div>
+    <div class="field">
+      <label for="dialogueCount">연습할 대화 개수</label>
+      <input id="dialogueCount" type="number" min="1" max="50" value="12">
+    </div>
+
+    <div class="field">
+      <label for="voiceType">영어 발음</label>
+      <select id="voiceType">
+        <option value="en-US">미국식 영어</option>
+        <option value="en-GB">영국식 영어</option>
+      </select>
+    </div>
+
     <button class="primary" id="startBtn" type="button">연습 시작</button>
     <button id="roleToggleBtn" type="button">🔄 역할 바꾸기: 기본</button>
     <button id="editToggleBtn" type="button">대화 내용 수정</button>
@@ -68,44 +385,57 @@ input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-ra
 <section class="panel chat-panel">
   <div class="progress" id="progress">연습 시작 버튼을 눌러 주세요.</div>
 
-  <!-- 기본 모드: 먼저 말하는 선생님 채팅 -->
+  <!-- 선생님 채팅 -->
   <div class="chat-row left" id="teacherRow">
-    <div class="avatar">🧑‍🏫</div>
+    <div class="avatar">
+      <img src="https://snowj205.github.io/effect-file/teacher.png" alt="선생님">
+    </div>
+
     <div class="bubble-wrap">
       <div class="bubble" id="englishBubble">Hello! How are you?</div>
       <div class="translation" id="englishKoreanTranslation"></div>
     </div>
   </div>
 
-  <!-- 아이가 한글을 보고 영어로 말하는 채팅 -->
+  <!-- 아이 채팅 -->
   <div class="chat-row right hidden" id="koreanRow">
     <div class="bubble-wrap">
       <div class="answer-line hidden" id="answerText"></div>
-      <div class="bubble" id="koreanBubble">나는 잘 지내. 너는 어때?</div>
-      <div style="text-align:right;margin-top:10px;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-  <button id="answerAudioBtn" type="button">🔊 정답 영어 듣기</button>
-  <button id="chatShowAnswerBtn" type="button" class="primary">정답 확인</button>
-</div>
 
+      <div class="bubble" id="koreanBubble">나는 잘 지내. 너는 어때?</div>
+
+      <div style="text-align:right;margin-top:10px;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <button id="answerAudioBtn" type="button">🔊 정답 영어 듣기</button>
+        <button id="chatShowAnswerBtn" type="button" class="primary">정답 확인</button>
+      </div>
     </div>
-    <div class="avatar">👧</div>
+
+    <div class="avatar">
+      <img src="https://snowj205.github.io/effect-file/child.png" alt="아이">
+    </div>
   </div>
 
-  <!-- 역할 바꾸기 모드: 아이가 말한 뒤 나타나는 선생님 채팅. 아이 채팅 뒤에 배치 -->
+  <!-- 역할 바꾸기 모드의 선생님 채팅 -->
   <div class="chat-row left hidden" id="replyTeacherRow">
-    <div class="avatar">🧑‍🏫</div>
+    <div class="avatar">
+      <img src="https://snowj205.github.io/effect-file/teacher.png" alt="선생님">
+    </div>
+
     <div class="bubble-wrap">
       <div class="bubble" id="replyTeacherBubble"></div>
       <div class="translation" id="replyTeacherTranslation"></div>
     </div>
   </div>
 
-  <div class="bubble-hint" id="waitHint">왼쪽의 영어 음성을 들은 후 한글 말풍선이 나타납니다.</div>
+  <div class="bubble-hint" id="waitHint">
+    왼쪽의 영어 음성을 들은 후 한글 말풍선이 나타납니다.
+  </div>
 
   <div class="mic-area">
     <button class="mic-button" id="micBtn" type="button" aria-label="영어로 말하기" disabled>
       <img id="micImage" src="https://snowj205.github.io/effect-file/mike_bk.png" alt="마이크">
     </button>
+
     <div class="mic-caption" id="micCaption">연습을 시작해 주세요.</div>
   </div>
 
@@ -117,37 +447,65 @@ input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-ra
     <button id="showAnswerBtn" type="button" disabled>정답 확인</button>
     <button class="primary" id="nextBtn" type="button" disabled>다음 대화 →</button>
   </div>
-  <div class="note">마이크 버튼을 누르고 영어로 말하세요. 정답 확인 버튼을 누르면 모범 답안을 볼 수 있습니다. 음성 인식은 기기나 브라우저에 따라 지원되지 않을 수 있습니다.</div>
+
+  <div class="note">
+    마이크 버튼을 누르고 영어로 말하세요.
+    정답 확인 버튼을 누르면 모범 답안을 볼 수 있습니다.
+    음성 인식은 기기나 브라우저에 따라 지원되지 않을 수 있습니다.
+  </div>
 </section>
 
 <section class="panel hidden" id="editorPanel">
   <h2 class="edit-title">✏️ 대화 내용 편집</h2>
-  <p class="edit-help">상대방의 영어 문장과 한글 해석, 아이에게 보여 줄 한글 뜻, 정답 영어 문장을 입력하세요. 저장 버튼을 누르면 연습 화면에 적용됩니다.</p>
-  <div class="editor-labels"><div>번호</div><div class="editor-label-fields"><div>상대방 영어 문장</div><div>상대방 말의 한글 해석</div><div>아이에게 보여 줄 한글</div><div>정답 영어 문장</div></div></div>
+
+  <p class="edit-help">
+    상대방의 영어 문장과 한글 해석, 아이에게 보여 줄 한글 뜻, 정답 영어 문장을 입력하세요.
+    저장 버튼을 누르면 연습 화면에 적용됩니다.
+  </p>
+
+  <div class="editor-labels">
+    <div>번호</div>
+    <div class="editor-label-fields">
+      <div>상대방 영어 문장</div>
+      <div>상대방 말의 한글 해석</div>
+      <div>아이에게 보여 줄 한글</div>
+      <div>정답 영어 문장</div>
+    </div>
+  </div>
+
   <div id="dialogueEditor"></div>
-  <div class="controls"><button class="primary" id="saveEditBtn" type="button">대화 저장 및 적용</button><button id="addDialogueBtn" type="button">+ 대화 추가</button></div>
-  <div class="note">수정한 내용은 현재 페이지를 사용하는 동안 유지됩니다. 페이지를 새로 열면 기본 예시로 돌아갑니다.</div>
+
+  <div class="controls">
+    <button class="primary" id="saveEditBtn" type="button">대화 저장 및 적용</button>
+    <button id="addDialogueBtn" type="button">+ 대화 추가</button>
+  </div>
+
+  <div class="note">
+    수정한 내용은 현재 페이지를 사용하는 동안 유지됩니다.
+    페이지를 새로 열면 기본 예시로 돌아갑니다.
+  </div>
 </section>
+
 </div>
 
 <script>
 "use strict";
 
 const defaultDialogues = [
-  {en:"Did you wake up?",enKo:"일어났어?",ko:"내가 어디있는거야?",answer:"where am I"},
-  {en:"You are in the beach.",enKo:"넌 해변에 있어.",ko:"내가 왜 여기에 있어?",answer:"Why am I here?"},
-  {en:"You are asleep here.",enKo:"너 여기서 잠들었어",ko:"나 집에 가고 싶어.",answer:"I want to go back home."},
-  {en:"Yes, but I want to play with you.",enKo:"그래. 하지만 난 너랑 놀고 싶어.",ko:"나도 해변에서 점프하고 싶어.",answer:"I want to jump in the beach."},
-  {en:"Can that dog play with us?",enKo:"저 개도 우리랑 놀 수 있어?",ko:"아니, 저개는 우리와 놀수 없어.",answer:"No, that dog cannot play with us."},
-  {en:"why!",enKo:"왜?",ko:"저 개는 못생겼어!",answer:"That dog is so ugly."},
-  {en:"hey!",enKo:"이봐!",ko:"너희 집으로 돌아가!",answer:"go back your home!"},
-  {en:"here is a fox.",enKo:"여기 여우가 있어.",ko:"그는 하루 종일 못먹었어.",answer:"He didn't eat all day long."},
-  {en:"He is in the cage.",enKo:"그는 케이지 안에 있어.",ko:"난 지금 나갈수 있어!",answer:"Now I can get out!"},
-  {en:"I am hungry and I am sad",enKo:"난 배고프고 슬퍼",ko:"슬프고 배고픈 여우.",answer:"The poor hungry fox."},
-  {en:"shall we take it out?",enKo:"우리가 꺼내줄까?",ko:"좋은 생각이야.",answer:"good idea!"},
+  {en:"Did you wake up?",enKo:"일어났어?",ko:"내가 어디 있는 거야?",answer:"Where am I?"},
+  {en:"You are on the beach.",enKo:"넌 해변에 있어.",ko:"내가 왜 여기에 있어?",answer:"Why am I here?"},
+  {en:"You fell asleep here.",enKo:"너 여기서 잠들었어.",ko:"나 집에 가고 싶어.",answer:"I want to go back home."},
+  {en:"Yes, but I want to play with you.",enKo:"그래. 하지만 난 너랑 놀고 싶어.",ko:"나도 해변에서 점프하고 싶어.",answer:"I want to jump on the beach."},
+  {en:"Can that dog play with us?",enKo:"저 개도 우리랑 놀 수 있어?",ko:"아니, 저 개는 우리와 놀 수 없어.",answer:"No, that dog cannot play with us."},
+  {en:"Why?",enKo:"왜?",ko:"저 개는 못생겼어!",answer:"That dog is so ugly!"},
+  {en:"Hey!",enKo:"이봐!",ko:"너희 집으로 돌아가!",answer:"Go back to your home!"},
+  {en:"Here is a fox.",enKo:"여기 여우가 있어.",ko:"그는 하루 종일 못 먹었어.",answer:"He didn't eat all day long."},
+  {en:"He is in the cage.",enKo:"그는 우리 안에 있어.",ko:"난 지금 나갈 수 있어!",answer:"Now I can get out!"},
+  {en:"I am hungry and I am sad.",enKo:"난 배고프고 슬퍼.",ko:"슬프고 배고픈 여우.",answer:"The poor, hungry fox."},
+  {en:"Shall we take it out?",enKo:"우리가 꺼내 줄까?",ko:"좋은 생각이야.",answer:"Good idea!"}
 ];
 
-let dialogues = defaultDialogues.map(item=>({...item}));
+let dialogues = defaultDialogues.map(item => ({...item}));
 let activeDialogues = [];
 let currentIndex = 0;
 let isRecording = false;
@@ -159,409 +517,618 @@ let reverseRole = false;
 let completed = false;
 
 const $ = id => document.getElementById(id);
-const countInput=$("dialogueCount"), voiceSelect=$("voiceType");
-const startBtn=$("startBtn"), roleToggleBtn=$("roleToggleBtn"), micBtn=$("micBtn"), micImage=$("micImage");
-const replayBtn=$("replayBtn"), nextBtn=$("nextBtn"), showAnswerBtn=$("showAnswerBtn");
-const teacherRow=$("teacherRow"), englishBubble=$("englishBubble"), englishKoreanTranslation=$("englishKoreanTranslation");
-const koreanRow=$("koreanRow"), koreanBubble=$("koreanBubble"), waitHint=$("waitHint");
-const replyTeacherRow=$("replyTeacherRow"), replyTeacherBubble=$("replyTeacherBubble"), replyTeacherTranslation=$("replyTeacherTranslation");
-const progress=$("progress"), micCaption=$("micCaption"), feedback=$("feedback"), recognized=$("recognized");
-const answerText=$("answerText"), answerAudioBtn=$("answerAudioBtn");
-const editToggleBtn=$("editToggleBtn"), editorPanel=$("editorPanel"), dialogueEditor=$("dialogueEditor");
-const saveEditBtn=$("saveEditBtn"), addDialogueBtn=$("addDialogueBtn");
-  const chatShowAnswerBtn = $("chatShowAnswerBtn");
 
-chatShowAnswerBtn.addEventListener("click", () => {
+const countInput = $("dialogueCount");
+const voiceSelect = $("voiceType");
+const startBtn = $("startBtn");
+const roleToggleBtn = $("roleToggleBtn");
+const micBtn = $("micBtn");
+const micImage = $("micImage");
+const replayBtn = $("replayBtn");
+const nextBtn = $("nextBtn");
+const showAnswerBtn = $("showAnswerBtn");
+
+const teacherRow = $("teacherRow");
+const englishBubble = $("englishBubble");
+const englishKoreanTranslation = $("englishKoreanTranslation");
+const koreanRow = $("koreanRow");
+const koreanBubble = $("koreanBubble");
+const waitHint = $("waitHint");
+
+const replyTeacherRow = $("replyTeacherRow");
+const replyTeacherBubble = $("replyTeacherBubble");
+const replyTeacherTranslation = $("replyTeacherTranslation");
+
+const progress = $("progress");
+const micCaption = $("micCaption");
+const feedback = $("feedback");
+const recognized = $("recognized");
+const answerText = $("answerText");
+const answerAudioBtn = $("answerAudioBtn");
+
+const editToggleBtn = $("editToggleBtn");
+const editorPanel = $("editorPanel");
+const dialogueEditor = $("dialogueEditor");
+const saveEditBtn = $("saveEditBtn");
+const addDialogueBtn = $("addDialogueBtn");
+const chatShowAnswerBtn = $("chatShowAnswerBtn");
+
+const micDefaultImage = "https://snowj205.github.io/effect-file/mike_bk.png";
+const micActiveImage = "https://snowj205.github.io/effect-file/mike_pk.png";
+
+function setMicImage(active) {
+  micImage.src = active ? micActiveImage : micDefaultImage;
+}
+
+function stopSpeech() {
+  speechRunId++;
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function speakEnglish(text, onFinished) {
+  stopSpeech();
+
+  const runId = speechRunId;
+
+  if (!("speechSynthesis" in window)) {
+    if (onFinished) onFinished();
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = voiceSelect.value;
+  utterance.rate = 0.85;
+  utterance.pitch = 1;
+
+  utterance.onend = () => {
+    if (runId === speechRunId && onFinished) onFinished();
+  };
+
+  utterance.onerror = () => {
+    if (runId === speechRunId && onFinished) onFinished();
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+roleToggleBtn.addEventListener("click", () => {
+  reverseRole = !reverseRole;
+
+  roleToggleBtn.textContent = reverseRole
+    ? "🔄 역할 바꾸기: 반대"
+    : "🔄 역할 바꾸기: 기본";
+
+  if (activeDialogues.length) {
+    renderCurrentDialogue();
+  }
+});
+
+function renderCurrentDialogue() {
+  if (!activeDialogues.length) return;
+
+  stopSpeech();
+  stopRecording();
+
+  completed = false;
+
+  const item = activeDialogues[currentIndex];
+
+  replyTeacherRow.classList.add("hidden");
+  replyTeacherBubble.textContent = "";
+  replyTeacherTranslation.textContent = "";
+
+  answerText.classList.add("hidden");
+  answerRevealed = false;
+
+  answerAudioBtn.classList.remove("hidden");
+  showAnswerBtn.textContent = "정답 확인";
+  showAnswerBtn.disabled = true;
+  chatShowAnswerBtn.disabled = true;
+
+  nextBtn.disabled = true;
+  replayBtn.disabled = false;
+
+  feedback.textContent = "";
+  feedback.className = "feedback";
+  recognized.textContent = "";
+
+  progress.textContent = `대화 ${currentIndex + 1} / ${activeDialogues.length}`;
+
+  micCaption.textContent = "";
+  waitingForAnswer = false;
+  setMicImage(false);
+
+  if (reverseRole) {
+    teacherRow.classList.add("hidden");
+
+    englishBubble.textContent = "";
+    englishKoreanTranslation.textContent = "";
+
+    koreanBubble.textContent = item.enKo;
+    answerText.textContent = item.en;
+
+    koreanRow.classList.remove("hidden");
+    waitHint.classList.add("hidden");
+
+    showKoreanPrompt();
+  } else {
+    teacherRow.classList.remove("hidden");
+
+    englishBubble.textContent = item.en;
+    englishKoreanTranslation.textContent = item.enKo || "";
+
+    koreanBubble.textContent = item.ko;
+    answerText.textContent = item.answer;
+
+    koreanRow.classList.add("hidden");
+    waitHint.classList.remove("hidden");
+
+    micBtn.disabled = true;
+    speakEnglish(item.en, showKoreanPrompt);
+  }
+}
+
+function showKoreanPrompt() {
+  koreanRow.classList.remove("hidden");
+  waitHint.classList.add("hidden");
+
+  micBtn.disabled = false;
+  showAnswerBtn.disabled = false;
+  chatShowAnswerBtn.disabled = false;
+
+  micCaption.textContent = "";
+  waitingForAnswer = true;
+}
+
+startBtn.addEventListener("click", () => {
+  const requested = Number.parseInt(countInput.value, 10);
+
+  if (!Number.isFinite(requested) || requested < 1 || requested > 50) {
+    alert("대화 개수는 1개부터 50개까지 입력해 주세요.");
+    countInput.value = "12";
+    return;
+  }
+
+  const valid = dialogues.filter(item =>
+    item.en.trim() &&
+    item.enKo.trim() &&
+    item.ko.trim() &&
+    item.answer.trim()
+  );
+
+  if (!valid.length) {
+    alert("모든 대화에 영어 문장과 한글 문장, 정답을 입력해 주세요.");
+    return;
+  }
+
+  activeDialogues = valid.slice(0, Math.min(requested, valid.length));
+  currentIndex = 0;
+
+  renderCurrentDialogue();
+});
+
+function createRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SR) return null;
+
+  const rec = new SR();
+
+  rec.lang = "en-US";
+  rec.continuous = false;
+  rec.interimResults = true;
+  rec.maxAlternatives = 5;
+
+  rec.onstart = () => {
+    isRecording = true;
+
+    micBtn.classList.add("recording");
+    setMicImage(true);
+
+    micCaption.textContent = "듣고 있어요. 영어로 말해 보세요!";
+    feedback.textContent = "";
+    recognized.textContent = "";
+  };
+
+  rec.onresult = event => {
+    let finalText = "";
+    let interim = "";
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalText += event.results[i][0].transcript;
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+
+    const shown = (finalText + " " + interim).trim();
+
+    if (shown) {
+      recognized.textContent = "인식한 영어: " + shown;
+    }
+
+    if (finalText.trim()) {
+      checkAnswer(finalText.trim());
+    }
+  };
+
+  rec.onerror = event => {
+    isRecording = false;
+
+    micBtn.classList.remove("recording");
+    setMicImage(false);
+
+    if (waitingForAnswer) {
+      micBtn.disabled = false;
+    }
+
+    micCaption.textContent = "마이크를 눌러 다시 말해 보세요.";
+
+    if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+      feedback.textContent = "마이크 권한을 허용해 주세요. 브라우저 설정도 확인해 보세요.";
+    } else if (event.error === "no-speech") {
+      feedback.textContent = "음성이 들리지 않았어요. 다시 말해 보세요.";
+    } else if (event.error === "network") {
+      feedback.textContent = "음성 인식 연결에 문제가 있어요. 인터넷 연결을 확인해 주세요.";
+    } else if (event.error !== "aborted") {
+      feedback.textContent = "음성을 인식하지 못했어요. 다시 시도해 보세요.";
+    }
+  };
+
+  rec.onend = () => {
+    isRecording = false;
+
+    micBtn.classList.remove("recording");
+    setMicImage(false);
+
+    if (
+      waitingForAnswer &&
+      !completed &&
+      micCaption.textContent.includes("듣고 있어요")
+    ) {
+      micCaption.textContent = "마이크를 눌러 다시 말해 보세요.";
+      micBtn.disabled = false;
+    }
+  };
+
+  return rec;
+}
+
+function stopRecording() {
+  if (recognition && isRecording) {
+    try {
+      recognition.stop();
+    } catch (e) {}
+  }
+
+  isRecording = false;
+  micBtn.classList.remove("recording");
+  setMicImage(false);
+}
+
+micBtn.addEventListener("click", () => {
+  if (!waitingForAnswer || !activeDialogues.length || completed) return;
+
+  if (isRecording) {
+    stopRecording();
+    return;
+  }
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SR) {
+    feedback.textContent = "이 브라우저는 음성 인식을 지원하지 않습니다. 최신 Chrome에서 열어 보세요.";
+    return;
+  }
+
+  try {
+    recognition = createRecognition();
+
+    if (!recognition) {
+      throw new Error("Speech recognition unavailable");
+    }
+
+    micBtn.disabled = true;
+    recognition.start();
+  } catch (e) {
+    micBtn.disabled = false;
+    setMicImage(false);
+    feedback.textContent = "마이크를 시작하지 못했어요. 잠시 후 다시 눌러 주세요.";
+  }
+});
+
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[’‘]/g, "'")
+    .replace(/[^a-z0-9'\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function checkAnswer(spokenText) {
+  if (!activeDialogues.length || !waitingForAnswer || completed) return;
+
+  const item = activeDialogues[currentIndex];
+  const correct = reverseRole ? item.en : item.answer;
+
+  if (!normalize(spokenText)) return;
+
+  if (normalize(spokenText) === normalize(correct)) {
+    waitingForAnswer = false;
+    completed = true;
+
+    micBtn.disabled = true;
+    nextBtn.disabled = false;
+    showAnswerBtn.disabled = true;
+    chatShowAnswerBtn.disabled = true;
+
+    feedback.textContent = "🎉 Perfect! 아주 잘했어요!";
+    feedback.className = "feedback success";
+
+    micCaption.textContent = "정답이에요! 다음 대화로 넘어갈 수 있어요.";
+
+    if (reverseRole) {
+      replyTeacherBubble.textContent = item.answer;
+      replyTeacherTranslation.textContent = item.ko || "";
+      replyTeacherRow.classList.remove("hidden");
+
+      speakEnglish(item.answer);
+    }
+  } else {
+    feedback.textContent = "🔄 조금 달라요. 한 번 더 말해 보세요!";
+    feedback.className = "feedback warning";
+
+    micCaption.textContent = "다시 말하려면 마이크를 눌러 주세요.";
+    micBtn.disabled = false;
+  }
+}
+
+function revealAnswer() {
   if (!activeDialogues.length || completed) return;
 
   const item = activeDialogues[currentIndex];
 
-  // 아이가 말해야 하는 영어 정답만 표시
-  const correctAnswer = reverseRole ? item.en : item.answer;
-
-  feedback.textContent = "💡 영어 정답: " + correctAnswer;
-  feedback.className = "feedback warning";
-
-  // 힌트 버튼을 눌러도 다음 대화로 넘어가지 않음
-  nextBtn.disabled = true;
-});
-
-
-const micDefaultImage="https://snowj205.github.io/effect-file/mike_bk.png";
-const micActiveImage="https://snowj205.github.io/effect-file/mike_pk.png";
-function setMicImage(active){micImage.src=active?micActiveImage:micDefaultImage;}
-
-function stopSpeech(){
-  speechRunId++;
-  if("speechSynthesis" in window) window.speechSynthesis.cancel();
-}
-function speakEnglish(text,onFinished){
-  stopSpeech();
-  const runId=speechRunId;
-  if(!("speechSynthesis" in window)){
-    if(onFinished) onFinished();
-    return;
-  }
-  const utterance=new SpeechSynthesisUtterance(text);
-  utterance.lang=voiceSelect.value;
-  utterance.rate=0.85;
-  utterance.pitch=1;
-  utterance.onend=()=>{if(runId===speechRunId && onFinished) onFinished();};
-  utterance.onerror=()=>{if(runId===speechRunId && onFinished) onFinished();};
-  window.speechSynthesis.speak(utterance);
-}
-
-roleToggleBtn.addEventListener("click",()=>{
-  reverseRole=!reverseRole;
-  roleToggleBtn.textContent=reverseRole?"🔄 역할 바꾸기: 반대":"🔄 역할 바꾸기: 기본";
-  if(activeDialogues.length) renderCurrentDialogue();
-});
-
-function renderCurrentDialogue(){
-  if(!activeDialogues.length) return;
-  stopSpeech();
-  stopRecording();
-  completed=false;
-  const item=activeDialogues[currentIndex];
-
-  // 매 대화가 시작될 때 모든 이전 말풍선을 초기화
-  replyTeacherRow.classList.add("hidden");
-  replyTeacherBubble.textContent="";
-  replyTeacherTranslation.textContent="";
-  answerText.classList.add("hidden");
-  answerRevealed=false;
-  answerAudioBtn.classList.remove("hidden");
-  showAnswerBtn.textContent="정답 확인";
-  showAnswerBtn.disabled=true;
-  chatShowAnswerBtn.disabled = true;
-  nextBtn.disabled=true;
-  replayBtn.disabled=false;
-  feedback.textContent="";
-  feedback.className="feedback";
-  recognized.textContent="";
-  progress.textContent=`대화 ${currentIndex+1} / ${activeDialogues.length}`;
-  micCaption.textContent="";
-  waitingForAnswer=false;
-  setMicImage(false);
-
-  if(reverseRole){
-    // 아이가 먼저 말함. 위쪽의 선생님 말풍선은 아예 숨김
-    teacherRow.classList.add("hidden");
-    englishBubble.textContent="";
-    englishKoreanTranslation.textContent="";
-    koreanBubble.textContent=item.enKo;
-    answerText.textContent=item.en;
-    koreanRow.classList.remove("hidden");
-    waitHint.classList.add("hidden");
-    showKoreanPrompt();
-  }else{
-    teacherRow.classList.remove("hidden");
-    englishBubble.textContent=item.en;
-    englishKoreanTranslation.textContent=item.enKo||"";
-    koreanBubble.textContent=item.ko;
-    answerText.textContent=item.answer;
-    koreanRow.classList.add("hidden");
-    waitHint.classList.remove("hidden");
-    micBtn.disabled=true;
-    speakEnglish(item.en,showKoreanPrompt);
-  }
-}
-
-function showKoreanPrompt(){
-  koreanRow.classList.remove("hidden");
-  waitHint.classList.add("hidden");
-  micBtn.disabled=false;
-  showAnswerBtn.disabled=false;
-  chatShowAnswerBtn.disabled = false;
-  micCaption.textContent="";
-  waitingForAnswer=true;
-}
-
-startBtn.addEventListener("click",()=>{
-  const requested=Number.parseInt(countInput.value,10);
-  if(!Number.isFinite(requested)||requested<1||requested>50){
-    alert("대화 개수는 1개부터 50개까지 입력해 주세요.");
-    countInput.value="12";
-    return;
-  }
-  const valid=dialogues.filter(x=>x.en.trim()&&x.enKo.trim()&&x.ko.trim()&&x.answer.trim());
-  if(!valid.length){alert("모든 대화에 영어 문장과 한글 문장, 정답을 입력해 주세요.");return;}
-  activeDialogues=valid.slice(0,Math.min(requested,valid.length));
-  currentIndex=0;
-  renderCurrentDialogue();
-});
-
-function createRecognition(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR) return null;
-  const rec=new SR();
-  rec.lang="en-US";
-  rec.continuous=false;
-  rec.interimResults=true;
-  rec.maxAlternatives=5;
-  rec.onstart=()=>{
-    isRecording=true;
-    micBtn.classList.add("recording");
-    setMicImage(true);
-    micCaption.textContent="듣고 있어요. 영어로 말해 보세요!";
-    feedback.textContent="";
-    recognized.textContent="";
-  };
-  rec.onresult=event=>{
-    let finalText="", interim="";
-    for(let i=event.resultIndex;i<event.results.length;i++){
-      if(event.results[i].isFinal) finalText+=event.results[i][0].transcript;
-      else interim+=event.results[i][0].transcript;
-    }
-    const shown=(finalText+" "+interim).trim();
-    if(shown) recognized.textContent="인식한 영어: "+shown;
-    if(finalText.trim()) checkAnswer(finalText.trim());
-  };
-  rec.onerror=event=>{
-    isRecording=false;
-    micBtn.classList.remove("recording");
-    setMicImage(false);
-    if(waitingForAnswer) micBtn.disabled=false;
-    micCaption.textContent="마이크를 눌러 다시 말해 보세요.";
-    if(event.error==="not-allowed"||event.error==="service-not-allowed") feedback.textContent="마이크 권한을 허용해 주세요. 브라우저 설정도 확인해 보세요.";
-    else if(event.error==="no-speech") feedback.textContent="음성이 들리지 않았어요. 다시 말해 보세요.";
-    else if(event.error==="network") feedback.textContent="음성 인식 연결에 문제가 있어요. 인터넷 연결을 확인해 주세요.";
-    else if(event.error!=="aborted") feedback.textContent="음성을 인식하지 못했어요. 다시 시도해 보세요.";
-  };
-  rec.onend=()=>{
-    isRecording=false;
-    micBtn.classList.remove("recording");
-    setMicImage(false);
-    if(waitingForAnswer && !completed && micCaption.textContent.includes("듣고 있어요")){
-      micCaption.textContent="마이크를 눌러 다시 말해 보세요.";
-      micBtn.disabled=false;
-    }
-  };
-  return rec;
-}
-function stopRecording(){
-  if(recognition&&isRecording){try{recognition.stop();}catch(e){}}
-  isRecording=false;
-  micBtn.classList.remove("recording");
-  setMicImage(false);
-}
-micBtn.addEventListener("click",()=>{
-  if(!waitingForAnswer||!activeDialogues.length||completed) return;
-  if(isRecording){stopRecording();return;}
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){feedback.textContent="이 브라우저는 음성 인식을 지원하지 않습니다. 최신 Chrome에서 열어 보세요.";return;}
-  try{
-    recognition=createRecognition();
-    if(!recognition) throw new Error("Speech recognition unavailable");
-    micBtn.disabled=true;
-    recognition.start();
-  }catch(e){
-    micBtn.disabled=false;
-    setMicImage(false);
-    feedback.textContent="마이크를 시작하지 못했어요. 잠시 후 다시 눌러 주세요.";
-  }
-});
-
-function normalize(text){
-  return text.toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9'\s]/g," ").replace(/\s+/g," ").trim();
-}
-function checkAnswer(spokenText){
-  if(!activeDialogues.length||!waitingForAnswer||completed) return;
-  const item=activeDialogues[currentIndex];
-  const correct=reverseRole?item.en:item.answer;
-  if(!normalize(spokenText)) return;
-  if(normalize(spokenText)===normalize(correct)){
-    waitingForAnswer=false;
-    completed=true;
-    micBtn.disabled=true;
-    nextBtn.disabled=false;
-    showAnswerBtn.disabled=true;
-    feedback.textContent="🎉 Perfect! 아주 잘했어요!";
-    feedback.className="feedback success";
-    micCaption.textContent="정답이에요! 다음 대화로 넘어갈 수 있어요.";
-
-    if(reverseRole){
-      // 아이 채팅 아래에 선생님 대사를 표시하고 자동 재생
-      replyTeacherBubble.textContent=item.answer;
-      replyTeacherTranslation.textContent=item.ko||"";
-      replyTeacherRow.classList.remove("hidden");
-      speakEnglish(item.answer);
-    }
-
-    // 정답 처리 후 다음 대화 버튼을 확실히 활성화
-    nextBtn.disabled=false;
-  }else{
-    feedback.textContent="🔄 조금 달라요. 한 번 더 말해 보세요!";
-    feedback.className="feedback warning";
-    micCaption.textContent="다시 말하려면 마이크를 눌러 주세요.";
-    micBtn.disabled=false;
-  }
-}
-
-showAnswerBtn.addEventListener("click",()=>{
-  if(!activeDialogues.length || completed) return;
-  const item=activeDialogues[currentIndex];
-
-  answerText.textContent=reverseRole ? item.en : item.answer;
+  answerText.textContent = reverseRole ? item.en : item.answer;
   answerText.classList.remove("hidden");
-  answerRevealed=true;
 
-  // 정답을 확인해도 다시 말할 수 있게 유지
-  showAnswerBtn.disabled=true;
-  showAnswerBtn.textContent="정답 확인 완료";
-  
-  completed=false;
-  waitingForAnswer=true;
-  micBtn.disabled=false;
-  nextBtn.disabled=true;
+  answerRevealed = true;
 
-  feedback.textContent="모범 답안을 확인했어요. 마이크를 눌러 영어로 말해 보세요!";
-  feedback.className="feedback success";
-  micCaption.textContent="마이크를 눌러 영어로 말해 보세요.";
+  showAnswerBtn.disabled = true;
+  showAnswerBtn.textContent = "정답 확인 완료";
 
-  // 역할 바꾸기 모드에서는 선생님 답변을 아이 말풍선 아래에 표시하고 재생
-  if(reverseRole){
-    replyTeacherBubble.textContent=item.answer;
-    replyTeacherTranslation.textContent=item.ko||"";
+  completed = false;
+  waitingForAnswer = true;
+
+  micBtn.disabled = false;
+  nextBtn.disabled = true;
+
+  feedback.textContent = "모범 답안을 확인했어요. 마이크를 눌러 영어로 말해 보세요!";
+  feedback.className = "feedback success";
+
+  micCaption.textContent = "마이크를 눌러 영어로 말해 보세요.";
+
+  if (reverseRole) {
+    replyTeacherBubble.textContent = item.answer;
+    replyTeacherTranslation.textContent = item.ko || "";
     replyTeacherRow.classList.remove("hidden");
+
     speakEnglish(item.answer);
   }
-});
+}
 
-replayBtn.addEventListener("click",()=>{
-  if(!activeDialogues.length||completed) return;
-  const item=activeDialogues[currentIndex];
+showAnswerBtn.addEventListener("click", revealAnswer);
+chatShowAnswerBtn.addEventListener("click", revealAnswer);
+
+replayBtn.addEventListener("click", () => {
+  if (!activeDialogues.length || completed) return;
+
+  const item = activeDialogues[currentIndex];
+
   stopSpeech();
   stopRecording();
-  feedback.textContent="";
-  recognized.textContent="";
-  if(reverseRole){
-    // 역할 바꾸기에서는 아이가 먼저 말하므로 상대방 음성을 재생하지 않음
-    micCaption.textContent="한글 문장을 보고 영어로 말해 보세요.";
-    micBtn.disabled=false;
-    waitingForAnswer=true;
+
+  feedback.textContent = "";
+  recognized.textContent = "";
+
+  if (reverseRole) {
+    micCaption.textContent = "한글 문장을 보고 영어로 말해 보세요.";
+    micBtn.disabled = false;
+    waitingForAnswer = true;
     return;
   }
+
   koreanRow.classList.add("hidden");
   waitHint.classList.remove("hidden");
-  micBtn.disabled=true;
-  showAnswerBtn.disabled=true;
-  speakEnglish(item.en,showKoreanPrompt);
+
+  micBtn.disabled = true;
+  showAnswerBtn.disabled = true;
+  chatShowAnswerBtn.disabled = true;
+
+  speakEnglish(item.en, showKoreanPrompt);
 });
 
-answerAudioBtn.addEventListener("click",()=>{
-  if(!activeDialogues.length) return;
-  const item=activeDialogues[currentIndex];
-  speakEnglish(reverseRole?item.en:item.answer);
+answerAudioBtn.addEventListener("click", () => {
+  if (!activeDialogues.length) return;
+
+  const item = activeDialogues[currentIndex];
+  speakEnglish(reverseRole ? item.en : item.answer);
 });
 
-nextBtn.addEventListener("click",()=>{
-  if(!activeDialogues.length) return;
-  if(nextBtn.disabled) return;
+nextBtn.addEventListener("click", () => {
+  if (!activeDialogues.length || nextBtn.disabled) return;
+
   stopSpeech();
   stopRecording();
-  if(currentIndex<activeDialogues.length-1){
+
+  if (currentIndex < activeDialogues.length - 1) {
     currentIndex++;
     renderCurrentDialogue();
     return;
   }
-  completed=true;
-  waitingForAnswer=false;
-  progress.textContent="연습 완료!";
+
+  completed = true;
+  waitingForAnswer = false;
+
+  progress.textContent = "연습 완료!";
+
   teacherRow.classList.add("hidden");
   replyTeacherRow.classList.add("hidden");
   koreanRow.classList.remove("hidden");
   waitHint.classList.add("hidden");
-  koreanBubble.textContent="정말 잘했어요!";
-  answerText.textContent="";
+
+  koreanBubble.textContent = "정말 잘했어요!";
+
+  answerText.textContent = "";
   answerText.classList.add("hidden");
   answerAudioBtn.classList.add("hidden");
-  feedback.textContent="🎉 모든 대화를 마쳤어요!";
-  feedback.className="feedback success";
-  recognized.textContent="";
-  micBtn.disabled=true;
+
+  feedback.textContent = "🎉 모든 대화를 마쳤어요!";
+  feedback.className = "feedback success";
+
+  recognized.textContent = "";
+
+  micBtn.disabled = true;
   setMicImage(false);
-  replayBtn.disabled=true;
-  showAnswerBtn.disabled=true;
-  nextBtn.disabled=true;
-  micCaption.textContent="다시 연습하려면 연습 시작을 눌러 주세요.";
+
+  replayBtn.disabled = true;
+  showAnswerBtn.disabled = true;
+  chatShowAnswerBtn.disabled = true;
+  nextBtn.disabled = true;
+
+  micCaption.textContent = "다시 연습하려면 연습 시작을 눌러 주세요.";
 });
 
-function renderEditor(){
-  dialogueEditor.innerHTML="";
-  dialogues.forEach((item,index)=>{
-    const number=document.createElement("div");
-    number.className="dialogue-number";
-    number.textContent=index+1;
-    const row=document.createElement("div");
-    row.className="dialogue-editor";
-    const fields=document.createElement("div");
-    fields.className="editor-fields";
-    const definitions=[
-      ["en",item.en,"상대방 영어 문장"],
-      ["enKo",item.enKo||"","영어 문장의 한글 해석"],
-      ["ko",item.ko,"아이에게 보여 줄 한글"],
-      ["answer",item.answer,"정답 영어 문장"]
+function renderEditor() {
+  dialogueEditor.innerHTML = "";
+
+  dialogues.forEach((item, index) => {
+    const number = document.createElement("div");
+    number.className = "dialogue-number";
+    number.textContent = index + 1;
+
+    const row = document.createElement("div");
+    row.className = "dialogue-editor";
+
+    const fields = document.createElement("div");
+    fields.className = "editor-fields";
+
+    const definitions = [
+      ["en", item.en, "상대방 영어 문장"],
+      ["enKo", item.enKo || "", "영어 문장의 한글 해석"],
+      ["ko", item.ko, "아이에게 보여 줄 한글"],
+      ["answer", item.answer, "정답 영어 문장"]
     ];
-    definitions.forEach(([type,value,placeholder])=>{
-      const area=document.createElement("textarea");
-      area.value=value;
-      area.placeholder=placeholder;
-      area.dataset.index=index;
-      area.dataset.type=type;
-      area.setAttribute("aria-label",`${index+1}번 ${placeholder}`);
+
+    definitions.forEach(([type, value, placeholder]) => {
+      const area = document.createElement("textarea");
+
+      area.value = value;
+      area.placeholder = placeholder;
+      area.dataset.index = index;
+      area.dataset.type = type;
+      area.setAttribute("aria-label", `${index + 1}번 ${placeholder}`);
+
       fields.appendChild(area);
     });
-    row.append(number,fields);
+
+    row.append(number, fields);
     dialogueEditor.appendChild(row);
   });
+
   updateEditorLayout();
 }
-editToggleBtn.addEventListener("click",()=>{
+
+editToggleBtn.addEventListener("click", () => {
   editorPanel.classList.toggle("hidden");
-  if(!editorPanel.classList.contains("hidden")){
+
+  if (!editorPanel.classList.contains("hidden")) {
     renderEditor();
-    editorPanel.scrollIntoView({behavior:"smooth",block:"start"});
+    editorPanel.scrollIntoView({behavior: "smooth", block: "start"});
   }
 });
-saveEditBtn.addEventListener("click",()=>{
-  const rows=dialogueEditor.querySelectorAll(".dialogue-editor");
-  const updated=[];
-  rows.forEach(row=>{
-    const get=type=>row.querySelector(`[data-type="${type}"]`).value.trim();
-    updated.push({en:get("en"),enKo:get("enKo"),ko:get("ko"),answer:get("answer")});
+
+saveEditBtn.addEventListener("click", () => {
+  const rows = dialogueEditor.querySelectorAll(".dialogue-editor");
+  const updated = [];
+
+  rows.forEach(row => {
+    const get = type =>
+      row.querySelector(`[data-type="${type}"]`).value.trim();
+
+    updated.push({
+      en: get("en"),
+      enKo: get("enKo"),
+      ko: get("ko"),
+      answer: get("answer")
+    });
   });
-  if(updated.some(x=>!x.en||!x.enKo||!x.ko||!x.answer)){
+
+  if (updated.some(item => !item.en || !item.enKo || !item.ko || !item.answer)) {
     alert("모든 대화에 영어 문장과 한글 해석, 아이가 볼 한글, 정답 영어 문장을 입력해 주세요.");
     return;
   }
-  if(updated.length>50){alert("대화는 최대 50개까지 사용할 수 있어요.");return;}
-  dialogues=updated;
-  countInput.value=Math.min(Number.parseInt(countInput.value,10)||12,dialogues.length);
-  activeDialogues=[];
+
+  if (updated.length > 50) {
+    alert("대화는 최대 50개까지 사용할 수 있어요.");
+    return;
+  }
+
+  dialogues = updated;
+
+  countInput.value = Math.min(
+    Number.parseInt(countInput.value, 10) || 12,
+    dialogues.length
+  );
+
+  activeDialogues = [];
+
   alert("대화 내용이 저장되었어요. 연습 시작 버튼을 눌러 주세요.");
   editorPanel.classList.add("hidden");
 });
-addDialogueBtn.addEventListener("click",()=>{
-  if(dialogues.length>=50){alert("대화는 최대 50개까지 추가할 수 있어요.");return;}
-  dialogues.push({en:"What do you like?",enKo:"너는 무엇을 좋아하니?",ko:"나는 음악을 좋아해.",answer:"I like music."});
-  countInput.value=dialogues.length;
+
+addDialogueBtn.addEventListener("click", () => {
+  if (dialogues.length >= 50) {
+    alert("대화는 최대 50개까지 추가할 수 있어요.");
+    return;
+  }
+
+  dialogues.push({
+    en: "What do you like?",
+    enKo: "너는 무엇을 좋아하니?",
+    ko: "나는 음악을 좋아해.",
+    answer: "I like music."
+  });
+
+  countInput.value = dialogues.length;
   renderEditor();
 });
-function updateEditorLayout(){
-  const mobile=window.innerWidth<=600;
-  document.querySelectorAll(".editor-label-fields,.editor-fields").forEach(el=>{
-    el.style.display="grid";
-    el.style.gridTemplateColumns=mobile?"1fr":"repeat(4,minmax(0,1fr))";
-    el.style.gap="8px";
+
+function updateEditorLayout() {
+  const mobile = window.innerWidth <= 600;
+
+  document.querySelectorAll(".editor-label-fields, .editor-fields").forEach(el => {
+    el.style.display = "grid";
+    el.style.gridTemplateColumns = mobile
+      ? "1fr"
+      : "repeat(4, minmax(0, 1fr))";
+    el.style.gap = "8px";
   });
 }
-window.addEventListener("resize",updateEditorLayout);
-micBtn.disabled=true;
+
+window.addEventListener("resize", updateEditorLayout);
+
+micBtn.disabled = true;
 setMicImage(false);
-replayBtn.disabled=true;
-showAnswerBtn.disabled=true;
-nextBtn.disabled=true;
+replayBtn.disabled = true;
+showAnswerBtn.disabled = true;
+chatShowAnswerBtn.disabled = true;
+nextBtn.disabled = true;
+
 updateEditorLayout();
 </script>
 </body>
