@@ -53,7 +53,7 @@ body {
 .progress > div {
   height: 100%;
   width: 0;
-  background: var(--blue);
+  background: #FA85DD;
   transition: width .2s;
 }
 
@@ -97,7 +97,7 @@ body {
 .prompt {
   margin: 0 0 8px;
   font-size: 85px;
-  font-weight: 600;
+  font-weight: 450;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
@@ -140,31 +140,41 @@ body {
   color: #c13b4a;
 }
 
-/* 정답 캐릭터 */
+/* 정답·오답 캐릭터: 화면 전체를 덮으며 표시 */
 .mascot-wrap {
   display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.96);
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 4px;
 }
 
 .mascot-wrap.show {
   display: flex;
 }
 
+/* 캐릭터 크게 표시 */
 .mascot {
-  width: clamp(90px, 13vw, 125px);
-  height: clamp(90px, 13vw, 125px);
+  width: min(70vw, 65vh, 500px);
+  height: min(70vw, 65vh, 500px);
   object-fit: contain;
 }
 
+/* 정답 캐릭터 애니메이션 */
 .mascot-wrap.happy .mascot {
-  animation: bunnyHop .65s ease-in-out 2;
+  animation: bunnyHop 0.65s ease-in-out 2;
 }
 
+/* 오답 캐릭터 애니메이션 */
 .mascot-wrap.try .mascot {
-  animation: bearWobble .55s ease-in-out 2;
+  animation: bearWobble 0.55s ease-in-out 2;
 }
 
 .mascot-caption {
@@ -172,7 +182,7 @@ body {
   font-weight: 900;
   letter-spacing: 1px;
   transform-origin: center;
-  animation: captionPop .75s ease-in-out 2;
+  animation: captionPop 0.75s ease-in-out 2;
 }
 
 .mascot-wrap.happy .mascot-caption {
@@ -221,6 +231,16 @@ body {
   }
 }
 
+@keyframes captionPop {
+  0%, 100% {
+    transform: scale(.82);
+  }
+
+  50% {
+    transform: scale(1.18);
+  }
+}
+
 /* 버튼 영역: 문제 아래쪽으로 간격을 좁혀 배치 */
 .bottom {
   display: flex;
@@ -235,12 +255,21 @@ body {
 
 .controls {
   display: grid;
-  grid-template-columns: 1fr 104px 1fr;
+  grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr);
   align-items: center;
   gap: 16px;
   width: 100%;
-  max-width: 700px;
-  margin-top: 0;
+  max-width: 900px;
+  margin-top: 20px;
+}
+
+/* 전구는 더 왼쪽으로, 스피커는 더 오른쪽으로 배치 */
+#showAnswer {
+  justify-self: start;
+}
+
+#listenAnswer {
+  justify-self: end;
 }
 
 /* 정답 확인 및 정답 듣기 버튼 확대 */
@@ -265,10 +294,36 @@ body {
   transform: scale(.97);
 }
 
+/* 아이콘 버튼: 글자와 테두리 없이 이미지 표시 */
+.icon-button {
+  width: 64px;
+  height: 64px;
+  min-height: 0;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.icon-button:hover {
+  background: transparent;
+}
+
+.icon-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /* 마이크 버튼: 배경색과 그림자 제거 */
 .mic {
-  width: 104px;
-  height: 104px;
+  width: 90px;
+  height: 90px;
   padding: 0;
   border: none;
   border-radius: 0;
@@ -312,10 +367,7 @@ body {
 }
 
 .status {
-  color: var(--muted);
-  text-align: center;
-  font-size: 14px;
-  min-height: 21px;
+  display: none; /* 마이크 오류 및 안내 메시지 영역 숨김 */
 }
 
 .answer {
@@ -356,7 +408,7 @@ body {
   }
 
   .hint {
-    font-size: 11px;
+    font-size: 14px;
   }
 
   .feedback {
@@ -366,14 +418,15 @@ body {
   }
 
   .controls {
-    grid-template-columns: 1fr 82px 1fr;
+    grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
     gap: 5px;
     max-width: 100%;
+    margin-top: 20px;
   }
 
   .mic {
-    width: 82px;
-    height: 82px;
+    width: 64px;
+    height: 64px;
   }
 
   .side-button {
@@ -381,6 +434,15 @@ body {
     padding: 8px 4px;
     font-size: 13px;
     border-radius: 11px;
+  }
+
+  .icon-button {
+    width: 44px;
+    height: 44px;
+    min-height: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
   }
 
   .bottom {
@@ -392,10 +454,10 @@ body {
   }
 
   .answer {
-    font-size: 60px !important;
+    font-size: 20px !important;
 }
   .prompt {
-    font-size: 50px !important;
+    font-size: 40px !important;
   }
 }
 </style>
@@ -406,7 +468,7 @@ body {
 
   <div class="top">
     <span>영어 말하기 연습</span>
-    <span id="counter">1 / 25</span>
+    <span id="counter">1 / 15</span>
   </div>
 
   <div class="progress">
@@ -438,8 +500,10 @@ body {
 
     <div class="controls">
 
-      <button class="side-button" id="showAnswer">
-        정답 확인
+      <button class="side-button icon-button" id="showAnswer" aria-label="정답 확인" title="정답 확인">
+        <img id="bulbImage"
+             src="https://snowj205.github.io/effect-file/bulb_gy.png"
+             alt="정답 확인">
       </button>
 
       <button
@@ -451,20 +515,20 @@ body {
         <img
           class="mic-image"
           id="micImage"
-          src="https://snowj205.github.io/effect-file/mike_bk.png"
+          src="https://snowj205.github.io/effect-file/mic_gy.png"
           alt="마이크"
         >
       </button>
 
-      <button class="side-button" id="listenAnswer">
-        🔊 정답 듣기
+      <button class="side-button icon-button" id="listenAnswer" aria-label="정답 듣기" title="정답 듣기">
+        <img id="speakerImage"
+             src="https://snowj205.github.io/effect-file/speaker_gy.png"
+             alt="정답 듣기">
       </button>
 
     </div>
 
-    <div class="status" id="status">
-      마이크 버튼을 누르고 영어로 말해 보세요.
-    </div>
+    <div class="status" id="status"></div>
 
     <div class="answer" id="answer"></div>
 
@@ -474,37 +538,35 @@ body {
 
 <script>
 const questions = [
-  {type:"meaning", korean:"만나다", answer:"meet"},
-  {type:"sentence", english:"five minute past three", korean:"3시 5분", answer:"five minute past three"},
-  {type:"meaning", korean:"멜론", answer:"melon"},
-  {type:"sentence", english:"milk is healthy food.", korean:"우유는 건강에 좋은 음식이다.", answer:"milk is healthy food."},
-  {type:"meaning", korean:"신선한 우유", answer:"fresh milk"},
-  {type:"meaning", korean:"미터", answer:"meter"},
-  {type:"meaning", korean:"중학교", answer:"middle school"},
-  {type:"meaning", korean:"중앙, 가운데", answer:"middle"},
-  {type:"sentence", english:"The model is tall and handsome.", korean:"그 모델은 키가 크고 잘생겼다.", answer:"The model is tall and handsome."},
-  {type:"meaning", korean:"100만 달러", answer:"one million $"},
-  {type:"meaning", korean:"우유", answer:"milk"},
-  {type:"sentence", english:"look in a mirror", korean:"거울을 보다", answer:"look in a mirror"},
-  {type:"meaning", korean:"100만", answer:"million"},
-  {type:"sentence", english:"The snow is one meter deep.", korean:"눈이 1미터나 쌓였다.", answer:"The snow is one meter deep."},
-  {type:"meaning", korean:"나는 니가 그리워.", answer:"I miss you."},
-  {type:"meaning", korean:"모형, 모델", answer:"model"},
-  {type:"meaning", korean:"용돈", answer:"pocket money"},
-  {type:"meaning", korean:"원숭이", answer:"monkey"},
-  {type:"sentence", english:"We often meet.", korean:"우리는 종종 만난다.", answer:"We often meet."},
-  {type:"meaning", korean:"이번 달", answer:"this month"},
-  {type:"meaning", korean:"달", answer:"moon"},
-  {type:"meaning", korean:"좋은 아침", answer:"good morning"},
-  {type:"meaning", korean:"입", answer:"mouth"},
-  {type:"sentence", english:"I get up early everyday.", korean:"나는 매일 아침 일찍 일어난다.", answer:"I get up early everyday."},
-  {type:"meaning", korean:"입을 움직여 보세요", answer:"move your mouth."}
+  { type: "meaning", korean: "하나의", answer: "a,an" },
+  { type: "meaning", korean: "~에 대하여", answer: "about" },
+  { type: "meaning", korean: "~건너편에", answer: "across" },
+  { type: "meaning", korean: "행동,행하다", answer: "act" },
+  { type: "meaning", korean: "주소", answer: "address" },
+  { type: "meaning", korean: "두려워하는", answer: "afraid" },
+  { type: "meaning", korean: "~후에", answer: "atter" },
+  { type: "meaning", korean: "오후", answer: "afternoon" },
+  { type: "meaning", korean: "다시,또", answer: "again" },
+  { type: "meaning", korean: "나이", answer: "age" },
+  { type: "meaning", korean: "1주간", answer: "for a week" },
+  { type: "meaning", korean: "나는 연필 하나가 필요하다.", answer: "I need a pencil." },
+  { type: "meaning", korean: "이 책은 동물에 대한 내용이다.", answer: "This book is about animals. },
+  { type: "meaning", korean: "수퍼마켓은 길 건너편에있다.", answer: "The supermarket is across the street." },
+  { type: "meaning", korean: "그 소년은 아기처럼 행동했다.", answer: "The boy act like a baby." },
+  { type: "meaning", korean: "나느 그녀의 주소를 안다.", answer: "I know her address." },
+  { type: "meaning", korean: "두려워하지 마.", answer: "Don't be afraid." },
+  { type: "meaning", korean: "그 다음날", answer: "the day after" },
+  { type: "meaning", korean: "모레", answer: "the day after tomorrow" },
+  { type: "meaning", korean: "월요일 오후에", answer: "on Monday afternoon" }
+  { type: "meaning", korean: "그녀는 또 다시 울고 있다.", answer: "she is crying again." }
+  { type: "meaning", korean: "그녀는 너와 나이가 같다.", answer: "she is your age." }
 ];
 
 let index = 0;
 let recognition = null;
 let listening = false;
 let finalTranscript = "";
+let finalAlternatives = [];
 
 const promptEl = document.getElementById("prompt");
 const meaningEl = document.getElementById("meaning");
@@ -513,12 +575,19 @@ const statusEl = document.getElementById("status");
 const answerEl = document.getElementById("answer");
 const micEl = document.getElementById("mic");
 const micImageEl = document.getElementById("micImage");
+const bulbImageEl = document.getElementById("bulbImage");
+const speakerImageEl = document.getElementById("speakerImage");
+
+const bulbIdleImage = "https://snowj205.github.io/effect-file/bulb_gy.png";
+const bulbPressedImage = "https://snowj205.github.io/effect-file/bulb_pk.png";
+const speakerIdleImage = "https://snowj205.github.io/effect-file/speaker_gy.png";
+const speakerPlayingImage = "https://snowj205.github.io/effect-file/speaker_pk.png";
 
 const micIdleImage =
-  "https://snowj205.github.io/effect-file/mike_bk.png";
+  "https://snowj205.github.io/effect-file/mic_gy.png";
 
 const micSpeakingImage =
-  "https://snowj205.github.io/effect-file/mike_pk.png";
+  "https://snowj205.github.io/effect-file/mic_pk.png";
 
 /* 마이크 이미지 변경 */
 function setMicImage(isSpeaking) {
@@ -574,7 +643,9 @@ function renderQuestion() {
   hideMascot();
 
   answerEl.textContent = "";
-  statusEl.textContent = "마이크 버튼을 누르고 영어로 말해 보세요.";
+  statusEl.textContent = "";
+  bulbImageEl.src = bulbIdleImage;
+  speakerImageEl.src = speakerIdleImage;
 
   document.getElementById("counter").textContent =
     `${index + 1} / ${questions.length}`;
@@ -632,7 +703,7 @@ function startListening() {
 
   recognition.lang = "en-US";
   recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
+  recognition.maxAlternatives = 3;
   recognition.continuous = false;
 
   /* 듣기 시작: 분홍 마이크 이미지 */
@@ -648,29 +719,44 @@ function startListening() {
 
     if (q.type === "blank") {
       statusEl.textContent =
-        "빈칸에 들어갈 영어 단어를 말해 보세요.";
+        "";
     } else if (q.type === "sentence") {
       statusEl.textContent =
-        "영어 문장 전체를 읽어 보세요.";
+        "";
     } else {
       statusEl.textContent =
-        "한국어 뜻에 맞는 영어 단어를 말해 보세요.";
+        "";
     }
   };
 
   recognition.onresult = event => {
-    let transcript = "";
+  let interim = "";
+  const q = questions[index];
 
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      transcript += event.results[i][0].transcript;
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const result = event.results[i];
+
+    if (result.isFinal) {
+      const alternatives = [];
+
+      for (let a = 0; a < result.length; a++) {
+        const candidate = result[a].transcript.trim();
+
+        if (candidate) alternatives.push(candidate);
+      }
+
+      if (alternatives.length) {
+        finalAlternatives = alternatives;
+        finalTranscript = alternatives[0];
+      }
+    } else {
+      interim += result[0].transcript;
     }
+  }
 
-    finalTranscript = transcript.trim();
-
-    statusEl.textContent = finalTranscript
-      ? `인식한 문장: “${finalTranscript}”`
-      : "듣고 있어요…";
-  };
+  // 안내 문구는 표시하지 않고, 채점이 끝난 뒤 인식 내용과 일치도를 표시합니다.
+  statusEl.textContent = "";
+};
 
   recognition.onerror = event => {
     let message = "음성을 인식하지 못했어요. 다시 시도해 보세요.";
@@ -692,26 +778,45 @@ function startListening() {
   };
 
   recognition.onend = () => {
-    listening = false;
+  listening = false;
 
-    micEl.classList.remove("listening");
-    micEl.setAttribute("aria-label", "말하기 시작");
+  micEl.classList.remove("listening");
+  micEl.setAttribute("aria-label", "말하기 시작");
 
-    /* 듣기 종료: 검정 마이크 이미지 */
-    setMicImage(false);
+  // 듣기 종료: 검정 마이크 이미지
+  setMicImage(false);
 
-    if (finalTranscript) {
-      const transcriptToCheck = finalTranscript;
-      finalTranscript = "";
-      checkAnswer(transcriptToCheck);
-    } else if (
-      !statusEl.textContent.includes("권한") &&
-      !statusEl.textContent.includes("연결에 실패")
-    ) {
-      statusEl.textContent =
-        "다시 말하려면 마이크를 눌러 주세요.";
-    }
-  };
+  if (finalAlternatives.length || finalTranscript) {
+    const q = questions[index];
+
+    const candidates = [
+      ...new Set(
+        finalAlternatives.length
+          ? finalAlternatives
+          : [finalTranscript]
+      )
+    ];
+
+    candidates.sort(
+      (a, b) =>
+        similarityPercent(b, q.answer) -
+        similarityPercent(a, q.answer)
+    );
+
+    const transcriptToCheck = candidates[0];
+
+    finalTranscript = "";
+    finalAlternatives = [];
+
+    checkAnswer(transcriptToCheck);
+
+  } else if (
+    !statusEl.textContent.includes("권한") &&
+    !statusEl.textContent.includes("연결에 실패")
+  ) {
+    statusEl.textContent = "";
+  }
+};
 
   try {
     recognition.start();
@@ -757,61 +862,51 @@ function levenshtein(a, b) {
 
 /* 정답과 음성 인식 결과 비교 */
 function similarityPercent(spoken, expected) {
-  const said = normalize(spoken);
-  const answer = normalize(expected);
+  // 음성 인식 결과와 정답을 문자열로 변환
+  const said = normalize(String(spoken ?? ""));
+  const answer = normalize(String(expected ?? ""));
 
   if (!said || !answer) return 0;
   if (said === answer) return 100;
 
-  const charScore =
-    1 - levenshtein(said, answer) /
-    Math.max(said.length, answer.length);
-
   const sw = said.split(" ").filter(Boolean);
   const aw = answer.split(" ").filter(Boolean);
 
-  let matched = 0;
-  const used = new Set();
+  const rows = Array.from(
+    { length: sw.length + 1 },
+    (_, i) => i
+  );
 
-  for (const word of sw) {
-    let bestIndex = -1;
-    let bestScore = 0;
+  for (let i = 1; i <= sw.length; i++) {
+    let previous = rows[0];
+    rows[0] = i;
 
-    aw.forEach((target, i) => {
-      if (used.has(i)) return;
+    for (let j = 1; j <= aw.length; j++) {
+      const old = rows[j];
 
-      const score =
-        1 - levenshtein(word, target) /
-        Math.max(word.length, target.length);
+      rows[j] = Math.min(
+        rows[j] + 1,
+        rows[j - 1] + 1,
+        previous + (sw[i - 1] === aw[j - 1] ? 0 : 1)
+      );
 
-      if (score > bestScore) {
-        bestScore = score;
-        bestIndex = i;
-      }
-    });
-
-    if (
-      bestIndex >= 0 &&
-      bestScore >= (
-        Math.min(word.length, aw[bestIndex].length) <= 3
-          ? 0.67
-          : 0.72
-      )
-    ) {
-      matched++;
-      used.add(bestIndex);
+      previous = old;
     }
   }
 
-  const precision = matched / Math.max(sw.length, 1);
-  const recall = matched / Math.max(aw.length, 1);
-
   const wordScore =
-    precision + recall
-      ? 2 * precision * recall / (precision + recall)
-      : 0;
+    1 - rows[aw.length] / Math.max(sw.length, aw.length, 1);
 
-  return Math.round(Math.max(charScore, wordScore) * 100);
+  const charScore =
+    1 - levenshtein(said, answer) /
+    Math.max(said.length, answer.length, 1);
+
+  return Math.round(
+    Math.max(
+      0,
+      Math.min(1, wordScore * 0.75 + charScore * 0.25)
+    ) * 100
+  );
 }
 
 /* 채점 결과 */
@@ -822,12 +917,15 @@ function checkAnswer(spoken) {
     fillBlank(spoken);
   }
 
-  const score = similarityPercent(spoken, q.answer);
+  const score = Number(similarityPercent(spoken, q.answer));
+  const safeScore = Number.isFinite(score) ? score : 0;
 
   answerEl.textContent =
-    `인식한 내용: ${spoken} · 일치도 ${score}%`;
+    `인식한 내용: ${spoken} · 일치도 ${safeScore}%`;
 
-  if (score >= 80) {
+  statusEl.textContent = "";
+
+  if (safeScore >= 85) {
 
     // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
     if (q.type === "meaning") {
@@ -835,45 +933,53 @@ function checkAnswer(spoken) {
         meaningEl.textContent = q.korean;
     }
 
-    showMascot("perfect");
+    showMascot("excellent");
 
     feedbackEl.textContent =
-      `Perfect! 아주 잘했어요! (${score}%) 🎉`;
+      `Excellent! 아주 잘했어요! (${safeScore}%) 🎉`;
+    feedbackEl.className = "feedback good";
+   statusEl.textContent = "";
+
+    playFeedbackAudio("excellent");
+
+  } else if (safeScore >= 65) {
+    showMascot("good");
+
+    // 65점 이상이면 영어 정답과 한글 뜻 표시
+    if (q.type === "meaning" || q.type === "sentence") {
+        promptEl.textContent = q.answer;
+        meaningEl.textContent = q.korean;
+    }
 
     feedbackEl.className = "feedback good";
-    statusEl.textContent = "일치도 80% 이상이에요!";
 
-    playFeedbackAudio("perfect");
+    statusEl.textContent = "";
 
-  } else if (score >= 60) {
-    showMascot("goodjob");
-
-    feedbackEl.textContent =
-      `Good job! 잘했어요! (${score}%) 👍`;
-
-    feedbackEl.className = "feedback good";
-    statusEl.textContent =
-      "일치도 60% 이상이에요. 조금만 더 연습해 봐요!";
-
-    playFeedbackAudio("goodjob");
+    playFeedbackAudio("good");
 
   } else {
-    showMascot("tryagain");
+    showMascot("onemore");
 
     feedbackEl.textContent =
-      `한 번 더 도전해 봐요! (${score}%) 🙂`;
+      `한 번 더 도전해 봐요! (${safeScore}%) 🙂`;
 
     feedbackEl.className = "feedback try";
-    statusEl.textContent =
-      "인식 결과가 정답과 많이 달라요. 음성 인식 오류일 수도 있어요.";
+    statusEl.textContent = "";
 
-    playFeedbackAudio("tryagain");
+    playFeedbackAudio("onemore");
   }
 }
 
 /* 캐릭터 숨기기 */
+let mascotTimer = null;
+
 function hideMascot() {
   const wrap = document.getElementById("mascotWrap");
+
+  if (mascotTimer !== null) {
+    clearTimeout(mascotTimer);
+    mascotTimer = null;
+  }
 
   wrap.className = "mascot-wrap";
 
@@ -881,45 +987,42 @@ function hideMascot() {
   document.getElementById("mascot").removeAttribute("src");
 }
 
-/* 캐릭터 표시 */
+/* 캐릭터 크게 표시 후 2초 뒤 숨기기 */
 function showMascot(level) {
   const wrap = document.getElementById("mascotWrap");
-  const isTry = level === "tryagain";
-  const isPerfect = level === "perfect";
-
-  wrap.className =
-    `mascot-wrap show ${isTry ? "try" : "happy"}`;
-
   const mascot = document.getElementById("mascot");
 
+  if (mascotTimer !== null) {
+    clearTimeout(mascotTimer);
+  }
+
   const imageFiles = {
-    perfect:
-      "https://snowj205.github.io/effect-file/perfect.png",
-    goodjob:
-      "https://snowj205.github.io/effect-file/goodjob.png",
-    tryagain:
-      "https://snowj205.github.io/effect-file/tryagain.png"
+    excellent: "https://snowj205.github.io/effect-file/excellent.png",
+    good: "https://snowj205.github.io/effect-file/good.png",
+    onemore: "https://snowj205.github.io/effect-file/onemore.png"
   };
 
-  mascot.alt = isPerfect
-    ? "퍼펙트 축하 캐릭터"
-    : isTry
-      ? "다시 도전 응원 캐릭터"
-      : "굿잡 응원 캐릭터";
+  const isWrong = level === "onemore";
+
+  wrap.className =
+    `mascot-wrap show ${isWrong ? "try" : "happy"}`;
+
+  mascot.alt = isWrong
+    ? "다시 도전 응원 캐릭터"
+    : "정답 축하 캐릭터";
 
   mascot.onerror = () => {
-    statusEl.textContent =
-      "캐릭터 이미지를 불러오지 못했어요. GitHub 저장소의 파일 이름과 주소를 확인해 주세요.";
+    hideMascot();
+    console.error("캐릭터 이미지를 불러오지 못했습니다.");
   };
 
   mascot.src = imageFiles[level];
 
-  document.getElementById("mascotCaption").textContent =
-    isPerfect
-      ? "PERFECT!"
-      : isTry
-        ? "TRY AGAIN!"
-        : "GOOD JOB!";
+  document.getElementById("mascotCaption").textContent = "";
+
+  mascotTimer = setTimeout(() => {
+    hideMascot();
+  }, 2000);
 }
 
 /* 채점 효과음 */
@@ -935,9 +1038,9 @@ function playFeedbackAudio(level) {
   }
 
   const files = {
-    perfect: "perfect.mp3",
-    goodjob: "goodjob.mp3",
-    tryagain: "tryagain.mp3"
+    excellent: "excellent.mp3",
+    good: "good.mp3",
+    onemore: "onemore.mp3"
   };
 
   const audio = new Audio(soundBase + files[level]);
@@ -955,15 +1058,15 @@ function playFeedbackAudio(level) {
   });
 }
 
-/* 정답 듣기 */
+/* 정답 듣기: 재생 중 스피커 아이콘을 분홍색으로 변경 */
 function speakAnswer() {
   if (!("speechSynthesis" in window)) {
-    statusEl.textContent =
-      "이 브라우저에서는 정답 음성 재생을 지원하지 않아요.";
+    statusEl.textContent = "";
     return;
   }
 
   window.speechSynthesis.cancel();
+  speakerImageEl.src = speakerPlayingImage;
 
   const utterance =
     new SpeechSynthesisUtterance(questions[index].answer);
@@ -971,9 +1074,16 @@ function speakAnswer() {
   utterance.lang = "en-US";
   utterance.rate = 0.85;
 
-  window.speechSynthesis.speak(utterance);
+  utterance.onend = () => {
+    speakerImageEl.src = speakerIdleImage;
+  };
 
-  statusEl.textContent = "정답을 영어로 들려드릴게요.";
+  utterance.onerror = () => {
+    speakerImageEl.src = speakerIdleImage;
+  };
+
+  window.speechSynthesis.speak(utterance);
+  statusEl.textContent = "";
 }
 
 /* 버튼 이동 효과음 */
@@ -1035,16 +1145,18 @@ document.getElementById("next").addEventListener("click", () => {
   }
 });
 
-/* 정답 확인 */
+/* 정답 확인: 누르면 전구 아이콘이 분홍색으로 유지됨 */
 document.getElementById("showAnswer").addEventListener("click", () => {
   const q = questions[index];
+
+  bulbImageEl.src = bulbPressedImage;
 
   if (q.type === "blank") {
     fillBlank(q.answer);
   }
 
   answerEl.textContent = `정답: ${q.answer}`;
-
+  statusEl.textContent = "";
   playNavigationTone();
 });
 
