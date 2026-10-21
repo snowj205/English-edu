@@ -380,6 +380,10 @@
         height: 85px;
       }
     }
+    /* 위쪽 설정 영역 숨기기 */
+.container > section:first-child {
+  display: none !important;
+}
   </style>
 </head>
 
@@ -1159,11 +1163,17 @@
     window.addEventListener("resize", updateEditorLayout);
 
     micBtn.disabled = true;
-    setMic(false);
-    replayBtn.disabled = true;
-    showAnswerBtn.disabled = true;
-    nextBtn.disabled = true;
-    updateEditorLayout();
+setMic(false);
+replayBtn.disabled = true;
+showAnswerBtn.disabled = true;
+nextBtn.disabled = true;
+updateEditorLayout();
+
+// 페이지를 열면 첫 번째 대화 자동 시작
+window.addEventListener("load", () => {
+  countInput.value = 12;
+  $("startBtn").click();
+});
   </script>
 </body>
 </html>
