@@ -57,7 +57,7 @@ body {
   transition: width .2s;
 }
 
-/* 문제 영역: 세로 공간 축소 */
+/* 문제 영역 */
 .main {
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr) 52px;
@@ -83,7 +83,7 @@ body {
   cursor: default;
 }
 
-/* 문제 상자 제거 */
+/* 문제 상자 */
 .card {
   background: transparent;
   border: none;
@@ -140,7 +140,7 @@ body {
   color: #c13b4a;
 }
 
-/* 정답·오답 캐릭터: 화면 전체를 덮으며 표시 */
+/* 정답·오답 캐릭터 화면 */
 .mascot-wrap {
   display: none;
   position: fixed;
@@ -160,19 +160,16 @@ body {
   display: flex;
 }
 
-/* 캐릭터 크게 표시 */
 .mascot {
   width: min(70vw, 65vh, 500px);
   height: min(70vw, 65vh, 500px);
   object-fit: contain;
 }
 
-/* 정답 캐릭터 애니메이션 */
 .mascot-wrap.happy .mascot {
   animation: bunnyHop 0.65s ease-in-out 2;
 }
 
-/* 오답 캐릭터 애니메이션 */
 .mascot-wrap.try .mascot {
   animation: bearWobble 0.55s ease-in-out 2;
 }
@@ -197,11 +194,9 @@ body {
   0%, 100% {
     transform: translateY(0) rotate(0);
   }
-
   35% {
     transform: translateY(-17px) rotate(-5deg);
   }
-
   65% {
     transform: translateY(0) rotate(5deg);
   }
@@ -211,11 +206,9 @@ body {
   0%, 100% {
     transform: rotate(0);
   }
-
   25% {
     transform: rotate(-9deg);
   }
-
   75% {
     transform: rotate(9deg);
   }
@@ -225,23 +218,12 @@ body {
   0%, 100% {
     transform: scale(.82);
   }
-
   50% {
     transform: scale(1.18);
   }
 }
 
-@keyframes captionPop {
-  0%, 100% {
-    transform: scale(.82);
-  }
-
-  50% {
-    transform: scale(1.18);
-  }
-}
-
-/* 버튼 영역: 문제 아래쪽으로 간격을 좁혀 배치 */
+/* 하단 버튼 영역 */
 .bottom {
   display: flex;
   flex-direction: column;
@@ -253,26 +235,32 @@ body {
   flex-shrink: 0;
 }
 
+/* 버튼 배치: 왼쪽 세로 버튼 + 가운데 마이크 */
 .controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr);
+  grid-template-columns: 1fr 90px 1fr;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   width: 100%;
   max-width: 900px;
   margin-top: 20px;
 }
 
-/* 전구는 더 왼쪽으로, 스피커는 더 오른쪽으로 배치 */
-#showAnswer {
+/* 정답 확인·정답 듣기 왼쪽 세로 배치 */
+.left-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   justify-self: start;
+  gap: 12px;
 }
 
-#listenAnswer {
-  justify-self: end;
+/* 오른쪽 빈 공간: 마이크 중앙 정렬용 */
+.right-space {
+  width: 100%;
 }
 
-/* 정답 확인 및 정답 듣기 버튼 확대 */
+/* 일반 버튼 */
 .side-button {
   min-height: 64px;
   padding: 12px 16px;
@@ -294,12 +282,11 @@ body {
   transform: scale(.97);
 }
 
-/* 아이콘 버튼: 글자와 테두리 없이 이미지 표시 */
+/* 아이콘 버튼 */
 .icon-button {
-  width: 64px;
-  height: 64px;
+  width: 40px;
+  height: 40px;
   min-height: 0;
-  justify-self: center;
   display: grid;
   place-items: center;
   padding: 0;
@@ -320,7 +307,7 @@ body {
   object-fit: contain;
 }
 
-/* 마이크 버튼: 배경색과 그림자 제거 */
+/* 마이크 버튼 */
 .mic {
   width: 90px;
   height: 90px;
@@ -331,13 +318,13 @@ body {
   box-shadow: none;
   display: grid;
   place-items: center;
+  justify-self: center;
   cursor: pointer;
   overflow: visible;
   transition: transform .15s;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 이미지 자체만 표시 */
 .mic-image {
   display: block;
   width: 100%;
@@ -348,7 +335,7 @@ body {
   border-radius: 0;
 }
 
-/* 말하는 동안 이미지 확대 효과 */
+/* 말하는 동안 마이크 확대 */
 .mic.listening {
   background: transparent;
   box-shadow: none;
@@ -360,14 +347,13 @@ body {
   0%, 100% {
     filter: drop-shadow(0 0 0 transparent);
   }
-
   50% {
     filter: drop-shadow(0 0 8px #e24c6670);
   }
 }
 
 .status {
-  display: none; /* 마이크 오류 및 안내 메시지 영역 숨김 */
+  display: none;
 }
 
 .answer {
@@ -417,11 +403,22 @@ body {
     margin-top: 4px;
   }
 
+  /* 모바일 버튼 배치 */
   .controls {
-    grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+    grid-template-columns: 1fr 64px 1fr;
     gap: 5px;
     max-width: 100%;
     margin-top: 20px;
+  }
+
+  .left-buttons {
+    gap: 8px;
+  }
+
+  /* 모바일 전구·스피커 크기 */
+  .left-buttons .icon-button {
+    width: 40px;
+    height: 40px;
   }
 
   .mic {
@@ -437,8 +434,6 @@ body {
   }
 
   .icon-button {
-    width: 44px;
-    height: 44px;
     min-height: 0;
     padding: 0;
     border: none;
@@ -455,9 +450,6 @@ body {
 
   .answer {
     font-size: 20px !important;
-}
-  .prompt {
-    font-size: 40px !important;
   }
 }
 </style>
@@ -500,12 +492,30 @@ body {
 
     <div class="controls">
 
-      <button class="side-button icon-button" id="showAnswer" aria-label="정답 확인" title="정답 확인">
-        <img id="bulbImage"
-             src="https://snowj205.github.io/effect-file/bulb_gy.png"
-             alt="정답 확인">
-      </button>
+      <!-- 왼쪽: 정답 확인 + 정답 듣기 -->
+      <div class="left-buttons">
 
+        <button class="side-button icon-button"
+                id="showAnswer"
+                aria-label="정답 확인"
+                title="정답 확인">
+          <img id="bulbImage"
+               src="https://snowj205.github.io/effect-file/bulb_gy.png"
+               alt="정답 확인">
+        </button>
+
+        <button class="side-button icon-button"
+                id="listenAnswer"
+                aria-label="정답 듣기"
+                title="정답 듣기">
+          <img id="speakerImage"
+               src="https://snowj205.github.io/effect-file/speaker_gy.png"
+               alt="정답 듣기">
+        </button>
+
+      </div>
+
+      <!-- 가운데: 마이크 -->
       <button
         class="mic"
         id="mic"
@@ -520,11 +530,8 @@ body {
         >
       </button>
 
-      <button class="side-button icon-button" id="listenAnswer" aria-label="정답 듣기" title="정답 듣기">
-        <img id="speakerImage"
-             src="https://snowj205.github.io/effect-file/speaker_gy.png"
-             alt="정답 듣기">
-      </button>
+      <!-- 오른쪽 빈 공간 -->
+      <div class="right-space"></div>
 
     </div>
 
@@ -656,7 +663,7 @@ function renderQuestion() {
     index === questions.length - 1;
 }
 
-/* 말하기를 중단하고 검정 마이크 이미지로 복귀 */
+/* 말하기를 중단하고 기본 마이크 이미지로 복귀 */
 function stopListening() {
   const wasListening = listening;
 
@@ -694,6 +701,7 @@ function startListening() {
   }
 
   finalTranscript = "";
+  finalAlternatives = [];
   answerEl.textContent = "";
   feedbackEl.textContent = "";
 
@@ -704,7 +712,6 @@ function startListening() {
   recognition.maxAlternatives = 3;
   recognition.continuous = false;
 
-  /* 듣기 시작: 분홍 마이크 이미지 */
   recognition.onstart = () => {
     listening = true;
 
@@ -713,48 +720,35 @@ function startListening() {
 
     setMicImage(true);
 
-    const q = questions[index];
-
-    if (q.type === "blank") {
-      statusEl.textContent =
-        "";
-    } else if (q.type === "sentence") {
-      statusEl.textContent =
-        "";
-    } else {
-      statusEl.textContent =
-        "";
-    }
+    statusEl.textContent = "";
   };
 
   recognition.onresult = event => {
-  let interim = "";
-  const q = questions[index];
+    let interim = "";
 
-  for (let i = event.resultIndex; i < event.results.length; i++) {
-    const result = event.results[i];
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const result = event.results[i];
 
-    if (result.isFinal) {
-      const alternatives = [];
+      if (result.isFinal) {
+        const alternatives = [];
 
-      for (let a = 0; a < result.length; a++) {
-        const candidate = result[a].transcript.trim();
+        for (let a = 0; a < result.length; a++) {
+          const candidate = result[a].transcript.trim();
 
-        if (candidate) alternatives.push(candidate);
+          if (candidate) alternatives.push(candidate);
+        }
+
+        if (alternatives.length) {
+          finalAlternatives = alternatives;
+          finalTranscript = alternatives[0];
+        }
+      } else {
+        interim += result[0].transcript;
       }
-
-      if (alternatives.length) {
-        finalAlternatives = alternatives;
-        finalTranscript = alternatives[0];
-      }
-    } else {
-      interim += result[0].transcript;
     }
-  }
 
-  // 안내 문구는 표시하지 않고, 채점이 끝난 뒤 인식 내용과 일치도를 표시합니다.
-  statusEl.textContent = "";
-};
+    statusEl.textContent = "";
+  };
 
   recognition.onerror = event => {
     let message = "음성을 인식하지 못했어요. 다시 시도해 보세요.";
@@ -776,45 +770,44 @@ function startListening() {
   };
 
   recognition.onend = () => {
-  listening = false;
+    listening = false;
 
-  micEl.classList.remove("listening");
-  micEl.setAttribute("aria-label", "말하기 시작");
+    micEl.classList.remove("listening");
+    micEl.setAttribute("aria-label", "말하기 시작");
 
-  // 듣기 종료: 검정 마이크 이미지
-  setMicImage(false);
+    setMicImage(false);
 
-  if (finalAlternatives.length || finalTranscript) {
-    const q = questions[index];
+    if (finalAlternatives.length || finalTranscript) {
+      const q = questions[index];
 
-    const candidates = [
-      ...new Set(
-        finalAlternatives.length
-          ? finalAlternatives
-          : [finalTranscript]
-      )
-    ];
+      const candidates = [
+        ...new Set(
+          finalAlternatives.length
+            ? finalAlternatives
+            : [finalTranscript]
+        )
+      ];
 
-    candidates.sort(
-      (a, b) =>
-        similarityPercent(b, q.answer) -
-        similarityPercent(a, q.answer)
-    );
+      candidates.sort(
+        (a, b) =>
+          similarityPercent(b, q.answer) -
+          similarityPercent(a, q.answer)
+      );
 
-    const transcriptToCheck = candidates[0];
+      const transcriptToCheck = candidates[0];
 
-    finalTranscript = "";
-    finalAlternatives = [];
+      finalTranscript = "";
+      finalAlternatives = [];
 
-    checkAnswer(transcriptToCheck);
+      checkAnswer(transcriptToCheck);
 
-  } else if (
-    !statusEl.textContent.includes("권한") &&
-    !statusEl.textContent.includes("연결에 실패")
-  ) {
-    statusEl.textContent = "";
-  }
-};
+    } else if (
+      !statusEl.textContent.includes("권한") &&
+      !statusEl.textContent.includes("연결에 실패")
+    ) {
+      statusEl.textContent = "";
+    }
+  };
 
   try {
     recognition.start();
@@ -860,7 +853,6 @@ function levenshtein(a, b) {
 
 /* 정답과 음성 인식 결과 비교 */
 function similarityPercent(spoken, expected) {
-  // 음성 인식 결과와 정답을 문자열로 변환
   const said = normalize(String(spoken ?? ""));
   const answer = normalize(String(expected ?? ""));
 
@@ -925,10 +917,9 @@ function checkAnswer(spoken) {
 
   if (safeScore >= 85) {
 
-    // 한글 뜻 문제를 맞히면 영어 정답을 문제 화면에 표시
     if (q.type === "meaning") {
-        promptEl.textContent = q.answer;
-        meaningEl.textContent = q.korean;
+      promptEl.textContent = q.answer;
+      meaningEl.textContent = q.korean;
     }
 
     showMascot("excellent");
@@ -936,22 +927,18 @@ function checkAnswer(spoken) {
     feedbackEl.textContent =
       `Excellent! 아주 잘했어요! (${safeScore}%) 🎉`;
     feedbackEl.className = "feedback good";
-   statusEl.textContent = "";
 
     playFeedbackAudio("excellent");
 
   } else if (safeScore >= 65) {
     showMascot("good");
 
-    // 65점 이상이면 영어 정답과 한글 뜻 표시
     if (q.type === "meaning" || q.type === "sentence") {
-        promptEl.textContent = q.answer;
-        meaningEl.textContent = q.korean;
+      promptEl.textContent = q.answer;
+      meaningEl.textContent = q.korean;
     }
 
     feedbackEl.className = "feedback good";
-
-    statusEl.textContent = "";
 
     playFeedbackAudio("good");
 
@@ -962,7 +949,6 @@ function checkAnswer(spoken) {
       `한 번 더 도전해 봐요! (${safeScore}%) 🙂`;
 
     feedbackEl.className = "feedback try";
-    statusEl.textContent = "";
 
     playFeedbackAudio("onemore");
   }
@@ -985,7 +971,7 @@ function hideMascot() {
   document.getElementById("mascot").removeAttribute("src");
 }
 
-/* 캐릭터 크게 표시 후 2초 뒤 숨기기 */
+/* 캐릭터 표시 후 2초 뒤 숨기기 */
 function showMascot(level) {
   const wrap = document.getElementById("mascotWrap");
   const mascot = document.getElementById("mascot");
@@ -1056,7 +1042,7 @@ function playFeedbackAudio(level) {
   });
 }
 
-/* 정답 듣기: 재생 중 스피커 아이콘을 분홍색으로 변경 */
+/* 정답 듣기 */
 function speakAnswer() {
   if (!("speechSynthesis" in window)) {
     statusEl.textContent = "";
@@ -1143,7 +1129,7 @@ document.getElementById("next").addEventListener("click", () => {
   }
 });
 
-/* 정답 확인: 누르면 전구 아이콘이 분홍색으로 유지됨 */
+/* 정답 확인 */
 document.getElementById("showAnswer").addEventListener("click", () => {
   const q = questions[index];
 
@@ -1155,6 +1141,7 @@ document.getElementById("showAnswer").addEventListener("click", () => {
 
   answerEl.textContent = `정답: ${q.answer}`;
   statusEl.textContent = "";
+
   playNavigationTone();
 });
 
