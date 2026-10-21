@@ -1,1 +1,1157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>영어 대화 말하기 연습</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 13px;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      background: #f5f7fb;
+      color: #263238;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 18px;
+      font-weight: bold;
+      background: #e9eef5;
+      color: #263238;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .panel {
+      background: #fff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 12px #0000000d;
+    }
+
+    .settings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .field {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5df;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .primary {
+      background: #3978ed;
+      color: white;
+    }
+
+    .success {
+      background: #e1f5e8;
+      color: #187345;
+    }
+
+    .warning {
+      background: #fff0d6;
+      color: #8a5700;
+    }
+
+    .chat-panel {
+      padding: 22px;
+    }
+
+    .progress {
+      text-align: center;
+      color: #667788;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    #chatHistory {
+      max-height: 65vh;
+      min-height: 250px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .chat-row.right {
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      overflow: visible;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .bubble-wrap {
+      max-width: 78%;
+      min-width: 0;
+    }
+
+    .bubble {
+      padding: 17px 19px;
+      border-radius: 17px;
+      font-size: 22px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .translation {
+      margin-top: 7px;
+      padding: 0 4px;
+      color: #667788;
+      font-size: 16px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .answer-line {
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #2459bd;
+      font-size: 20px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .left .bubble {
+      background: #eaf0ff;
+      border-top-left-radius: 4px;
+    }
+
+    .right .bubble {
+      background: #fff0d9;
+      border-top-right-radius: 4px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .bubble-hint {
+      font-size: 15px;
+      color: #7b8794;
+      padding: 15px;
+      background: #f3f5f8;
+      border-radius: 12px;
+    }
+
+    .chat-actions {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .chat-actions button {
+      padding: 9px 12px;
+      font-size: 14px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mic-button {
+      margin: 0 auto;
+      width: 90px;
+      height: 90px;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      padding: 0;
+    }
+
+    .mic-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .mic-button.recording {
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      50% {
+        transform: scale(1.04);
+      }
+    }
+
+    .mic-area {
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .mic-caption {
+      margin-top: 5px;
+      color: #526171;
+      font-weight: bold;
+    }
+
+    .feedback {
+      min-height: 32px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .recognized {
+      margin-top: 5px;
+      text-align: center;
+      color: #536273;
+      overflow-wrap: anywhere;
+    }
+
+    .edit-title {
+      font-size: 20px;
+      margin-top: 0;
+    }
+
+    .edit-help {
+      color: #6b7785;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .dialogue-editor {
+      display: grid;
+      grid-template-columns: 35px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      margin-top: 12px;
+    }
+
+    .dialogue-number {
+      padding-top: 12px;
+      font-weight: bold;
+      color: #607080;
+      text-align: center;
+    }
+
+    .dialogue-editor textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .editor-labels {
+      display: grid;
+      grid-template-columns: 35px minmax(0, 1fr);
+      gap: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #536273;
+    }
+
+    .note {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #6b7785;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 9px;
+      }
+
+      .panel {
+        padding: 13px;
+      }
+
+      .chat-panel {
+        padding: 14px 10px;
+      }
+
+      #chatHistory {
+        max-height: 60vh;
+        min-height: 220px;
+        padding: 6px;
+      }
+
+      .bubble {
+        font-size: 19px;
+        padding: 13px;
+      }
+
+      .bubble-wrap {
+        max-width: 82%;
+      }
+
+      .avatar {
+        width: 54px;
+        height: 54px;
+      }
+
+      .dialogue-editor,
+      .editor-labels {
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 5px;
+      }
+
+      .dialogue-editor textarea {
+        font-size: 14px;
+        padding: 8px;
+      }
+
+      .mic-button {
+        width: 85px;
+        height: 85px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <section class="panel">
+      <div class="settings">
+        <div class="field">
+          <label for="dialogueCount">연습할 대화 개수</label>
+          <input id="dialogueCount" type="number" min="1" max="50" value="12">
+        </div>
+
+        <div class="field">
+          <label for="voiceType">영어 발음</label>
+          <select id="voiceType">
+            <option value="en-US">미국식 영어</option>
+            <option value="en-GB">영국식 영어</option>
+          </select>
+        </div>
+
+        <button class="primary" id="startBtn">연습 시작</button>
+        <button id="roleToggleBtn">🔄 역할 바꾸기: 기본</button>
+        <button id="editToggleBtn">대화 내용 수정</button>
+      </div>
+    </section>
+
+    <section class="panel chat-panel">
+      <div class="progress" id="progress">연습 시작 버튼을 눌러 주세요.</div>
+
+      <div id="chatHistory">
+        <div class="bubble-hint" id="initialHint">
+          연습을 시작하면 대화가 아래로 계속 쌓입니다. 이전 대화는 스크롤해서 다시 볼 수 있어요.
+        </div>
+      </div>
+
+      <div class="mic-area">
+        <button class="mic-button" id="micBtn" aria-label="영어로 말하기" disabled>
+          <img id="micImage" src="https://snowj205.github.io/effect-file/mic_gy.png" alt="마이크">
+        </button>
+        <div class="mic-caption" id="micCaption"></div>
+      </div>
+
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div class="recognized" id="recognized"></div>
+
+      <div class="controls">
+        <button id="replayBtn" disabled>🔊 영어 다시 듣기</button>
+        <button id="showAnswerBtn" disabled>정답 확인</button>
+        <button class="primary" id="nextBtn" disabled>다음 대화 →</button>
+      </div>
+
+      
+    </section>
+
+    <section class="panel hidden" id="editorPanel">
+      <h2 class="edit-title">✏️ 대화 내용 편집</h2>
+      <p class="edit-help">
+        상대방 영어 문장과 한글 해석, 아이에게 보여 줄 한글 뜻, 정답 영어 문장을 입력하세요.
+        저장 버튼을 누르면 연습 화면에 적용됩니다.
+      </p>
+
+      <div class="editor-labels">
+        <div>번호</div>
+        <div class="editor-label-fields">
+          <div>상대방 영어 문장</div>
+          <div>상대방 말의 한글 해석</div>
+          <div>아이에게 보여 줄 한글</div>
+          <div>정답 영어 문장</div>
+        </div>
+      </div>
+
+      <div id="dialogueEditor"></div>
+
+      <div class="controls">
+        <button class="primary" id="saveEditBtn">대화 저장 및 적용</button>
+        <button id="addDialogueBtn">+ 대화 추가</button>
+      </div>
+
+      <div class="note">
+        수정한 내용은 현재 페이지를 사용하는 동안 유지됩니다. 페이지를 새로 열면 기본 예시로 돌아갑니다.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    "use strict";
+
+    const defaultDialogues = [
+      {
+        en: "Hi. My name is sara. I'm from Mexico.",
+        enKo: "안녕. 내 이름은 사라야. 난 멕시코에서 왔어.",
+        ko: "안녕. 난 수잔이야. 난 브라질에서 왔어.",
+        answer: "Hi. I'm susan. I'm from Brazil."
+      },
+      {
+        en: "I'm glad to meet you.",
+        enKo: "너를 만나서 기뻐.",
+        ko: "나도 너를 만나서 기뻐.",
+        answer: "I'm glad to meet you, too."
+      },
+      {
+        en: "I will introduce my friend.",
+        enKo: "내 친구를 소개할께.",
+        ko: "좋아.",
+        answer: "oky."
+      },
+      {
+        en: "susan, this is my friend, jack.",
+        enKo: "수잔, 내 친구 잭이야.",
+        ko: "안녕. 너를 만나서 행복해.",
+        answer: "Hi. I'm happy to meet you."
+      },
+      {
+        en: "It's beautiful here, isn't it?",
+        enKo: "여기 너무 아름답다, 그렇지 않니?",
+        ko: "응, 그래.",
+        answer: "Yes, it is."
+      },
+      {
+        en: "Where are they from?",
+        enKo: "그들은 어디 출신이야?",
+        ko: "그들은 남아프리카 출신이야.",
+        answer: "They are from South Africa."
+      },
+      {
+        en: "How is your trip? Is it good?",
+        enKo: "너의 여행 어떠니? 좋아?",
+        ko: "좋아. 나는 이 여행을 좋아해."
+        answer: "It's good. I like this trip."
+      }
+    ];
+
+    let dialogues = defaultDialogues.map(item => ({ ...item }));
+    let activeDialogues = [];
+    let currentIndex = 0;
+    let isRecording = false;
+    let recognition = null;
+    let speechRunId = 0;
+    let waitingForAnswer = false;
+    let completed = false;
+    let reverseRole = false;
+
+    let currentChild = null;
+    let currentReply = null;
+    let currentTeacher = null;
+
+    const $ = id => document.getElementById(id);
+
+    const countInput = $("dialogueCount");
+    const voiceSelect = $("voiceType");
+    const chatHistory = $("chatHistory");
+    const progress = $("progress");
+    const micBtn = $("micBtn");
+    const micImage = $("micImage");
+    const micCaption = $("micCaption");
+    const feedback = $("feedback");
+    const recognized = $("recognized");
+    const replayBtn = $("replayBtn");
+    const showAnswerBtn = $("showAnswerBtn");
+    const nextBtn = $("nextBtn");
+
+    const micDefault = "https://snowj205.github.io/effect-file/mic_gy.png";
+    const micActive = "https://snowj205.github.io/effect-file/mic_pk.png";
+
+    function setMic(active) {
+      micImage.src = active ? micActive : micDefault;
+    }
+
+    function scrollBottom() {
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function stopSpeech() {
+      speechRunId++;
+
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speak(text, done) {
+      stopSpeech();
+      const id = speechRunId;
+
+      if (!("speechSynthesis" in window)) {
+        if (done) done();
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = voiceSelect.value;
+      utterance.rate = 0.85;
+      utterance.pitch = 1;
+
+      utterance.onend = () => {
+        if (id === speechRunId && done) done();
+      };
+
+      utterance.onerror = () => {
+        if (id === speechRunId && done) done();
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    function avatar(kind) {
+      const element = document.createElement("div");
+      element.className = "avatar";
+
+      const image = document.createElement("img");
+      image.src = `https://snowj205.github.io/effect-file/${kind}.png`;
+      image.alt = kind === "teacher" ? "선생님" : "아이";
+
+      element.appendChild(image);
+      return element;
+    }
+
+    function teacherRow(text, translation) {
+      const row = document.createElement("div");
+      row.className = "chat-row left";
+      row.appendChild(avatar("teacher"));
+
+      const wrap = document.createElement("div");
+      wrap.className = "bubble-wrap";
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+
+      const translationElement = document.createElement("div");
+      translationElement.className = "translation";
+      translationElement.textContent = translation || "";
+
+      wrap.append(bubble, translationElement);
+      row.appendChild(wrap);
+
+      return {
+        row,
+        bubble,
+        translation: translationElement
+      };
+    }
+
+    function childRow(prompt, answer) {
+      const row = document.createElement("div");
+      row.className = "chat-row right";
+
+      const wrap = document.createElement("div");
+      wrap.className = "bubble-wrap";
+
+      const answerLine = document.createElement("div");
+      answerLine.className = "answer-line hidden";
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = prompt;
+
+      const actions = document.createElement("div");
+      actions.className = "chat-actions";
+
+      const audioButton = document.createElement("button");
+      audioButton.textContent = "🔊 정답 영어 듣기";
+
+      const revealButton = document.createElement("button");
+      revealButton.textContent = "정답 확인";
+      revealButton.className = "primary";
+
+      actions.append(audioButton, revealButton);
+      wrap.append(answerLine, bubble, actions);
+      row.append(wrap, avatar("child"));
+
+      audioButton.addEventListener("click", () => {
+        speak(reverseRole ? activeDialogues[currentIndex].en : answer);
+      });
+
+      revealButton.addEventListener("click", revealAnswer);
+
+      return {
+        row,
+        answerLine,
+        bubble,
+        audio: audioButton,
+        reveal: revealButton
+      };
+    }
+
+    function appendRows(item) {
+      currentTeacher = teacherRow(item.en, item.enKo);
+      currentChild = childRow(
+        reverseRole ? item.enKo : item.ko,
+        reverseRole ? item.en : item.answer
+      );
+
+      currentReply = teacherRow("", "");
+      currentReply.row.classList.add("hidden");
+
+      if (reverseRole) {
+        currentTeacher.row.classList.add("hidden");
+        chatHistory.append(currentTeacher.row, currentChild.row, currentReply.row);
+      } else {
+        currentChild.row.classList.add("hidden");
+        chatHistory.append(currentTeacher.row, currentChild.row, currentReply.row);
+      }
+
+      scrollBottom();
+    }
+
+    function renderCurrent() {
+      if (!activeDialogues.length) return;
+
+      stopSpeech();
+      stopRecording();
+
+      completed = false;
+      waitingForAnswer = false;
+
+      const item = activeDialogues[currentIndex];
+
+      feedback.textContent = "";
+      feedback.className = "feedback";
+      recognized.textContent = "";
+      progress.textContent = `대화 ${currentIndex + 1} / ${activeDialogues.length}`;
+
+      micCaption.textContent = "";
+      micBtn.disabled = true;
+      nextBtn.disabled = true;
+      replayBtn.disabled = false;
+      showAnswerBtn.disabled = true;
+      setMic(false);
+
+      appendRows(item);
+
+      if (reverseRole) {
+        showPrompt();
+      } else {
+        speak(item.en, showPrompt);
+      }
+    }
+
+    function showPrompt() {
+      if (!currentChild) return;
+
+      currentChild.row.classList.remove("hidden");
+
+      const hint = $("initialHint");
+      if (hint) hint.classList.add("hidden");
+
+      waitingForAnswer = true;
+      micBtn.disabled = false;
+      showAnswerBtn.disabled = false;
+      currentChild.reveal.disabled = false;
+      micCaption.textContent = "";
+      scrollBottom();
+    }
+
+    $("startBtn").addEventListener("click", () => {
+      const count = parseInt(countInput.value, 10);
+
+      if (!Number.isFinite(count) || count < 1 || count > 50) {
+        alert("대화 개수는 1개부터 50개까지 입력해 주세요.");
+        countInput.value = 12;
+        return;
+      }
+
+      const validDialogues = dialogues.filter(item =>
+        item.en.trim() &&
+        item.enKo.trim() &&
+        item.ko.trim() &&
+        item.answer.trim()
+      );
+
+      if (!validDialogues.length) {
+        alert("대화 내용을 입력해 주세요.");
+        return;
+      }
+
+      activeDialogues = validDialogues.slice(0, Math.min(count, validDialogues.length));
+      currentIndex = 0;
+      chatHistory.innerHTML = "";
+      renderCurrent();
+    });
+
+    $("roleToggleBtn").addEventListener("click", () => {
+      reverseRole = !reverseRole;
+      $("roleToggleBtn").textContent = reverseRole
+        ? "🔄 역할 바꾸기: 반대"
+        : "🔄 역할 바꾸기: 기본";
+
+      feedback.textContent = "역할 설정이 바뀌었어요. 다음 연습 시작부터 적용됩니다.";
+      feedback.className = "feedback";
+    });
+
+    function createRecognition() {
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognitionAPI) return null;
+
+      const recognizer = new SpeechRecognitionAPI();
+      recognizer.lang = "en-US";
+      recognizer.continuous = false;
+      recognizer.interimResults = true;
+      recognizer.maxAlternatives = 5;
+
+      recognizer.onstart = () => {
+        isRecording = true;
+        micBtn.classList.add("recording");
+        setMic(true);
+        micCaption.textContent = "";
+        feedback.textContent = "";
+        recognized.textContent = "";
+      };
+
+      recognizer.onresult = event => {
+        let finalText = "";
+        let interimText = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalText += event.results[i][0].transcript;
+          } else {
+            interimText += event.results[i][0].transcript;
+          }
+        }
+
+        const shownText = (finalText + " " + interimText).trim();
+
+        if (shownText) {
+          recognized.textContent = "인식한 영어: " + shownText;
+        }
+
+        if (finalText.trim()) {
+          checkAnswer(finalText.trim());
+        }
+      };
+
+      recognizer.onerror = event => {
+        isRecording = false;
+        micBtn.classList.remove("recording");
+        setMic(false);
+
+        if (waitingForAnswer) {
+          micBtn.disabled = false;
+        }
+
+        micCaption.textContent = "";
+
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          feedback.textContent = "마이크 권한을 허용해 주세요. 브라우저 설정도 확인해 보세요.";
+        } else if (event.error === "no-speech") {
+          feedback.textContent = "음성이 들리지 않았어요. 다시 말해 보세요.";
+        } else if (event.error === "network") {
+          feedback.textContent = "음성 인식 연결에 문제가 있어요. 인터넷 연결을 확인해 주세요.";
+        } else if (event.error !== "aborted") {
+          feedback.textContent = "음성을 인식하지 못했어요. 다시 시도해 보세요.";
+        }
+      };
+
+      recognizer.onend = () => {
+        isRecording = false;
+        micBtn.classList.remove("recording");
+        setMic(false);
+
+        if (waitingForAnswer && !completed && micCaption.textContent.includes("듣고 있어요")) {
+          micCaption.textContent = "";
+          micBtn.disabled = false;
+        }
+      };
+
+      return recognizer;
+    }
+
+    function stopRecording() {
+      if (recognition && isRecording) {
+        try {
+          recognition.stop();
+        } catch (error) {
+          // 이미 중지된 경우에는 아무 작업도 하지 않습니다.
+        }
+      }
+
+      isRecording = false;
+      micBtn.classList.remove("recording");
+      setMic(false);
+    }
+
+    micBtn.addEventListener("click", () => {
+      if (!waitingForAnswer || !activeDialogues.length || completed) return;
+
+      if (isRecording) {
+        stopRecording();
+        return;
+      }
+
+      if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
+        feedback.textContent = "이 브라우저는 음성 인식을 지원하지 않습니다. 최신 Chrome에서 열어 보세요.";
+        return;
+      }
+
+      try {
+        recognition = createRecognition();
+        micBtn.disabled = true;
+        recognition.start();
+      } catch (error) {
+        micBtn.disabled = false;
+        setMic(false);
+        feedback.textContent = "";
+      }
+    });
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .replace(/[’‘]/g, "'")
+        .replace(/[^a-z0-9'\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function checkAnswer(text) {
+      if (!activeDialogues.length || !waitingForAnswer || completed) return;
+
+      const item = activeDialogues[currentIndex];
+      const correctAnswer = reverseRole ? item.en : item.answer;
+
+      if (normalize(text) === normalize(correctAnswer)) {
+        waitingForAnswer = false;
+        completed = true;
+        micBtn.disabled = true;
+        nextBtn.disabled = false;
+        showAnswerBtn.disabled = true;
+        currentChild.reveal.disabled = true;
+
+        feedback.textContent = "🎉 Perfect! 아주 잘했어요!";
+        feedback.className = "feedback success";
+        micCaption.textContent = "정답이에요! 다음 대화로 넘어갈 수 있어요.";
+
+        if (reverseRole) {
+          currentReply.row.classList.remove("hidden");
+          currentReply.bubble.textContent = item.answer;
+          currentReply.translation.textContent = item.ko || "";
+          speak(item.answer);
+          scrollBottom();
+        }
+
+        // 정답이면 1.2초 후 자동으로 다음 대화로 이동합니다.
+        setTimeout(() => {
+          if (completed && currentIndex < activeDialogues.length - 1) {
+            nextBtn.click();
+          } else if (completed && currentIndex === activeDialogues.length - 1) {
+            nextBtn.click();
+          }
+        }, 1200);
+      } else {
+        feedback.textContent = "🔄 조금 달라요. 한 번 더 말해 보세요!";
+        feedback.className = "feedback warning";
+        micCaption.textContent = "";
+        micBtn.disabled = false;
+      }
+    }
+
+    function revealAnswer() {
+      if (!activeDialogues.length || !currentChild) return;
+
+      const item = activeDialogues[currentIndex];
+
+      currentChild.answerLine.textContent = reverseRole ? item.en : item.answer;
+      currentChild.answerLine.classList.remove("hidden");
+      currentChild.reveal.disabled = true;
+      currentChild.reveal.textContent = "정답 확인 완료";
+      showAnswerBtn.disabled = true;
+
+      if (reverseRole) {
+        currentReply.row.classList.remove("hidden");
+        currentReply.bubble.textContent = item.answer;
+        currentReply.translation.textContent = item.ko || "";
+        speak(item.answer);
+      }
+
+      waitingForAnswer = true;
+      completed = false;
+      micBtn.disabled = false;
+      nextBtn.disabled = true;
+
+      feedback.textContent = "모범 답안을 확인했어요. 마이크를 눌러 영어로 말해 보세요!";
+      feedback.className = "feedback success";
+      micCaption.textContent = "";
+      scrollBottom();
+    }
+
+    showAnswerBtn.addEventListener("click", revealAnswer);
+
+    replayBtn.addEventListener("click", () => {
+      if (!activeDialogues.length || completed) return;
+
+      const item = activeDialogues[currentIndex];
+
+      stopSpeech();
+      stopRecording();
+      feedback.textContent = "";
+      recognized.textContent = "";
+
+      if (reverseRole) {
+        waitingForAnswer = true;
+        micBtn.disabled = false;
+        micCaption.textContent = "";
+        return;
+      }
+
+      currentChild.row.classList.add("hidden");
+      micBtn.disabled = true;
+      showAnswerBtn.disabled = true;
+
+      speak(item.en, showPrompt);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (!activeDialogues.length || nextBtn.disabled) return;
+
+      stopSpeech();
+      stopRecording();
+
+      if (currentIndex < activeDialogues.length - 1) {
+        currentIndex++;
+        showAnswerBtn.textContent = "정답 확인";
+        renderCurrent();
+        return;
+      }
+
+      completed = true;
+      waitingForAnswer = false;
+      progress.textContent = "연습 완료!";
+      micBtn.disabled = true;
+      setMic(false);
+      replayBtn.disabled = true;
+      showAnswerBtn.disabled = true;
+      nextBtn.disabled = true;
+      micCaption.textContent = "다시 연습하려면 연습 시작을 눌러 주세요.";
+
+      const endMessage = document.createElement("div");
+      endMessage.className = "bubble-hint";
+      endMessage.textContent = "🎉 모든 대화를 마쳤어요!";
+      chatHistory.appendChild(endMessage);
+
+      feedback.textContent = "🎉 모든 대화를 마쳤어요!";
+      feedback.className = "feedback success";
+      recognized.textContent = "";
+      scrollBottom();
+    });
+
+    function renderEditor() {
+      const root = $("dialogueEditor");
+      root.innerHTML = "";
+
+      dialogues.forEach((item, index) => {
+        const number = document.createElement("div");
+        number.className = "dialogue-number";
+        number.textContent = index + 1;
+
+        const row = document.createElement("div");
+        row.className = "dialogue-editor";
+
+        const fields = document.createElement("div");
+        fields.className = "editor-fields";
+
+        [
+          ["en", item.en, "상대방 영어 문장"],
+          ["enKo", item.enKo || "", "영어 문장의 한글 해석"],
+          ["ko", item.ko, "아이에게 보여 줄 한글"],
+          ["answer", item.answer, "정답 영어 문장"]
+        ].forEach(([type, value, placeholder]) => {
+          const area = document.createElement("textarea");
+          area.value = value;
+          area.placeholder = placeholder;
+          area.dataset.type = type;
+          area.setAttribute("aria-label", `${index + 1}번 ${placeholder}`);
+          fields.appendChild(area);
+        });
+
+        row.append(number, fields);
+        root.appendChild(row);
+      });
+
+      updateEditorLayout();
+    }
+
+    $("editToggleBtn").addEventListener("click", () => {
+      $("editorPanel").classList.toggle("hidden");
+
+      if (!$("editorPanel").classList.contains("hidden")) {
+        renderEditor();
+        $("editorPanel").scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+
+    $("saveEditBtn").addEventListener("click", () => {
+      const updatedDialogues = [];
+
+      $("dialogueEditor").querySelectorAll(".dialogue-editor").forEach(row => {
+        const getValue = type =>
+          row.querySelector(`[data-type="${type}"]`).value.trim();
+
+        updatedDialogues.push({
+          en: getValue("en"),
+          enKo: getValue("enKo"),
+          ko: getValue("ko"),
+          answer: getValue("answer")
+        });
+      });
+
+      if (updatedDialogues.some(item =>
+        !item.en || !item.enKo || !item.ko || !item.answer
+      )) {
+        alert("모든 항목을 입력해 주세요.");
+        return;
+      }
+
+      if (updatedDialogues.length > 50) {
+        alert("대화는 최대 50개까지 사용할 수 있어요.");
+        return;
+      }
+
+      dialogues = updatedDialogues;
+      countInput.value = Math.min(
+        parseInt(countInput.value, 10) || 12,
+        dialogues.length
+      );
+
+      activeDialogues = [];
+      alert("대화 내용이 저장되었어요. 연습 시작 버튼을 눌러 주세요.");
+      $("editorPanel").classList.add("hidden");
+    });
+
+    $("addDialogueBtn").addEventListener("click", () => {
+      if (dialogues.length >= 50) {
+        alert("대화는 최대 50개까지 추가할 수 있어요.");
+        return;
+      }
+
+      dialogues.push({
+        en: "What do you like?",
+        enKo: "너는 무엇을 좋아하니?",
+        ko: "나는 음악을 좋아해.",
+        answer: "I like music."
+      });
+
+      countInput.value = dialogues.length;
+      renderEditor();
+    });
+
+    function updateEditorLayout() {
+      const isMobile = innerWidth <= 600;
+
+      document.querySelectorAll(".editor-label-fields, .editor-fields").forEach(element => {
+        element.style.display = "grid";
+        element.style.gridTemplateColumns = isMobile
+          ? "1fr"
+          : "repeat(4, minmax(0, 1fr))";
+        element.style.gap = "8px";
+      });
+    }
+
+    window.addEventListener("resize", updateEditorLayout);
+
+    micBtn.disabled = true;
+    setMic(false);
+    replayBtn.disabled = true;
+    showAnswerBtn.disabled = true;
+    nextBtn.disabled = true;
+    updateEditorLayout();
+  </script>
+</body>
+</html>
