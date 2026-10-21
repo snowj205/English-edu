@@ -1298,11 +1298,26 @@ showAnswerBtn.disabled = true;
 nextBtn.disabled = true;
 updateEditorLayout();
 
-// 페이지를 열면 첫 번째 대화 자동 시작
-window.addEventListener("load", () => {
+```javascript
+// 페이지를 열면 자동으로 첫 번째 대화 시작
+function autoStartDialogue() {
   countInput.value = 12;
-  $("startBtn").click();
-});
+
+  if (dialogues.length > 0) {
+    activeDialogues = dialogues.slice(0, 12);
+    currentIndex = 0;
+    chatHistory.innerHTML = "";
+    renderCurrent();
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", autoStartDialogue);
+} else {
+  autoStartDialogue();
+}
+```
+
   </script>
 </body>
 </html>
