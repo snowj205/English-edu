@@ -656,7 +656,8 @@
 
       setMic(false);
 
-      appendRows(item);
+      // 기존 대화를 지우지 않고 새 대화를 아래에 추가
+appendRows(item);
 
       if (reverseRole) {
         showPrompt();
@@ -714,7 +715,7 @@
       activeDialogues = validDialogues;
       currentIndex = 0;
 
-      chatHistory.innerHTML = "";
+      
 
       renderCurrent();
     });
