@@ -36,7 +36,7 @@
     }
 
     button:disabled {
-      opacity: 1;
+      opacity: 0.45;
       cursor: not-allowed;
     }
 
@@ -84,35 +84,6 @@
     .primary {
       background: #3978ed;
       color: white;
-    }
-
-    /* 다음 대화: 분홍색 화살표만 표시 */
-    #nextBtn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 64px;
-      height: 64px;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
-      background: transparent;
-      color: #FE009E;
-      font-size: 54px;
-      line-height: 1;
-      font-weight: normal;
-      box-shadow: none;
-    }
-
-    #nextBtn:disabled {
-      opacity: 0.45;
-      background: transparent;
-    }
-
-    #nextBtn:focus-visible {
-      outline: 2px solid #FE009E;
-      outline-offset: 3px;
-      border-radius: 8px;
     }
 
     .success {
@@ -235,18 +206,16 @@
     }
 
     .chat-actions {
-      margin-top: 8px;
+      margin-top: 10px;
       display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-end;
+      flex-direction: column;
+      align-items: flex-end;
       gap: 8px;
     }
 
-    .chat-actions .icon-button {
-      width: 64px;
-      height: 64px;
-      flex: 0 0 64px;
+    .chat-actions button {
+      padding: 9px 12px;
+      font-size: 14px;
     }
 
     .controls {
@@ -254,45 +223,8 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 0;
-      min-height: 0;
+      margin-top: 8px;
     }
-
-    /* 정답 확인 아이콘은 아이 채팅창 아래에 표시 */
-    #showAnswerBtn { display: none !important; }
-
-    .mic-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-    }
-
-    /* 영어 다시 듣기 아이콘은 선생님 말풍선 아래에 배치 */
-    .teacher-replay-row {
-      display: flex;
-      justify-content: flex-start;
-      margin-top: 6px;
-    }
-    .teacher-replay-row #replayBtn {
-      width: 64px;
-      height: 64px;
-      flex: 0 0 64px;
-    }
-
-    .mic-row .mic-button {
-      margin: 0;
-    }
-
-    .icon-button {
-      width: 80px; height: 80px; padding: 0; border: 0; border-radius: 0;
-      background: transparent; box-shadow: none; display: inline-flex;
-      align-items: center; justify-content: center; overflow: visible;
-    }
-    .icon-button img {
-      width: 100%; height: 100%; object-fit: contain; display: block;
-    }
-    .icon-button:disabled { opacity: 1; }
 
     .mic-button {
       margin: 0 auto;
@@ -447,25 +379,7 @@
         width: 85px;
         height: 85px;
       }
-
-      .mic-row #replayBtn {
-        width: 58px;
-        height: 58px;
-        flex-basis: 58px;
-      }
-
-      .chat-actions .icon-button {
-        width: 48px;
-        height: 48px;
-        flex-basis: 48px;
-      }
-
-      .mic-row { gap: 8px; }
     }
-    /* 위쪽 설정 영역 숨기기 */
-.container > section:first-child {
-  display: none !important;
-}
   </style>
 </head>
 
@@ -502,22 +416,19 @@
       </div>
 
       <div class="mic-area">
-        <div class="mic-row">
-          <button class="mic-button" id="micBtn" aria-label="영어로 말하기" disabled>
-            <img id="micImage" src="https://snowj205.github.io/effect-file/mic_gy.png" alt="마이크">
-          </button>
-        </div>
+        <button class="mic-button" id="micBtn" aria-label="영어로 말하기" disabled>
+          <img id="micImage" src="https://snowj205.github.io/effect-file/mic_gy.png" alt="마이크">
+        </button>
         <div class="mic-caption" id="micCaption"></div>
       </div>
 
       <div class="feedback" id="feedback" aria-live="polite"></div>
       <div class="recognized" id="recognized"></div>
 
-      <button id="showAnswerBtn" class="icon-button" data-icon-type="bulb" disabled aria-label="정답 확인" title="정답 확인">
-        <img src="https://snowj205.github.io/effect-file/bulb_gy.png" alt="정답 확인">
-      </button>
       <div class="controls">
-        <button id="nextBtn" disabled aria-label="다음 대화" title="다음 대화">→</button>
+        <button id="replayBtn" disabled>🔊 영어 다시 듣기</button>
+        <button id="showAnswerBtn" disabled>정답 확인</button>
+        <button class="primary" id="nextBtn" disabled>다음 대화 →</button>
       </div>
 
       
@@ -644,20 +555,6 @@
 
     const micDefault = "https://snowj205.github.io/effect-file/mic_gy.png";
     const micActive = "https://snowj205.github.io/effect-file/mic_pk.png";
-    const speakerDefault = "https://snowj205.github.io/effect-file/speaker_gy.png";
-    const speakerActive = "https://snowj205.github.io/effect-file/speaker_pk.png";
-    const bulbDefault = "https://snowj205.github.io/effect-file/bulb_gy.png";
-    const bulbActive = "https://snowj205.github.io/effect-file/bulb_pk.png";
-
-    function setIcon(button, active) {
-      const image = button.querySelector("img");
-      if (!image) return;
-      const isSpeaker = button.dataset.iconType === "speaker" ||
-        button.getAttribute("data-icon-type") === "speaker";
-      image.src = isSpeaker
-        ? (active ? speakerActive : speakerDefault)
-        : (active ? bulbActive : bulbDefault);
-    }
 
     function setMic(active) {
       micImage.src = active ? micActive : micDefault;
@@ -729,15 +626,6 @@
       translationElement.textContent = translation || "";
 
       wrap.append(bubble, translationElement);
-
-      // 선생님 채팅 말풍선 바로 아래에 영어 다시 듣기 아이콘을 둡니다.
-      if (text) {
-        const replayRow = document.createElement("div");
-        replayRow.className = "teacher-replay-row";
-        replayRow.appendChild(replayBtn);
-        wrap.appendChild(replayRow);
-      }
-
       row.appendChild(wrap);
 
       return {
@@ -765,34 +653,21 @@
       actions.className = "chat-actions";
 
       const audioButton = document.createElement("button");
-      audioButton.className = "icon-button";
-      audioButton.type = "button";
-      audioButton.dataset.iconType = "speaker";
-      audioButton.setAttribute("aria-label", "정답 영어 듣기");
-      audioButton.title = "정답 영어 듣기";
-      audioButton.innerHTML = '<img src="https://snowj205.github.io/effect-file/speaker_gy.png" alt="정답 영어 듣기">';
+      audioButton.textContent = "🔊 정답 영어 듣기";
 
       const revealButton = document.createElement("button");
-      revealButton.className = "icon-button";
-      revealButton.type = "button";
-      revealButton.dataset.iconType = "bulb";
-      revealButton.setAttribute("aria-label", "정답 확인");
-      revealButton.title = "정답 확인";
-      revealButton.innerHTML = '<img src="https://snowj205.github.io/effect-file/bulb_gy.png" alt="정답 확인">';
+      revealButton.textContent = "정답 확인";
+      revealButton.className = "primary";
 
       actions.append(audioButton, revealButton);
       wrap.append(answerLine, bubble, actions);
       row.append(wrap, avatar("child"));
 
       audioButton.addEventListener("click", () => {
-        setIcon(audioButton, true);
         speak(reverseRole ? activeDialogues[currentIndex].en : answer);
       });
 
-      revealButton.addEventListener("click", () => {
-        setIcon(revealButton, true);
-        revealAnswer();
-      });
+      revealButton.addEventListener("click", revealAnswer);
 
       return {
         row,
@@ -845,8 +720,6 @@
       nextBtn.disabled = true;
       replayBtn.disabled = false;
       showAnswerBtn.disabled = true;
-      setIcon(replayBtn, false);
-      setIcon(showAnswerBtn, false);
       setMic(false);
 
       appendRows(item);
@@ -869,7 +742,6 @@
       waitingForAnswer = true;
       micBtn.disabled = false;
       showAnswerBtn.disabled = false;
-      nextBtn.disabled = false;
       currentChild.reveal.disabled = false;
       micCaption.textContent = "";
       scrollBottom();
@@ -1077,7 +949,6 @@
         feedback.className = "feedback warning";
         micCaption.textContent = "";
         micBtn.disabled = false;
-        nextBtn.disabled = false;
       }
     }
 
@@ -1089,9 +960,8 @@
       currentChild.answerLine.textContent = reverseRole ? item.en : item.answer;
       currentChild.answerLine.classList.remove("hidden");
       currentChild.reveal.disabled = true;
-      setIcon(currentChild.reveal, true);
+      currentChild.reveal.textContent = "정답 확인 완료";
       showAnswerBtn.disabled = true;
-      setIcon(showAnswerBtn, true);
 
       if (reverseRole) {
         currentReply.row.classList.remove("hidden");
@@ -1111,14 +981,10 @@
       scrollBottom();
     }
 
-    showAnswerBtn.addEventListener("click", () => {
-      setIcon(showAnswerBtn, true);
-      revealAnswer();
-    });
+    showAnswerBtn.addEventListener("click", revealAnswer);
 
     replayBtn.addEventListener("click", () => {
       if (!activeDialogues.length || completed) return;
-      setIcon(replayBtn, true);
 
       const item = activeDialogues[currentIndex];
 
@@ -1149,6 +1015,7 @@
 
       if (currentIndex < activeDialogues.length - 1) {
         currentIndex++;
+        showAnswerBtn.textContent = "정답 확인";
         renderCurrent();
         return;
       }
@@ -1292,32 +1159,11 @@
     window.addEventListener("resize", updateEditorLayout);
 
     micBtn.disabled = true;
-setMic(false);
-replayBtn.disabled = true;
-showAnswerBtn.disabled = true;
-nextBtn.disabled = true;
-updateEditorLayout();
-
-```javascript
-// 페이지를 열면 자동으로 첫 번째 대화 시작
-function autoStartDialogue() {
-  countInput.value = 12;
-
-  if (dialogues.length > 0) {
-    activeDialogues = dialogues.slice(0, 12);
-    currentIndex = 0;
-    chatHistory.innerHTML = "";
-    renderCurrent();
-  }
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", autoStartDialogue);
-} else {
-  autoStartDialogue();
-}
-```
-
+    setMic(false);
+    replayBtn.disabled = true;
+    showAnswerBtn.disabled = true;
+    nextBtn.disabled = true;
+    updateEditorLayout();
   </script>
 </body>
 </html>
