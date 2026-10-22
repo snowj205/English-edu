@@ -884,17 +884,51 @@ appendRows(item);
       }
     });
 
-    // 문장부호를 제거한 뒤 영어 답안 비교
-    function normalize(text) {
-      return text
-        .toLowerCase()
-        .replace(/[’‘]/g, "'")
-        .replace(/[^a-z0-9\s]/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
+    // 문장부호와 대소문자를 무시하고 영어 답안 비교
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[’‘]/g, "'")
+    .replace(/[^a-z0-9\s']/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
-    ```javascript
+// 두 문장의 유사도 계산
+function similarity(a, b) {
+  a = normalize(a);
+  b = normalize(b);
+
+  if (a === b) return 1;
+  if (!a || !b) return 0;
+
+  const rows = a.length + 1;
+  const cols = b.length + 1;
+
+  const dp = Array.from(
+    { length: rows },
+    () => Array(cols).fill(0)
+  );
+
+  for (let i = 0; i < rows; i++) dp[i][0] = i;
+  for (let j = 0; j < cols; j++) dp[0][j] = j;
+
+  for (let i = 1; i < rows; i++) {
+    for (let j = 1; j < cols; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+
+  return 1 - dp[a.length][b.length] /
+    Math.max(a.length, b.length);
+}
+
 // 정답 처리
 function checkAnswer(text) {
   if (
@@ -911,8 +945,20 @@ function checkAnswer(text) {
     ? item.en
     : item.answer;
 
-  // 쉼표, 마침표, 물음표, 느낌표 등을 무시하고 비교
-  if (normalize(text) === normalize(correctAnswer)) {
+  const spoken = normalize(text);
+  const expected = normalize(correctAnswer);
+
+  // 완전히 일치하거나 유사도가 85% 이상이면 정답 처리
+  const score = similarity(spoken, expected);
+  const isCorrect = spoken === expected || score >= 0.85;
+
+  // 이전 자동 이동 타이머가 있다면 취소
+  if (answerTimer) {
+    clearTimeout(answerTimer);
+    answerTimer = null;
+  }
+
+  if (isCorrect) {
     waitingForAnswer = false;
     completed = true;
 
@@ -927,43 +973,46 @@ function checkAnswer(text) {
     feedback.textContent = "🎉 Perfect! 아주 잘했어요!";
     feedback.className = "feedback success";
 
-    micCaption.textContent =
-      "정답이에요! 잠시 후 다음 대화로 넘어갑니다.";
+    micCaption.textContent = "정답이에요!";
 
-    if (reverseRole) {
+    // 반대 역할에서는 선생님의 영어 답변도 표시
+    if (reverseRole && currentReply) {
       currentReply.row.classList.remove("hidden");
       currentReply.bubble.textContent = item.answer;
       currentReply.translation.textContent = item.ko || "";
 
-      speak(item.answer);
       scrollBottom();
+      speak(item.answer);
     }
 
-    // 정답이면 1.2초 후 다음 대화로 자동 이동
+    // 정답이면 1.2초 후 다음 대화로 이동
     answerTimer = setTimeout(() => {
       answerTimer = null;
 
-      if (completed) {
+      if (completed && currentIndex < activeDialogues.length - 1) {
+        currentIndex++;
+        renderCurrent();
+      } else if (completed) {
+        nextBtn.disabled = false;
         nextBtn.click();
       }
     }, 1200);
 
   } else {
-    // 오답이어도 현재 대화에서 다시 시도할 수 있도록 처리
+    // 오답이어도 다음 대화로 넘어갈 수 있게 함
     waitingForAnswer = true;
     completed = false;
 
     micBtn.disabled = false;
-    nextBtn.disabled = true;
+    nextBtn.disabled = false;
 
     feedback.textContent =
-      "🔄 조금 달라요! 마이크를 누르고 다시 말해 보세요.";
+      "🔄 조금 달라요! 다시 말하거나 다음 대화로 넘어가세요.";
 
     feedback.className = "feedback warning";
 
     micCaption.textContent = "";
 
-    // 정답은 바로 공개하지 않고 다시 말할 기회를 줌
     showAnswerBtn.disabled = false;
 
     if (currentChild && currentChild.reveal) {
@@ -972,7 +1021,6 @@ function checkAnswer(text) {
     }
   }
 }
-```
 
 
     // 정답 확인
