@@ -47,12 +47,92 @@
       box-shadow: 0 3px 12px #0000000d;
     }
 
-    .top-controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
+    /* 역할 선택 영역 */
+.role-select {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 22px;
+}
+
+/* 선생님과 아이 선택 버튼 */
+.role-card {
+  width: 145px;
+  min-height: 145px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  background: #fff;
+  border: 3px solid transparent;
+  border-radius: 16px;
+
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+/* 역할 이미지 */
+.role-card img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  display: block;
+}
+
+/* 역할 이름 */
+.role-card span {
+  font-size: 16px;
+  font-weight: bold;
+  color: #263238;
+}
+
+/* 선택된 역할: 핑크색 테두리 */
+.role-card.selected {
+  border-color: #FE009E;
+  background: #fff0f8;
+}
+
+/* 마우스를 올렸을 때 */
+.role-card:hover {
+  background: #fff5fa;
+}
+
+/* 키보드로 선택할 때 */
+.role-card:focus-visible {
+  outline: 2px solid #FE009E;
+  outline-offset: 3px;
+}
+
+/* 역할 안내 */
+.role-guide {
+  margin-top: 12px;
+  text-align: center;
+  color: #667788;
+  font-size: 14px;
+}
+
+/* 작은 화면 */
+@media (max-width: 400px) {
+  .role-select {
+    gap: 14px;
+  }
+
+  .role-card {
+    width: 125px;
+    min-height: 125px;
+    padding: 8px;
+  }
+
+  .role-card img {
+    width: 75px;
+    height: 75px;
+  }
+}
 
     .primary {
       background: #3978ed;
@@ -301,13 +381,42 @@
 <body>
   <div class="container">
 
-    <!-- 상단에는 연습 시작과 역할 바꾸기만 표시 -->
-    <section class="panel">
-      <div class="top-controls">
-        <button class="primary" id="startBtn">연습 시작</button>
-        <button id="roleToggleBtn">🔄 역할 바꾸기: 기본</button>
-      </div>
-    </section>
+    <!-- 역할 선택 -->
+<section class="panel">
+  <div class="role-select">
+    <button
+      type="button"
+      class="role-card"
+      id="teacherSelect"
+      aria-label="선생님 역할 선택"
+      aria-pressed="false"
+    >
+      <img
+        src="https://snowj205.github.io/effect-file/teacher.png?v=2"
+        alt="선생님"
+      >
+      <span>선생님 역할</span>
+    </button>
+
+    <button
+      type="button"
+      class="role-card selected"
+      id="childSelect"
+      aria-label="아이 역할 선택"
+      aria-pressed="true"
+    >
+      <img
+        src="https://snowj205.github.io/effect-file/child.png?v=2"
+        alt="아이"
+      >
+      <span>아이 역할</span>
+    </button>
+  </div>
+
+  <div class="role-guide">
+    맡고 싶은 역할의 이미지를 눌러 주세요.
+  </div>
+</section>
 
     <section class="panel chat-panel">
 
@@ -719,19 +828,71 @@ appendRows(item);
       renderCurrent();
     });
 
-    // 역할 바꾸기
-    $("roleToggleBtn").addEventListener("click", () => {
-      reverseRole = !reverseRole;
+   // 역할 선택 버튼
+const teacherSelect = $("teacherSelect");
+const childSelect = $("childSelect");
 
-      $("roleToggleBtn").textContent = reverseRole
-        ? "🔄 역할 바꾸기: 반대"
-        : "🔄 역할 바꾸기: 기본";
+// 역할 선택 상태 표시
+function updateRoleSelection() {
+  teacherSelect.classList.toggle("selected", reverseRole);
+  childSelect.classList.toggle("selected", !reverseRole);
 
-      feedback.textContent =
-        "역할 설정이 바뀌었어요. 연습 시작을 누르면 적용됩니다.";
+  teacherSelect.setAttribute(
+    "aria-pressed",
+    String(reverseRole)
+  );
 
-      feedback.className = "feedback";
-    });
+  childSelect.setAttribute(
+    "aria-pressed",
+    String(!reverseRole)
+  );
+}
+
+// 역할을 선택하고 해당 역할로 연습 시작
+function selectRole(isTeacher) {
+  reverseRole = isTeacher;
+
+  updateRoleSelection();
+
+  const validDialogues = dialogues.filter(item =>
+    item.en.trim() &&
+    item.enKo.trim() &&
+    item.ko.trim() &&
+    item.answer.trim()
+  );
+
+  if (!validDialogues.length) {
+    alert("대화 내용이 없습니다.");
+    return;
+  }
+
+  stopSpeech();
+  stopRecording();
+
+  if (answerTimer) {
+    clearTimeout(answerTimer);
+    answerTimer = null;
+  }
+
+  activeDialogues = validDialogues;
+  currentIndex = 0;
+
+  // 역할을 선택하면 새 역할로 첫 대화부터 시작
+  renderCurrent();
+}
+
+// 선생님 이미지 클릭
+teacherSelect.addEventListener("click", () => {
+  selectRole(true);
+});
+
+// 아이 이미지 클릭
+childSelect.addEventListener("click", () => {
+  selectRole(false);
+});
+
+// 처음에는 아이 역할을 선택 상태로 표시
+updateRoleSelection();
 
     // 음성 인식 생성
     function createRecognition() {
