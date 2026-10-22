@@ -894,8 +894,8 @@ appendRows(item);
         .trim();
     }
 
-    ```javascript
-// 정답 처리
+    ``` javascript
+// 정답 처리: 단어 일치율을 이용해 조금 더 유연하게 채점
 function checkAnswer(text) {
   if (
     !activeDialogues.length ||
@@ -911,8 +911,34 @@ function checkAnswer(text) {
     ? item.en
     : item.answer;
 
-  // 쉼표, 마침표, 물음표, 느낌표 등을 무시하고 비교
-  if (normalize(text) === normalize(correctAnswer)) {
+  const spokenWords = normalize(text).split(" ").filter(Boolean);
+  const correctWords = normalize(correctAnswer).split(" ").filter(Boolean);
+
+  // 완전히 일치하면 바로 정답
+  let matchCount = 0;
+  const used = new Array(correctWords.length).fill(false);
+
+  spokenWords.forEach(word => {
+    const index = correctWords.findIndex(
+      (correctWord, i) => correctWord === word && !used[i]
+    );
+
+    if (index !== -1) {
+      matchCount++;
+      used[index] = true;
+    }
+  });
+
+  // 정답 문장의 단어 중 일치하는 비율 계산
+  const accuracy = correctWords.length
+    ? matchCount / correctWords.length
+    : 0;
+
+  // 단어 일치율 80% 이상이면 정답으로 인정
+  if (
+    normalize(text) === normalize(correctAnswer) ||
+    accuracy >= 0.8
+  ) {
     waitingForAnswer = false;
     completed = true;
 
@@ -924,7 +950,11 @@ function checkAnswer(text) {
       currentChild.reveal.disabled = true;
     }
 
-    feedback.textContent = "🎉 Perfect! 아주 잘했어요!";
+    feedback.textContent = accuracy >= 0.8 &&
+      normalize(text) !== normalize(correctAnswer)
+      ? "🎉 잘했어요! 거의 정확하게 말했어요!"
+      : "🎉 Perfect! 아주 잘했어요!";
+
     feedback.className = "feedback success";
 
     micCaption.textContent =
@@ -949,21 +979,22 @@ function checkAnswer(text) {
     }, 1200);
 
   } else {
-    // 오답이어도 현재 대화에서 다시 시도할 수 있도록 처리
+    // 오답이어도 다시 말하거나 다음 대화로 이동 가능
     waitingForAnswer = true;
     completed = false;
 
     micBtn.disabled = false;
-    nextBtn.disabled = true;
+
+    // 오답이어도 다음 대화 버튼 활성화
+    nextBtn.disabled = false;
 
     feedback.textContent =
-      "🔄 조금 달라요! 마이크를 누르고 다시 말해 보세요.";
+      "🔄 조금 달라요! 다시 말하거나 다음 대화로 넘어가세요.";
 
     feedback.className = "feedback warning";
 
     micCaption.textContent = "";
 
-    // 정답은 바로 공개하지 않고 다시 말할 기회를 줌
     showAnswerBtn.disabled = false;
 
     if (currentChild && currentChild.reveal) {
@@ -972,7 +1003,6 @@ function checkAnswer(text) {
     }
   }
 }
-```
 
 
     // 정답 확인
