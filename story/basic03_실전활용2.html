@@ -417,10 +417,10 @@
       padding: 0 !important;
       margin: 0 !important;
       border: 0 !important;
-      border-radius: 0 !important;
-      background: transparent !important;
-      color: #FE009E !important;
-      font-size: 58px !important;
+      border-radius: 16px !important;
+      background: #FE009E !important;
+      color: #ffffff !important;
+      font-size: 48px !important;
       line-height: 1 !important;
       font-weight: normal !important;
       display: inline-flex !important;
@@ -432,9 +432,9 @@
       z-index: 5;
     }
 
-    .start-btn:hover { background: #fff0f8 !important; border-radius: 12px !important; }
+    .start-btn:hover { background: #e6008e !important; border-radius: 16px !important; }
     .start-btn:focus-visible { outline: 2px solid #FE009E; outline-offset: 3px; }
-    .start-btn span { display: block !important; color: #FE009E !important; transform: translateX(2px); }
+    .start-btn span { display: block !important; color: #ffffff !important; transform: translateX(2px); }
 
     .role-select {
       display: flex;
@@ -962,6 +962,12 @@
     }
 
     $("startBtn").addEventListener("click", () => {
+      if (!selectedRole) {
+        alert("먼저 선생님 역할 또는 아이 역할을 선택해 주세요.");
+        return;
+      }
+
+      reverseRole = selectedRole === "teacher";
       const count = parseInt(countInput.value, 10);
 
       if (!Number.isFinite(count) || count < 1 || count > 50) {
@@ -1000,20 +1006,19 @@
       childSelect.setAttribute("aria-pressed", String(childActive));
     }
 
-    function chooseRoleAndStart(role) {
+    function chooseRole(role) {
       selectedRole = role;
       reverseRole = role === "teacher";
       updateRoleSelection();
-      // 역할 아이콘을 누르면 해당 역할로 첫 대화부터 시작합니다.
-      $("startBtn").click();
+      // 역할만 선택합니다. 분홍색 재생 버튼을 눌러야 대화가 시작됩니다.
     }
 
     teacherSelect.addEventListener("click", () => {
-      chooseRoleAndStart("teacher");
+      chooseRole("teacher");
     });
 
     childSelect.addEventListener("click", () => {
-      chooseRoleAndStart("child");
+      chooseRole("child");
     });
 
     updateRoleSelection();
@@ -1405,7 +1410,7 @@ nextBtn.disabled = true;
 updateEditorLayout();
 
 // 처음 화면에서는 대화를 자동 시작하지 않습니다.
-// 사용자가 선생님/아이 역할 아이콘을 눌렀을 때 해당 역할로 시작합니다.
+// 역할 아이콘을 선택한 뒤 분홍색 재생 버튼을 눌러 시작합니다.
 window.addEventListener("load", () => {
   countInput.value = 12;
   selectedRole = null;
