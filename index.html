@@ -40,7 +40,20 @@ header {
   padding: 32px 28px;
   margin-bottom: 30px;
 }
+/* 메인 배너 이미지 */
+.hero.banner {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 25px;
+  border: none;
+  background: transparent;
+}
 
+.hero.banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .eyebrow {
   color: #5279d8;
   font-size: 12px;
@@ -223,13 +236,15 @@ p {
 
   <section id="homeSection">
 
-    <section class="hero">
-      <div class="eyebrow">MY LEARNING</div>
+    
+<section class="hero banner">
+  <img
+    src="https://snowj205.github.io/effect-file/main-banner.png"
+    alt="오늘도 한 단계씩, 영어를 즐겁게 배워요!"
+  >
+</section>
+```
 
-      <h1>오늘도 한 단계씩,<br>영어를 즐겁게 배워요!</h1>
-
-      <p>원하는 학습 메뉴를 선택해 영어 공부를 시작하세요.</p>
-    </section>
 
     <main class="menu">
 
