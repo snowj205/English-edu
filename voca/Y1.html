@@ -1310,18 +1310,24 @@ document.getElementById("prev").addEventListener("click", () => {
   }
 });
 
-/* 다음 문제 */
-document.getElementById("next").addEventListener("click", () => {
-  // 마지막 문제에서는 결과 화면을 먼저 확실하게 표시합니다.
+/* 다음 문제 버튼 */
+document.getElementById("next").onclick = function () {
+
+  // 음성 인식이 진행 중이면 중지
+  stopListening();
+
+  // 마지막 문제라면 결과 화면 표시
   if (index >= questions.length - 1) {
     showResults();
     return;
   }
 
-  try { playNavigationTone(); } catch (e) {}
+  // 다음 문제로 이동
+  playNavigationTone();
   index++;
+
   renderQuestion();
-});
+};
 
 /* 정답 확인 */
 document.getElementById("showAnswer").addEventListener("click", () => {
