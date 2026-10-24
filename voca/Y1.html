@@ -1128,6 +1128,10 @@ function checkAnswer(spoken) {
       meaningEl.textContent = q.korean;
     }
 
+    // 굿 캐릭터와 칭찬 문구 표시
+    feedbackEl.textContent =
+      `Good job! 잘했어요! (${safeScore}%) 👍`;
+
     feedbackEl.className = "feedback good";
 
     playFeedbackAudio("good");
