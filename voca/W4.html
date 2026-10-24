@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>영어 말하기 연습</title>
+<title>초등영단어800</title>
 
 <style>
 :root {
@@ -459,7 +459,7 @@ body {
 <div class="app">
 
   <div class="top">
-    <span>영어 말하기 연습</span>
+    <span>진행단계</span>
     <span id="counter">1 / 15</span>
   </div>
 
@@ -917,7 +917,7 @@ function checkAnswer(spoken) {
 
   statusEl.textContent = "";
 
-  if (safeScore >= 85) {
+  if (safeScore >= 100) {
 
     if (q.type === "meaning") {
       promptEl.textContent = q.answer;
@@ -927,7 +927,7 @@ function checkAnswer(spoken) {
     showMascot("excellent");
 
     feedbackEl.textContent =
-      `Excellent! 아주 잘했어요! (${safeScore}%) 🎉`;
+      `Excellent! 아주 훌륭해요! (${safeScore}%) 🎉`;
     feedbackEl.className = "feedback good";
 
     playFeedbackAudio("excellent");
@@ -948,7 +948,7 @@ function checkAnswer(spoken) {
     showMascot("onemore");
 
     feedbackEl.textContent =
-      `한 번 더 도전해 봐요! (${safeScore}%) 🙂`;
+      `한 번 더 도전 해 봐요! (${safeScore}%) 🙂`;
 
     feedbackEl.className = "feedback try";
 
