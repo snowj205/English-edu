@@ -1312,14 +1312,15 @@ document.getElementById("prev").addEventListener("click", () => {
 
 /* 다음 문제 */
 document.getElementById("next").addEventListener("click", () => {
-  playNavigationTone();
-
-  if (index < questions.length - 1) {
-    index++;
-    renderQuestion();
-  } else {
+  // 마지막 문제에서는 결과 화면을 먼저 확실하게 표시합니다.
+  if (index >= questions.length - 1) {
     showResults();
+    return;
   }
+
+  try { playNavigationTone(); } catch (e) {}
+  index++;
+  renderQuestion();
 });
 
 /* 정답 확인 */
@@ -1393,8 +1394,15 @@ function showResults() {
     resultList.appendChild(li);
   });
 
-  document.getElementById("appRoot").style.display = "none";
-  document.getElementById("resultsScreen").classList.add("show");
+  const appRoot = document.getElementById("appRoot");
+  const resultsScreen = document.getElementById("resultsScreen");
+
+  // CSS 상태와 관계없이 결과 화면이 표시되도록 명시적으로 설정합니다.
+  appRoot.style.display = "none";
+  resultsScreen.classList.add("show");
+  resultsScreen.style.display = "block";
+  resultsScreen.style.visibility = "visible";
+  resultsScreen.style.opacity = "1";
   window.scrollTo(0, 0);
 }
 
@@ -1403,6 +1411,7 @@ document.getElementById("retryQuiz").addEventListener("click", () => {
   questionResults.fill(null);
   index = 0;
   document.getElementById("resultsScreen").classList.remove("show");
+  document.getElementById("resultsScreen").style.display = "none";
   document.getElementById("appRoot").style.display = "flex";
   renderQuestion();
   window.scrollTo(0, 0);
@@ -1411,6 +1420,7 @@ document.getElementById("retryQuiz").addEventListener("click", () => {
 /* 결과 화면을 닫고 마지막 문제로 돌아가기 */
 document.getElementById("reviewQuiz").addEventListener("click", () => {
   document.getElementById("resultsScreen").classList.remove("show");
+  document.getElementById("resultsScreen").style.display = "none";
   document.getElementById("appRoot").style.display = "flex";
   index = questions.length - 1;
   renderQuestion();
