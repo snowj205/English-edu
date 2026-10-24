@@ -927,7 +927,7 @@ function checkAnswer(spoken) {
     showMascot("excellent");
 
     feedbackEl.textContent =
-      `Excellent! 아주 훌륭해요! (${safeScore}%) 🎉`;
+      `Excellent! 아주 훌륭해요! (${safeScore}%) 🎊🏆🎉`;
     feedbackEl.className = "feedback good";
 
     playFeedbackAudio("excellent");
@@ -940,6 +940,10 @@ function checkAnswer(spoken) {
       meaningEl.textContent = q.korean;
     }
 
+    // 굿 캐릭터와 칭찬 문구 표시
+    feedbackEl.textContent =
+      `Good!!! 잘했어요! (${safeScore}%) 👍🥈👏`;
+
     feedbackEl.className = "feedback good";
 
     playFeedbackAudio("good");
@@ -948,7 +952,7 @@ function checkAnswer(spoken) {
     showMascot("onemore");
 
     feedbackEl.textContent =
-      `한 번 더 도전 해 봐요! (${safeScore}%) 🙂`;
+      `한 번 더 도전 해 봐요! (${safeScore}%) 😿😿😿`;
 
     feedbackEl.className = "feedback try";
 
