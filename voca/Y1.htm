@@ -364,6 +364,152 @@ body {
   overflow-wrap: anywhere;
 }
 
+
+
+/* 학습 결과 화면(API 없이 계산하는 음성 인식 문장 일치도) */
+.results-screen {
+  display: none;
+  min-height: 100vh;
+  padding: 28px 18px 40px;
+  background: #fff;
+}
+
+.results-screen.show {
+  display: block;
+}
+
+.results-inner {
+  width: min(900px, 100%);
+  margin: 0 auto;
+}
+
+.results-title {
+  margin: 10px 0 8px;
+  text-align: center;
+  font-size: clamp(28px, 5vw, 42px);
+  color: #263238;
+}
+
+.results-subtitle {
+  margin: 0 auto 26px;
+  text-align: center;
+  color: #6b7780;
+  line-height: 1.6;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.result-card {
+  padding: 22px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  text-align: center;
+  background: #fff;
+}
+
+.result-number {
+  display: block;
+  margin-bottom: 7px;
+  color: #ed48ad;
+  font-size: clamp(30px, 5vw, 42px);
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.result-label {
+  color: #536171;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.result-note {
+  padding: 15px 17px;
+  border-radius: 14px;
+  background: #fff4fb;
+  color: #68445c;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.result-detail-title {
+  margin: 28px 0 12px;
+  font-size: 21px;
+}
+
+.result-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+}
+
+.result-question {
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+.result-score {
+  white-space: nowrap;
+  font-weight: 800;
+  color: #536171;
+}
+
+.result-score.good { color: #16845b; }
+.result-score.partial { color: #c17a13; }
+.result-score.low { color: #c13b4a; }
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.result-action-button {
+  min-height: 48px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 13px;
+  background: #FA85DD;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.result-action-button.secondary {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #425166;
+}
+
+@media (max-width: 500px) {
+  .results-screen { padding: 18px 12px 28px; }
+  .results-grid { gap: 9px; }
+  .result-card { padding: 17px 9px; }
+  .result-label { font-size: 13px; }
+  .result-list li { padding: 10px; gap: 8px; }
+  .result-question { font-size: 14px; }
+  .result-score { font-size: 13px; }
+}
+
 /* 모바일 화면 */
 @media (max-width: 650px) {
   .app {
@@ -456,7 +602,7 @@ body {
 </head>
 
 <body>
-<div class="app">
+<div class="app" id="appRoot">
 
   <div class="top">
     <span>영어 말하기 연습</span>
@@ -543,6 +689,48 @@ body {
 
 </div>
 
+
+<section class="results-screen" id="resultsScreen" aria-labelledby="resultsTitle">
+  <div class="results-inner">
+    <h1 class="results-title" id="resultsTitle">말하기 연습 결과</h1>
+    <p class="results-subtitle" id="resultsSubtitle">수고했어요! 오늘의 연습 결과를 확인해 보세요.</p>
+
+    <div class="results-grid">
+      <div class="result-card">
+        <span class="result-number" id="resultAverage">—</span>
+        <span class="result-label">평균 문장 일치도</span>
+      </div>
+      <div class="result-card">
+        <span class="result-number" id="resultCorrectRate">—</span>
+        <span class="result-label">높은 일치도 비율 (85% 이상)</span>
+      </div>
+      <div class="result-card">
+        <span class="result-number" id="resultCorrect">—</span>
+        <span class="result-label">높은 일치도 문제 수</span>
+      </div>
+      <div class="result-card">
+        <span class="result-number" id="resultErrorRate">—</span>
+        <span class="result-label">문장 불일치율 추정</span>
+      </div>
+    </div>
+
+    <div class="result-note">
+      <strong>점수 안내</strong><br>
+      이 결과는 마이크가 인식한 영어 문장과 정답 문장의 일치도를 계산한 것입니다.
+      실제 발음의 정확도, 강세, 억양을 전문적으로 평가한 점수는 아니에요.
+      말하지 않은 문제는 평균 계산에서 제외됩니다.
+    </div>
+
+    <h2 class="result-detail-title">문제별 결과</h2>
+    <ul class="result-list" id="resultList"></ul>
+
+    <div class="result-actions">
+      <button class="result-action-button" id="retryQuiz">처음부터 다시 연습</button>
+      <button class="result-action-button secondary" id="reviewQuiz">문제 다시 보기</button>
+    </div>
+  </div>
+</section>
+
 <script>
 const questions = [
   { type: "meaning", korean: "응, 그래(찬성,긍정)", answer: "yeah" },
@@ -558,16 +746,17 @@ const questions = [
   { type: "meaning", korean: "그러게요, 안될것 없죠?", answer: "Yeah, why not?" },
   { type: "meaning", korean: "다음 해", answer: "next year" },
   { type: "meaning", korean: "노란 옷을 입은", answer: "wearing yellow" },
-  { type: "meaning", korean: ""네"라고 말하다", answer: "say yes" },
+  { type: "meaning", korean: '"네"라고 말하다', answer: "say yes" },
   { type: "meaning", korean: "너 좋아 보인다.", answer: "You look good." },
   { type: "meaning", korean: "그저께", answer: "the day before yesterday" },
   { type: "meaning", korean: "그는 아직 살아있다.", answer: "He is yet alive." },
   { type: "meaning", korean: "신부가 너무 어리다.", answer: "The bride is too young." },
   { type: "meaning", korean: "영상의(온도)", answer: "above zero" },
-  { type: "meaning", korean: "나는 동물원에서 호랑이를 보았다.", answer: "I saw a tigher in the zoo." }
+  { type: "meaning", korean: "나는 동물원에서 호랑이를 보았다.", answer: "I saw a tiger in the zoo." }
 ];
 
 let index = 0;
+const questionResults = questions.map(() => null);
 let recognition = null;
 let listening = false;
 let finalTranscript = "";
@@ -659,8 +848,7 @@ function renderQuestion() {
     `${((index + 1) / questions.length) * 100}%`;
 
   document.getElementById("prev").disabled = index === 0;
-  document.getElementById("next").disabled =
-    index === questions.length - 1;
+  document.getElementById("next").disabled = false;
 }
 
 /* 말하기를 중단하고 기본 마이크 이미지로 복귀 */
@@ -910,6 +1098,8 @@ function checkAnswer(spoken) {
   const score = Number(similarityPercent(spoken, q.answer));
   const safeScore = Number.isFinite(score) ? score : 0;
 
+  questionResults[index] = { score: safeScore, spoken: String(spoken || "") };
+
   answerEl.textContent =
     `인식한 내용: ${spoken} · 일치도 ${safeScore}%`;
 
@@ -1122,10 +1312,13 @@ document.getElementById("prev").addEventListener("click", () => {
 
 /* 다음 문제 */
 document.getElementById("next").addEventListener("click", () => {
+  playNavigationTone();
+
   if (index < questions.length - 1) {
-    playNavigationTone();
     index++;
     renderQuestion();
+  } else {
+    showResults();
   }
 });
 
@@ -1151,6 +1344,78 @@ document.getElementById("listenAnswer")
 
 /* 마이크 */
 micEl.addEventListener("click", startListening);
+
+/* 학습 결과 화면 표시 */
+function showResults() {
+  stopListening();
+  hideMascot();
+
+  const completed = questionResults.filter(result => result !== null);
+  const scores = completed.map(result => result.score);
+  const average = scores.length
+    ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length)
+    : 0;
+  const highScores = scores.filter(score => score >= 85).length;
+  const partialScores = scores.filter(score => score >= 65 && score < 85).length;
+  const lowScores = scores.filter(score => score < 65).length;
+  const highRate = scores.length ? Math.round(highScores / scores.length * 100) : 0;
+  const estimatedMismatch = scores.length ? 100 - average : 0;
+
+  document.getElementById("resultSubtitle").textContent =
+    `전체 ${questions.length}문제 중 ${completed.length}문제를 말했어요. ` +
+    `높은 일치도 ${highScores}문제 · 부분 일치 ${partialScores}문제 · 다시 연습 ${lowScores}문제`;
+  document.getElementById("resultAverage").textContent = scores.length ? `${average}%` : "—";
+  document.getElementById("resultCorrectRate").textContent = scores.length ? `${highRate}%` : "—";
+  document.getElementById("resultCorrect").textContent = `${highScores} / ${questions.length}`;
+  document.getElementById("resultErrorRate").textContent = scores.length ? `${estimatedMismatch}%` : "—";
+
+  const resultList = document.getElementById("resultList");
+  resultList.innerHTML = "";
+
+  questions.forEach((question, questionIndex) => {
+    const result = questionResults[questionIndex];
+    const li = document.createElement("li");
+    const questionText = document.createElement("span");
+    questionText.className = "result-question";
+    questionText.textContent = `${questionIndex + 1}. ${question.korean} → ${question.answer}`;
+
+    const scoreText = document.createElement("span");
+    scoreText.className = "result-score";
+
+    if (!result) {
+      scoreText.textContent = "미응답";
+    } else {
+      scoreText.textContent = `${result.score}%`;
+      scoreText.classList.add(result.score >= 85 ? "good" : result.score >= 65 ? "partial" : "low");
+    }
+
+    li.append(questionText, scoreText);
+    resultList.appendChild(li);
+  });
+
+  document.getElementById("appRoot").style.display = "none";
+  document.getElementById("resultsScreen").classList.add("show");
+  window.scrollTo(0, 0);
+}
+
+/* 결과 화면에서 다시 연습 */
+document.getElementById("retryQuiz").addEventListener("click", () => {
+  questionResults.fill(null);
+  index = 0;
+  document.getElementById("resultsScreen").classList.remove("show");
+  document.getElementById("appRoot").style.display = "flex";
+  renderQuestion();
+  window.scrollTo(0, 0);
+});
+
+/* 결과 화면을 닫고 마지막 문제로 돌아가기 */
+document.getElementById("reviewQuiz").addEventListener("click", () => {
+  document.getElementById("resultsScreen").classList.remove("show");
+  document.getElementById("appRoot").style.display = "flex";
+  index = questions.length - 1;
+  renderQuestion();
+  window.scrollTo(0, 0);
+});
 
 /* 첫 문제 표시 */
 renderQuestion();
