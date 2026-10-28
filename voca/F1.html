@@ -623,77 +623,64 @@ const questions = [
   { type: "meaning", korean: "모든,모두의", answer: "easy" },
   { type: "meaning", korean: "예,보기", answer: "eat" },
   { type: "meaning", korean: "우수한", answer: "egg" },
-  { type: "meaning", korean: "빈,비우다", answer: "empty" },
-  { type: "meaning", korean: "끝,끝내다", answer: "end" },
-  { type: "meaning", korean: "기관,엔진", answer: "engine" },
-  { type: "meaning", korean: "즐기다", answer: "enjoy" },
-  { type: "meaning", korean: "충분한,충분히", answer: "enough" },
-  { type: "meaning", korean: "지우다", answer: "erase" },
-  { type: "meaning", korean: "저녁", answer: "evening" },
-  { type: "meaning", korean: "아침을 먹다", answer: "eat breakfast" },
-  { type: "meaning", korean: "계란을 삶다", answer: "drive a car" },
-  { type: "meaning", korean: "빈상자", answer: "drop the price" },
-  { type: "meaning", korean: "이야기의 끝", answer: "beat a drum" },
-  { type: "meaning", korean: "증기 기관", answer: "dry air" },
-  { type: "meaning", korean: "게임을 즐기다", answer: "ducks quack" },
-  { type: "meaning", korean: "충분한 음식", answer: "pick one's ears" },
-  { type: "meaning", korean: "저녁 일찍", answer: "get up early" },
-  { type: "meaning", korean: "그 일은 쉽다.", answer: "live on earth" },
-  { type: "meaning", korean: "이것은 상한 계란이다.", answer: "He is playing a drum." },
-  { type: "meaning", korean: "재미있게 지내요!", answer: "My hands are dry now." },
-  { type: "meaning", korean: "안녕하세요.(저녁인사)", answer: "This duck is cute." },
-  { type: "meaning", korean: "토끼는 귀가 크다.", answer: "Rabbits have big ears." },
-  { type: "meaning", korean: "지구는 둥글다.", answer: "The earth is round." },
-  { type: "meaning", korean: "해는 동쪽에서 뜬다.", answer: "The sun rises in the east." },
+  { type: "meaning", korean: "흥분시키다", answer: "empty" },
+  { type: "meaning", korean: "변명,구실,용서하다", answer: "end" },
+  { type: "meaning", korean: "운동,연습,운동하다", answer: "engine" },
+  { type: "meaning", korean: "눈", answer: "enjoy" },
+  { type: "meaning", korean: "얼굴", answer: "enough" },
+  { type: "meaning", korean: "사실", answer: "erase" },
+  { type: "meaning", korean: "아름다운,공정한", answer: "evening" },
+  { type: "meaning", korean: "2년 마다 한 번씩", answer: "eat breakfast" },
+  { type: "meaning", korean: "예를 보이다", answer: "drive a car" },
+  { type: "meaning", korean: "훌륭한 식사", answer: "drop the price" },
+  { type: "meaning", korean: "흥분하다", answer: "beat a drum" },
+  { type: "meaning", korean: "완벽한 변명", answer: "dry air" },
+  { type: "meaning", korean: "힘든 연습", answer: "ducks quack" },
+  { type: "meaning", korean: "예리한 눈", answer: "pick one's ears" },
+  { type: "meaning", korean: "둥근 얼굴", answer: "get up early" },
+  { type: "meaning", korean: "사실을 말하다", answer: "live on earth" },
+  { type: "meaning", korean: "공정한 태도", answer: "He is playing a drum." },
+  { type: "meaning", korean: "여기 보기가 하나 있다.", answer: "My hands are dry now." },
+  { type: "meaning", korean: "그건 변명거리가 안돼요.", answer: "This duck is cute." },
+  { type: "meaning", korean: "나는 얼굴을 씻는다.", answer: "Rabbits have big ears." },
+  { type: "meaning", korean: "그것이 사실이다.", answer: "The earth is round." },
 
   // 문장 순서 맞추기: 단어를 누르면 발음이 재생되고 위쪽 정답 칸으로 이동합니다.
   {
     type: "order",
-    korean: "쉬운 책",
-    answer: "an easy book",
-    words: ["book", "an", "easy"]
+    korean: "매일 아침 해가 떠오른다.",
+    answer: "every morning the sun rises.",
+    words: ["sun", "the", "rises", "morning", "every"]
   },
   {
     type: "order",
-    korean: "연필 표시를 지우다",
-    answer: "erase pencil marks",
-    words: ["marks", "pencil", "erase"]
+    korean: "그는 뛰어난 음악가이다.",
+    answer: "He is an excellent musician.",
+    words: ["is", "musician", "He", "an", "excellent"]
    },   
   {
     type: "order",
-    korean: "밥 먹을 시간이에요.",
-    answer: "It's time to eat.",
-    words: ["eat", "It's", "to", "time"]
+    korean: "흥미진진한 경기였다.",
+    answer: "It was an exciting game.",
+    words: ["was", "It", "an", "game", "exciting"]
    },  
   {
     type: "order",
-    korean: "그 방은 비어 있었다.",
-    answer: "The room was empty.",
-    words: ["empty", "room", "The", "was"]
+    korean: "조깅은 좋은 운동이다.",
+    answer: "Jogging is good exercise.",
+    words: ["good", "is", "exercise", "jogging"]
    },
   {
     type: "order",
-    korean: "영화의 결말은 괜찮았다.",
-    answer: "The end of the movie was fine.",
-    words: ["was", "end", "movie", "The", "fine", "of", "movie"]
+    korean: "여우는 눈을 다쳤어요.",
+    answer: "Fox hurt his eye.",
+    words: ["eye", "Fox", "hurt", "his"]
    },
   {
     type: "order",
-    korean: "엔진이 멈췄다.",
-    answer: "The engine died.",
-    words: ["engine", "died", "The"]
-   },
-  {
-    type: "order",
-    korean: "비타민 C를 충분히 섭취해요.",
-    answer: "Take enough vitamin C.",
-    words: ["enough", "vitamin C", "take"]
-   },
-  {
-    type: "order",
-    korean: "나는 칠판을 지웠다.",
-    answer: "I erase a blackboard.",
-    words: ["a", "blackboard", "I", "erase"]
+    korean: "그의 판결은 공정하다.",
+    answer: "His judgement is fair.",
+    words: ["judgement", "fair", "His", "is"]
    }
 ];
 
