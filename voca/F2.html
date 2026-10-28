@@ -890,8 +890,7 @@ function renderWordOrder() {
   startY = event.clientY;
   didMove = false;
 
-  /* 단어를 누를 때 효과음 재생 */
-  playNavigationTone();
+  playWordClickSound();
 
   button.classList.add("dragging");
 
@@ -1609,7 +1608,53 @@ function playNavigationTone() {
 
   } catch (e) {}
 }
+/* 단어를 누를 때 짧은 클릭음 */
+function playWordClickSound() {
+  try {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
 
+    if (!AudioContextClass) return;
+
+    if (!window.wordClickAudioContext) {
+      window.wordClickAudioContext = new AudioContextClass();
+    }
+
+    const ctx = window.wordClickAudioContext;
+
+    const playSound = () => {
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(750, ctx.currentTime);
+
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        0.12,
+        ctx.currentTime + 0.005
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        ctx.currentTime + 0.07
+      );
+
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 0.08);
+    };
+
+    if (ctx.state === "suspended") {
+      ctx.resume().then(playSound).catch(() => {});
+    } else {
+      playSound();
+    }
+  } catch (error) {
+    console.log("클릭음 재생 오류:", error);
+  }
+}
 /* 이전 문제 */
 document.getElementById("prev").addEventListener("click", () => {
 playNavigationTone();
