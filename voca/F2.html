@@ -886,16 +886,19 @@ function renderWordOrder() {
 
       /* 손가락이나 마우스로 끌기 시작 */
       button.addEventListener("pointerdown", event => {
-        startX = event.clientX;
-        startY = event.clientY;
-        didMove = false;
+  startX = event.clientX;
+  startY = event.clientY;
+  didMove = false;
 
-        button.classList.add("dragging");
+  /* 단어를 누를 때 효과음 재생 */
+  playNavigationTone();
 
-        try {
-          button.setPointerCapture(event.pointerId);
-        } catch (e) {}
-      });
+  button.classList.add("dragging");
+
+  try {
+    button.setPointerCapture(event.pointerId);
+  } catch (e) {}
+});
 
       /* 실제로 움직였는지 확인 */
       button.addEventListener("pointermove", event => {
