@@ -689,6 +689,8 @@ let recognition = null;
 let listening = false;
 let finalTranscript = "";
 let finalAlternatives = [];
+let noSpeechRetries = 0;
+let lastRecognitionError = "";
 
 const promptEl = document.getElementById("prompt");
 const meaningEl = document.getElementById("meaning");
@@ -994,6 +996,8 @@ function startListening() {
   };
 
   recognition.onerror = event => {
+    lastRecognitionError = event.error || "";
+    
     let message = "음성을 인식하지 못했어요. 다시 시도해 보세요.";
 
     if (
@@ -1044,11 +1048,46 @@ function startListening() {
 
       checkAnswer(transcriptToCheck);
 
-    } else if (
-      !statusEl.textContent.includes("권한") &&
-      !statusEl.textContent.includes("연결에 실패")
-    ) {
-      statusEl.textContent = "";
+        } else {
+      // 짧은 단어를 인식하지 못하면 최대 2회 재시도
+      const canRetry =
+        !manualStop &&
+        noSpeechRetries < 2 &&
+        (
+          lastRecognitionError === "no-speech" ||
+          lastRecognitionError === ""
+        );
+
+      if (canRetry) {
+        noSpeechRetries++;
+
+        statusEl.textContent =
+          "잘 들리지 않았어요. 마이크가 켜지면 다시 말해 주세요.";
+
+        setTimeout(() => {
+          if (manualStop || !recognition) return;
+
+          try {
+            recognition.start();
+          } catch (e) {
+            statusEl.textContent =
+              "마이크를 눌러 다시 시도해 주세요.";
+          }
+        }, 500);
+
+        return;
+      }
+
+      if (
+        !statusEl.textContent.includes("권한") &&
+        !statusEl.textContent.includes("연결에 실패")
+      ) {
+        statusEl.textContent =
+          "음성이 잘 인식되지 않았어요. 마이크를 누르고 다시 말해 보세요.";
+      }
+
+      noSpeechRetries = 0;
+      lastRecognitionError = "";
     }
   };
 
