@@ -903,7 +903,7 @@ function renderQuestion() {
   document.getElementById("progressBar").style.width =
     `${((index + 1) / questions.length) * 100}%`;
 
-  document.getElementById("prev").disabled = index === 0;
+  document.getElementById("prev").disabled = false;
   document.getElementById("next").disabled =
     index === questions.length - 1;
 }
@@ -1411,12 +1411,17 @@ function playNavigationTone() {
 
 /* 이전 문제 */
 document.getElementById("prev").addEventListener("click", () => {
-  if (index > 0) {
-    playNavigationTone();
-    index--;
-    renderQuestion();
-  }
+playNavigationTone();
+
+if (index > 0) {
+index--;
+} else {
+index = questions.length - 1;
+}
+
+renderQuestion();
 });
+
 
 /* 다음 문제 */
 document.getElementById("next").addEventListener("click", () => {
