@@ -1240,7 +1240,8 @@ function checkAnswer(spoken) {
   }
 }
 
-/* 캐릭터 숨기기 */
+// 캐릭터 표시 및 숨기기 타이머
+let mascotShowTimer = null;
 let mascotTimer = null;
 
 function hideMascot() {
@@ -1274,8 +1275,11 @@ function showMascot(level) {
 
   const isWrong = level === "onemore";
 
+  // 캐릭터를 0.2초 늦게 표시
+mascotTimer = setTimeout(() => {
   wrap.className =
     `mascot-wrap show ${isWrong ? "try" : "happy"}`;
+}, 200);
 
   mascot.alt = isWrong
     ? "다시 도전 응원 캐릭터"
@@ -1292,7 +1296,7 @@ function showMascot(level) {
 
   mascotTimer = setTimeout(() => {
     hideMascot();
-  }, 2000);
+  }, 2400);
 }
 
 /* 채점 효과음 */
