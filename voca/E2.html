@@ -620,28 +620,28 @@ body {
 
 <script>
 const questions = [
-  { type: "meaning", korean: "마시다", answer: "drink" },
-  { type: "meaning", korean: "운전하다", answer: "drive" },
-  { type: "meaning", korean: "물방울,떨어뜨리다", answer: "drop" },
-  { type: "meaning", korean: "북", answer: "drum" },
-  { type: "meaning", korean: "건조한,말리다", answer: "dry" },
-  { type: "meaning", korean: "오리", answer: "duck" },
-  { type: "meaning", korean: "귀", answer: "ear" },
-  { type: "meaning", korean: "이른,일찍", answer: "early" },
-  { type: "meaning", korean: "지구,땅", answer: "earth" },
-  { type: "meaning", korean: "동쪽,동쪽의", answer: "east" },
-  { type: "meaning", korean: "커피를 한 잔 마시다", answer: "drink a cup of coffee." },
-  { type: "meaning", korean: "자동차를 운전하다", answer: "drive a car" },
-  { type: "meaning", korean: "값이 떨어지다", answer: "drop the price" },
-  { type: "meaning", korean: "북을 치다", answer: "beat a drum" },
-  { type: "meaning", korean: "건조한 공기", answer: "dry air" },
-  { type: "meaning", korean: "오리가 꽥꽥 울다", answer: "ducks quack" },
-  { type: "meaning", korean: "귀를 후비다", answer: "pick one's ears" },
-  { type: "meaning", korean: "일찍 일어나다", answer: "get up early" },
-  { type: "meaning", korean: "지구에 살다", answer: "live on earth" },
-  { type: "meaning", korean: "그는 북을 치고 있다.", answer: "He is playing a drum." },
-  { type: "meaning", korean: "이제 손이 다 말랐어요.", answer: "My hands are dry now." },
-  { type: "meaning", korean: "이 오리는 귀엽다.", answer: "This duck is cute." },
+  { type: "meaning", korean: "쉬운", answer: "easy" },
+  { type: "meaning", korean: "먹다", answer: "eat" },
+  { type: "meaning", korean: "계란", answer: "egg" },
+  { type: "meaning", korean: "빈,비우다", answer: "empty" },
+  { type: "meaning", korean: "끝,끝내다", answer: "end" },
+  { type: "meaning", korean: "기관,엔진", answer: "engine" },
+  { type: "meaning", korean: "즐기다", answer: "enjoy" },
+  { type: "meaning", korean: "충분한,충분히", answer: "enough" },
+  { type: "meaning", korean: "지우다", answer: "erase" },
+  { type: "meaning", korean: "저녁", answer: "evening" },
+  { type: "meaning", korean: "아침을 먹다", answer: "eat breakfast" },
+  { type: "meaning", korean: "계란을 삶다", answer: "drive a car" },
+  { type: "meaning", korean: "빈상자", answer: "drop the price" },
+  { type: "meaning", korean: "이야기의 끝", answer: "beat a drum" },
+  { type: "meaning", korean: "증기 기관", answer: "dry air" },
+  { type: "meaning", korean: "게임을 즐기다", answer: "ducks quack" },
+  { type: "meaning", korean: "충분한 음식", answer: "pick one's ears" },
+  { type: "meaning", korean: "저녁 일찍", answer: "get up early" },
+  { type: "meaning", korean: "그 일은 쉽다.", answer: "live on earth" },
+  { type: "meaning", korean: "이것은 상한 계란이다.", answer: "He is playing a drum." },
+  { type: "meaning", korean: "재미있게 지내요!", answer: "My hands are dry now." },
+  { type: "meaning", korean: "안녕하세요.(저녁인사)", answer: "This duck is cute." },
   { type: "meaning", korean: "토끼는 귀가 크다.", answer: "Rabbits have big ears." },
   { type: "meaning", korean: "지구는 둥글다.", answer: "The earth is round." },
   { type: "meaning", korean: "해는 동쪽에서 뜬다.", answer: "The sun rises in the east." },
@@ -649,33 +649,51 @@ const questions = [
   // 문장 순서 맞추기: 단어를 누르면 발음이 재생되고 위쪽 정답 칸으로 이동합니다.
   {
     type: "order",
-    korean: "나는 어디선가 내 지갑을 떨어뜨렸다.",
-    answer: "I drop my wallet somewhere.",
-    words: ["drop", "somewhere", "I", "my", "wallet"]
+    korean: "쉬운 책",
+    answer: "an easy book",
+    words: ["book", "an", "easy"]
   },
   {
     type: "order",
-    korean: "그들은 드라이브를 즐겼다.",
-    answer: "they enjoyed a drive.",
-    words: ["a", "enjoyed", "They", "drive"]
+    korean: "연필 표시를 지우다",
+    answer: "erase pencil marks",
+    words: ["marks", "pencil", "erase"]
    },   
   {
     type: "order",
-    korean: "물을 많이 마셔요.",
-    answer: "drink lots of water.",
-    words: ["lots", "water", "of", "drink"]
+    korean: "밥 먹을 시간이에요.",
+    answer: "It's time to eat.",
+    words: ["eat", "It's", "to", "time"]
    },  
   {
     type: "order",
-    korean: "도시의 동쪽에",
-    answer: "east of the city",
-    words: ["city", "of", "east", "the"]
+    korean: "그 방은 비어 있었다.",
+    answer: "The room was empty.",
+    words: ["empty", "room", "The", "was"]
    },
   {
     type: "order",
-    korean: "나는 일찍일어난다.",
-    answer: "I get up early.",
-    words: ["early", "I", "up", "get"]
+    korean: "영화의 결말은 괜찮았다.",
+    answer: "The end of the movie was fine.",
+    words: ["was", "end", "movie", "The", "fine", "of", "movie"]
+   },
+  {
+    type: "order",
+    korean: "엔진이 멈췄다.",
+    answer: "The engine died.",
+    words: ["engine", "died", "The"]
+   },
+  {
+    type: "order",
+    korean: "비타민 C를 충분히 섭취해요.",
+    answer: "Take enough vitamin C.",
+    words: ["enough", "vitamin C", "take"]
+   },
+  {
+    type: "order",
+    korean: "나는 칠판을 지웠다.",
+    answer: "I erase a blackboard.",
+    words: ["a", "blackboard", "I", "erase"]
    }
 ];
 
