@@ -140,20 +140,23 @@ body {
   color: #c13b4a;
 }
 
-/* 정답·오답 캐릭터 화면 */
+/* 정답·오답 캐릭터: 마이크 위치에 작게 나타났다가 사라짐 */
 .mascot-wrap {
   display: none;
   position: fixed;
-  inset: 0;
+  left: 50%;
+  bottom: 54px;
+  transform: translateX(-50%);
   z-index: 99999;
-  width: 100%;
-  height: 100%;
+  width: 112px;
+  height: 100px;
   margin: 0;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.96);
+  padding: 0;
+  background: transparent;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 
 .mascot-wrap.show {
@@ -161,8 +164,8 @@ body {
 }
 
 .mascot {
-  width: min(70vw, 65vh, 500px);
-  height: min(70vw, 65vh, 500px);
+  width: 86px;
+  height: 86px;
   object-fit: contain;
 }
 
@@ -364,6 +367,72 @@ body {
   overflow-wrap: anywhere;
 }
 
+
+/* 문장 순서 맞추기 */
+.word-order {
+  display: none;
+  width: 100%;
+  max-width: 850px;
+  margin: 22px auto 8px;
+}
+
+.word-order.show {
+  display: block;
+}
+.word-order-label {
+  margin: 14px 0 8px;
+  color: var(--muted);
+  font-size: 15px;
+  text-align: left;
+}
+.word-order-selected,
+.word-order-bank {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 12px;
+  border-radius: 16px;
+}
+.word-order-selected {
+  border: 2px dashed #f2a4dc;
+  background: #fff8fd;
+}
+.word-order-bank {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+.word-tile {
+  border: 1px solid #d9e2f0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #fff;
+  color: #263238;
+  font: inherit;
+  font-size: clamp(17px, 2.5vw, 24px);
+  cursor: pointer;
+  box-shadow: 0 2px 0 #e4e9f0;
+  transition: transform .12s, background .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.word-tile:active { transform: scale(.96); }
+.word-tile.selected-tile {
+  background: #ffe8f7;
+  border-color: #f3a1d9;
+}
+.word-order-note {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.mic:disabled {
+  opacity: .35;
+  cursor: default;
+  animation: none;
+}
+
 /* 모바일 화면 */
 @media (max-width: 650px) {
   .app {
@@ -396,6 +465,11 @@ body {
   .hint {
     font-size: 14px;
   }
+
+  .word-order { margin-top: 14px; }
+  .word-order-selected, .word-order-bank { gap: 7px; padding: 9px 6px; }
+  .word-tile { padding: 9px 12px; border-radius: 10px; }
+  .word-order-label, .word-order-note { font-size: 12px; }
 
   .feedback {
     min-height: 36px;
@@ -480,6 +554,7 @@ body {
 
       <div class="prompt" id="prompt">나는 사과를 좋아해요.</div>
       <div class="hint" id="meaning"></div>
+      <div class="word-order" id="wordOrder" aria-label="문장 순서 맞추기"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
 
     </section>
@@ -564,17 +639,44 @@ const questions = [
   { type: "meaning", korean: "귀를 후비다", answer: "pick one's ears" },
   { type: "meaning", korean: "일찍 일어나다", answer: "get up early" },
   { type: "meaning", korean: "지구에 살다", answer: "live on earth" },
-  { type: "meaning", korean: "도시의 동쪽에", answer: "east of the city" },
-  { type: "meaning", korean: "물을 많이 마셔요.", answer: "Drink lots of water." },
-  { type: "meaning", korean: "그들은 드라이브를 즐겼다.", answer: "They enjoyed a drive." },
-  { type: "meaning", korean: "나는 어디선가 지갑을 떨어뜨렸다.", answer: "I drop my wallet somewhere." },
   { type: "meaning", korean: "그는 북을 치고 있다.", answer: "He is playing a drum." },
   { type: "meaning", korean: "이제 손이 다 말랐어요.", answer: "My hands are dry now." },
   { type: "meaning", korean: "이 오리는 귀엽다.", answer: "This duck is cute." },
   { type: "meaning", korean: "토끼는 귀가 크다.", answer: "Rabbits have big ears." },
-  { type: "meaning", korean: "나는 일찍 일어난다.", answer: "I get up early." },
   { type: "meaning", korean: "지구는 둥글다.", answer: "The earth is round." },
-  { type: "meaning", korean: "해는 동쪽에서 뜬다.", answer: "The sun rises in the east." }
+  { type: "meaning", korean: "해는 동쪽에서 뜬다.", answer: "The sun rises in the east." },
+
+  // 문장 순서 맞추기: 단어를 누르면 발음이 재생되고 위쪽 정답 칸으로 이동합니다.
+  {
+    type: "order",
+    korean: "나는 어디선가 내 지갑을 떨어뜨렸다.",
+    answer: "I drop my wallet somewhere.",
+    words: ["drop", "somewhere", "I", "my", "wallet"]
+  },
+  {
+    type: "order",
+    korean: "그들은 드라이브를 즐겼다.",
+    answer: "they enjoyed a drive.",
+    words: ["a", "enjoyed", "They", "drive"]
+   },   
+  {
+    type: "order",
+    korean: "물을 많이 마셔요.",
+    answer: "drink lots of water.",
+    words: ["lots", "water", "of", "drink"]
+   },  
+  {
+    type: "order",
+    korean: "도시의 동쪽에",
+    answer: "east of the city",
+    words: ["city", "of", "east", "the"]
+   },
+  {
+    type: "order",
+    korean: "나는 일찍일어난다.",
+    answer: "I get up early.",
+    words: ["early", "I", "up", "get"]
+   }
 ];
 
 let index = 0;
@@ -592,6 +694,11 @@ const micEl = document.getElementById("mic");
 const micImageEl = document.getElementById("micImage");
 const bulbImageEl = document.getElementById("bulbImage");
 const speakerImageEl = document.getElementById("speakerImage");
+const wordOrderEl = document.getElementById("wordOrder");
+
+// 문장 순서 문제에서 현재 선택한 단어들
+let selectedOrderWords = [];
+let shuffledOrderWords = [];
 
 const bulbIdleImage = "https://snowj205.github.io/effect-file/bulb_gy.png";
 const bulbPressedImage = "https://snowj205.github.io/effect-file/bulb_pk.png";
@@ -637,8 +744,115 @@ function fillBlank(spoken) {
   );
 }
 
+/* 단어를 누르면 미국식 영어 음성으로 읽기 */
+function speakWord(word) {
+  if (!("speechSynthesis" in window)) return;
+
+  // 단어를 빠르게 연달아 눌러도 음성이 겹치지 않게 이전 음성을 중지
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = "en-US";
+  utterance.rate = 0.85;
+  window.speechSynthesis.speak(utterance);
+}
+
+/* 단어 배열 섞기 */
+function shuffleWords(words) {
+  const result = words.map((word, id) => ({ word, id }));
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+/* 문장 순서 문제의 단어 버튼 그리기 */
+function renderWordOrder() {
+  const q = questions[index];
+  if (q.type !== "order") {
+    wordOrderEl.classList.remove("show");
+    wordOrderEl.innerHTML = "";
+    return;
+  }
+
+  wordOrderEl.classList.add("show");
+  const selectedIds = new Set(selectedOrderWords.map(item => item.id));
+
+  wordOrderEl.innerHTML = `
+    <div class="word-order-label">완성할 문장</div>
+    <div class="word-order-selected" id="wordOrderSelected"></div>
+    <div class="word-order-label">아래 단어를 순서대로 눌러 보세요. 누르면 발음이 재생돼요.</div>
+    <div class="word-order-bank" id="wordOrderBank"></div>
+    <div class="word-order-note">선택한 단어를 다시 누르면 취소할 수 있어요.</div>
+  `;
+
+  const selectedEl = document.getElementById("wordOrderSelected");
+  const bankEl = document.getElementById("wordOrderBank");
+
+  if (selectedOrderWords.length === 0) {
+    selectedEl.innerHTML = '<span style="color:#9aa4b2">여기에 문장이 만들어져요</span>';
+  } else {
+    selectedOrderWords.forEach((item, position) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "word-tile selected-tile";
+      button.textContent = item.word;
+      button.setAttribute("aria-label", `${item.word}, 선택 취소`);
+      button.addEventListener("click", () => {
+        selectedOrderWords.splice(position, 1);
+        feedbackEl.textContent = "";
+        feedbackEl.className = "feedback";
+        answerEl.textContent = "";
+        renderWordOrder();
+      });
+      selectedEl.appendChild(button);
+    });
+  }
+
+  shuffledOrderWords.forEach(item => {
+    if (selectedIds.has(item.id)) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "word-tile";
+    button.textContent = item.word;
+    button.addEventListener("click", () => {
+      speakWord(item.word);
+      selectedOrderWords.push(item);
+      renderWordOrder();
+      if (selectedOrderWords.length === q.words.length) {
+        checkWordOrder();
+      }
+    });
+    bankEl.appendChild(button);
+  });
+}
+
+/* 문장 순서 정답 확인 */
+function checkWordOrder() {
+  const q = questions[index];
+  const builtSentence = selectedOrderWords.map(item => item.word).join(" ");
+  const correct = normalize(builtSentence) === normalize(q.answer);
+
+  statusEl.textContent = "";
+  if (correct) {
+    answerEl.textContent = `정답: ${q.answer}`;
+    feedbackEl.textContent = "Excellent! 문장 순서가 정확해요! 🎉";
+    feedbackEl.className = "feedback good";
+    showMascot("excellent");
+    playFeedbackAudio("excellent");
+  } else {
+    answerEl.textContent = "";
+    feedbackEl.textContent = "단어 순서를 다시 확인해 보세요. 선택한 단어를 누르면 취소할 수 있어요.";
+    feedbackEl.className = "feedback try";
+    showMascot("onemore");
+    playFeedbackAudio("onemore");
+  }
+}
+
 function renderQuestion() {
   stopListening();
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
 
   finalTranscript = "";
 
@@ -649,8 +863,20 @@ function renderQuestion() {
     meaningEl.textContent = q.korean;
   } else {
     promptEl.textContent = q.type === "blank" ? q.prompt : q.korean;
-    meaningEl.textContent = q.type === "blank" ? `뜻: ${q.korean}` : "";
+    meaningEl.textContent = q.type === "blank" ? `뜻: ${q.korean}` :
+      q.type === "order" ? "단어를 올바른 순서로 눌러 영어 문장을 완성하세요." : "";
   }
+
+  if (q.type === "order") {
+    selectedOrderWords = [];
+    shuffledOrderWords = shuffleWords(q.words);
+    renderWordOrder();
+  } else {
+    selectedOrderWords = [];
+    shuffledOrderWords = [];
+    renderWordOrder();
+  }
+  micEl.disabled = q.type === "order";
 
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
@@ -693,6 +919,8 @@ function stopListening() {
 
 /* 음성 인식 시작 */
 function startListening() {
+  if (questions[index].type === "order") return;
+
   const SR = window.SpeechRecognition ||
              window.webkitSpeechRecognition;
 
@@ -1020,7 +1248,7 @@ function showMascot(level) {
 
   mascotTimer = setTimeout(() => {
     hideMascot();
-  }, 1500);
+  }, 2000);
 }
 
 /* 채점 효과음 */
@@ -1151,6 +1379,25 @@ document.getElementById("showAnswer").addEventListener("click", () => {
 
   if (q.type === "blank") {
     fillBlank(q.answer);
+  }
+
+  if (q.type === "order") {
+    // 정답 순서대로 단어를 채워 보여 줍니다.
+    const unused = q.words.map((word, id) => ({ word, id }));
+    selectedOrderWords = q.answer
+      .replace(/[.,!?;:]+$/g, "")
+      .split(/\s+/)
+      .map(word => {
+        const foundIndex = unused.findIndex(item =>
+          normalize(item.word) === normalize(word)
+        );
+        if (foundIndex < 0) return null;
+        return unused.splice(foundIndex, 1)[0];
+      })
+      .filter(Boolean);
+    renderWordOrder();
+    feedbackEl.textContent = "정답 문장을 확인했어요.";
+    feedbackEl.className = "feedback good";
   }
 
   answerEl.textContent = `정답: ${q.answer}`;
