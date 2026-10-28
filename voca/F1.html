@@ -847,7 +847,9 @@ function checkWordOrder() {
     feedbackEl.textContent = "Excellent! 문장 순서가 정확해요! 🎉";
     feedbackEl.className = "feedback good";
     showMascot("excellent");
-    playFeedbackAudio("excellent");
+    setTimeout(() => {
+  playFeedbackAudio("excellent");
+}, 400);
   } else {
     answerEl.textContent = "";
     feedbackEl.textContent = "단어 순서를 다시 확인해 보세요. 선택한 단어를 누르면 취소할 수 있어요.";
@@ -1226,7 +1228,10 @@ function checkAnswer(spoken) {
 
     feedbackEl.className = "feedback good";
 
-    playFeedbackAudio("good");
+    // 일반 정답
+setTimeout(() => {
+  playFeedbackAudio("good");
+}, 400);
 
   } else {
     showMascot("onemore");
@@ -1236,7 +1241,10 @@ function checkAnswer(spoken) {
 
     feedbackEl.className = "feedback try";
 
-    playFeedbackAudio("onemore");
+    // 오답
+setTimeout(() => {
+  playFeedbackAudio("onemore");
+}, 400);
   }
 }
 
@@ -1279,7 +1287,7 @@ function showMascot(level) {
 mascotTimer = setTimeout(() => {
   wrap.className =
     `mascot-wrap show ${isWrong ? "try" : "happy"}`;
-}, 200);
+}, 400);
 
   mascot.alt = isWrong
     ? "다시 도전 응원 캐릭터"
