@@ -436,6 +436,22 @@ pointer-events: none;
 .word-tile.selected-tile {
   background: #ffe8f7;
   border-color: #f3a1d9;
+
+  /* 손가락으로 끌어서 순서를 바꿀 수 있도록 설정 */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.word-tile.selected-tile:active {
+  cursor: grabbing;
+}
+
+.word-tile.selected-tile.dragging {
+  opacity: 0.55;
+  transform: scale(1.04);
+  z-index: 10;
 }
 .word-order-note {
   margin-top: 9px;
@@ -792,6 +808,7 @@ function shuffleWords(words) {
 /* 문장 순서 문제의 단어 버튼 그리기 */
 function renderWordOrder() {
   const q = questions[index];
+
   if (q.type !== "order") {
     wordOrderEl.classList.remove("show");
     wordOrderEl.innerHTML = "";
@@ -799,53 +816,208 @@ function renderWordOrder() {
   }
 
   wordOrderEl.classList.add("show");
-  const selectedIds = new Set(selectedOrderWords.map(item => item.id));
+
+  const selectedIds = new Set(
+    selectedOrderWords.map(item => item.id)
+  );
 
   wordOrderEl.innerHTML = `
     <div class="word-order-label">완성할 문장</div>
-    <div class="word-order-selected" id="wordOrderSelected"></div>
-    <div class="word-order-label">아래 단어를 순서대로 눌러 보세요. 누르면 발음이 재생돼요.</div>
-    <div class="word-order-bank" id="wordOrderBank"></div>
-    <div class="word-order-note">선택한 단어를 다시 누르면 취소할 수 있어요.</div>
+
+    <div
+      class="word-order-selected"
+      id="wordOrderSelected"
+    ></div>
+
+    <div class="word-order-label">
+      아래 단어를 누르면 위로 이동해요. 단어를 누르면 발음이 재생돼요.
+    </div>
+
+    <div
+      class="word-order-bank"
+      id="wordOrderBank"
+    ></div>
+
+    <div class="word-order-note">
+      위쪽 단어를 끌어서 순서를 바꾸거나, 짧게 눌러 선택을 취소할 수 있어요.
+    </div>
   `;
 
-  const selectedEl = document.getElementById("wordOrderSelected");
-  const bankEl = document.getElementById("wordOrderBank");
+  const selectedEl =
+    document.getElementById("wordOrderSelected");
 
+  const bankEl =
+    document.getElementById("wordOrderBank");
+
+  /* 위쪽: 선택된 단어 표시 */
   if (selectedOrderWords.length === 0) {
-    selectedEl.innerHTML = '<span style="color:#9aa4b2">여기에 문장이 만들어져요</span>';
+    selectedEl.innerHTML =
+      '<span style="color:#9aa4b2">여기에 문장이 만들어져요</span>';
   } else {
     selectedOrderWords.forEach((item, position) => {
       const button = document.createElement("button");
+
       button.type = "button";
       button.className = "word-tile selected-tile";
       button.textContent = item.word;
-      button.setAttribute("aria-label", `${item.word}, 선택 취소`);
-      button.addEventListener("click", () => {
-        selectedOrderWords.splice(position, 1);
+
+      button.dataset.position = position;
+
+      button.setAttribute(
+        "aria-label",
+        `${item.word}, 끌어서 순서 변경 또는 눌러서 선택 취소`
+      );
+
+      let startX = 0;
+      let startY = 0;
+      let didMove = false;
+      let suppressClick = false;
+
+      /* 손가락이나 마우스로 끌기 시작 */
+      button.addEventListener("pointerdown", event => {
+        startX = event.clientX;
+        startY = event.clientY;
+        didMove = false;
+
+        button.classList.add("dragging");
+
+        try {
+          button.setPointerCapture(event.pointerId);
+        } catch (e) {}
+      });
+
+      /* 실제로 움직였는지 확인 */
+      button.addEventListener("pointermove", event => {
+        const distanceX = Math.abs(event.clientX - startX);
+        const distanceY = Math.abs(event.clientY - startY);
+
+        if (distanceX > 6 || distanceY > 6) {
+          didMove = true;
+        }
+      });
+
+      /* 끌기를 끝냈을 때 위치 변경 */
+      button.addEventListener("pointerup", event => {
+        button.classList.remove("dragging");
+
+        if (!didMove) {
+          return;
+        }
+
+        suppressClick = true;
+
+        const target = document.elementFromPoint(
+          event.clientX,
+          event.clientY
+        );
+
+        const targetButton = target
+          ? target.closest(".selected-tile")
+          : null;
+
+        if (!targetButton || !selectedEl.contains(targetButton)) {
+          return;
+        }
+
+        const fromIndex = Number(button.dataset.position);
+        const toIndex = Number(targetButton.dataset.position);
+
+        if (
+          !Number.isInteger(fromIndex) ||
+          !Number.isInteger(toIndex) ||
+          fromIndex === toIndex
+        ) {
+          return;
+        }
+
+        /* 끌어 놓은 위치로 단어 이동 */
+        const movedItem = selectedOrderWords.splice(
+          fromIndex,
+          1
+        )[0];
+
+        selectedOrderWords.splice(
+          toIndex,
+          0,
+          movedItem
+        );
+
+        /* 기존 채점 결과 지우기 */
         feedbackEl.textContent = "";
         feedbackEl.className = "feedback";
         answerEl.textContent = "";
+        statusEl.textContent = "";
+
+        /* 바뀐 순서로 다시 그리기 */
+        renderWordOrder();
+
+        /* 모든 단어가 선택된 상태라면 새 순서 채점 */
+        if (
+          selectedOrderWords.length === q.words.length
+        ) {
+          checkWordOrder();
+        }
+      });
+
+      button.addEventListener("pointercancel", () => {
+        button.classList.remove("dragging");
+      });
+
+      /* 짧게 누르면 기존처럼 선택 취소 */
+      button.addEventListener("click", () => {
+        if (suppressClick) {
+          suppressClick = false;
+          return;
+        }
+
+        selectedOrderWords.splice(position, 1);
+
+        feedbackEl.textContent = "";
+        feedbackEl.className = "feedback";
+        answerEl.textContent = "";
+        statusEl.textContent = "";
+
         renderWordOrder();
       });
+
       selectedEl.appendChild(button);
     });
   }
 
+  /* 아래쪽: 아직 선택하지 않은 단어 표시 */
   shuffledOrderWords.forEach(item => {
-    if (selectedIds.has(item.id)) return;
+    if (selectedIds.has(item.id)) {
+      return;
+    }
+
     const button = document.createElement("button");
+
     button.type = "button";
     button.className = "word-tile";
     button.textContent = item.word;
+
     button.addEventListener("click", () => {
+      /* 단어 발음 재생 */
       speakWord(item.word);
+
+      /* 위쪽 문장에 단어 추가 */
       selectedOrderWords.push(item);
+
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+      answerEl.textContent = "";
+      statusEl.textContent = "";
+
       renderWordOrder();
-      if (selectedOrderWords.length === q.words.length) {
+
+      /* 모든 단어를 선택하면 자동 채점 */
+      if (
+        selectedOrderWords.length === q.words.length
+      ) {
         checkWordOrder();
       }
     });
+
     bankEl.appendChild(button);
   });
 }
