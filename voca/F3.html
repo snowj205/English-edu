@@ -651,83 +651,77 @@ pointer-events: none;
 
 <script>
 const questions = [
-  { type: "meaning", korean: "들판,경기장", answer: "fall" },
-  { type: "meaning", korean: "싸움,싸우다", answer: "family" },
-  { type: "meaning", korean: "채우다", answer: "far" },
-  { type: "meaning", korean: "영화,필름", answer: "farm" },
-  { type: "meaning", korean: "찾다", answer: "fast" },
-  { type: "meaning", korean: "좋은,훌륭한", answer: "fat" },
-  { type: "meaning", korean: "손가락", answer: "famous" },
-  { type: "meaning", korean: "끝내다", answer: "father" },
-  { type: "meaning", korean: "불", answer: "feel" },
-  { type: "meaning", korean: "물고기,낚시하다", answer: "few" },
-  { type: "meaning", korean: "풀밭에서 놀다", answer: "fall to the ground" },
-  { type: "meaning", korean: "적과 싸우다", answer: "a family of 5" },
-  { type: "meaning", korean: "잔을 채우다", answer: "not far from here" },
-  { type: "meaning", korean: "컬러 필름", answer: "a fruit farm" },
-  { type: "meaning", korean: "책을 찾다", answer: "run very fast" },
-  { type: "meaning", korean: "좋은 경치", answer: "a fat pig" },
-  { type: "meaning", korean: "긴 손가락", answer: "famous pictures" },
-  { type: "meaning", korean: "숙제를 끝내다", answer: "father's love" },
-  { type: "meaning", korean: "불을 피우다", answer: "fell a pain" },
-  { type: "meaning", korean: "물고기를 잡다", answer: "a few apples" },
-  { type: "meaning", korean: "좋습니다.", answer: "Dew falls" },
-  { type: "meaning", korean: "불이 났다.", answer: "Dew falls" },
+  { type: "meaning", korean: "들판,경기장", answer: "field" },
+  { type: "meaning", korean: "싸움,싸우다", answer: "fight" },
+  { type: "meaning", korean: "채우다", answer: "fill" },
+  { type: "meaning", korean: "영화,필름", answer: "film" },
+  { type: "meaning", korean: "찾다", answer: "find" },
+  { type: "meaning", korean: "좋은,훌륭한", answer: "fine" },
+  { type: "meaning", korean: "손가락", answer: "finger" },
+  { type: "meaning", korean: "끝내다", answer: "finish" },
+  { type: "meaning", korean: "불", answer: "fire" },
+  { type: "meaning", korean: "물고기,낚시하다", answer: "fish" },
+  { type: "meaning", korean: "풀밭에서 놀다", answer: "play in the green field." },
+  { type: "meaning", korean: "적과 싸우다", answer: "fight the enemy" },
+  { type: "meaning", korean: "잔을 채우다", answer: "fill a glass" },
+  { type: "meaning", korean: "컬러 필름", answer: "a color film" },
+  { type: "meaning", korean: "책을 찾다", answer: "find the book" },
+  { type: "meaning", korean: "좋은 경치", answer: "a fine view" },
+  { type: "meaning", korean: "긴 손가락", answer: "long fingers" },
+  { type: "meaning", korean: "숙제를 끝내다.", answer: "finish my homework" },
+  { type: "meaning", korean: "불을 피우다", answer: "light a fire" },
+  { type: "meaning", korean: "물고기를 잡다", answer: "catch a fish" },
+  { type: "meaning", korean: "좋습니다.", answer: "That's fine." },
+  { type: "meaning", korean: "불이 났다.", answer: "A fire broke out." },
 
   // 문장 순서 맞추기: 단어를 누르면 발음이 재생되고 위쪽 정답 칸으로 이동합니다.
   {
     type: "order",
     korean: "싸움은 아직 끝나지 않았다.",
-    answer: "That is my family.",
-    words: ["is", "family", "That", "my"]
+    answer: "The fight is not over yet.",
+    words: ["fight", "over", "not", "is", "yet"]
   },
   {
     type: "order",
     korean: "농부가 들에서 일한다.",
-    answer: "He lives far from here.",
-    words: ["He", "from", "here", "far", "lives"]
+    answer: "The farmer works in the field.",
+    words: ["The farmer", "in", "the", "field", "works"]
    },   
   {
     type: "order",
     korean: "빈 칸을 채우시오.",
-    answer: "He works on the farm.",
-    words: ["on", "works", "farm", "the", "He"]
+    answer: "Fill in the blanks.",
+    words: ["blanks", "the", "in", "Fill"]
    },  
   {
     type: "order",
     korean: "우리는 개에 관한 영화를 봤다.",
-    answer: "That car is fast.",
-    words: ["fast", "is", "car", "That"]
+    answer: "We saw a film about dogs.",
+    words: ["saw", "a", "about", "film", "dogs", "we"]
    },
   {
     type: "order",
     korean: "지갑 찾았어요?",
-    answer: "He is a famous actor.",
-    words: ["actor", "is", "a", "He", "famous"]
-   },
-  {
-    type: "order",
-    korean: "좋습니다.",
-    answer: "My father is an engineer.",
-    words: ["an", "engineer", "father", "My", "is"]
+    answer: "Did you find your wallet?",
+    words: ["you", "find", "wallet", "your", "Did"]
    },
   {
     type: "order",
     korean: "손가락이 아직도 아프다.",
-    answer: "She feels cold.",
-    words: ["cold", "feels", "she"]
+    answer: "My finger still hurts.",
+    words: ["finger", "hurts", "still", "My"]
    },
   {
     type: "order",
     korean: "거의 끝났어.",
-    answer: "There were few people in the classroom.",
-    words: ["few", "were", "people", "in", "classroom", "the", "There"]
+    answer: "I'm almost finish.",
+    words: ["finish", "almost", "I'm"]
    },
   {
     type: "order",
     korean: "어떤 물고기는 날 수 있다.",
-    answer: "There were few people in the classroom.",
-    words: ["few", "were", "people", "in", "classroom", "the", "There"]
+    answer: "Some fish can fly.",
+    words: ["fly", "fish", "some", "can"]
    }
 ];
 
