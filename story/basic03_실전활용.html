@@ -933,11 +933,14 @@
           }
         }, 1200);
       } else {
-        feedback.textContent = "🔄 조금 달라요. 한 번 더 말해 보세요!";
-        feedback.className = "feedback warning";
-        micCaption.textContent = "";
-        micBtn.disabled = false;
-      }
+  feedback.textContent = "🔄 조금 달라요. 다시 말하거나 다음 대화로 넘어가세요!";
+  feedback.className = "feedback warning";
+  micCaption.textContent = "";
+  micBtn.disabled = false;
+
+  // 오답이어도 다음 대화 버튼 활성화
+  nextBtn.disabled = false;
+}
     }
 
     function revealAnswer() {
