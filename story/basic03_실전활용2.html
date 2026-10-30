@@ -202,6 +202,41 @@
 .controls button {
   flex: 1;
 }
+    /* 영어 다시 듣기 */
+#replayBtn {
+  background: #b9d5f5;
+  color: #315b91;
+}
+
+/* 다음 대화 */
+#nextBtn {
+  background: #a9d9c5;
+  color: #28664c;
+}
+
+/* 정답 듣기 */
+.chat-actions button:first-child {
+  background: #f5d6b5;
+  color: #805329;
+}
+
+/* 정답 확인 */
+.chat-actions button:last-child {
+  background: #e2d4f5;
+  color: #674b91;
+}
+
+/* 연습 시작 */
+#startBtn {
+  background: #f5c6d6;
+  color: #8c4560;
+}
+
+/* 역할 바꾸기 */
+#roleToggleBtn {
+  background: #c8d9ef;
+  color: #3e5d80;
+}
 
     .mic-button {
       margin: 0 auto;
@@ -614,7 +649,7 @@ function playCorrectSound() {
       actions.className = "chat-actions";
 
       const audioButton = document.createElement("button");
-      audioButton.textContent = "🔊 정답 영어 듣기";
+      audioButton.textContent = "🔊 정답 듣기";
 
       const revealButton = document.createElement("button");
       revealButton.textContent = "정답 확인";
