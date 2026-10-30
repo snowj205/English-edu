@@ -192,12 +192,16 @@
     }
 
     .controls {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.controls button {
+  flex: 1;
+}
 
     .mic-button {
       margin: 0 auto;
@@ -232,7 +236,7 @@
 
     .mic-area {
       text-align: center;
-      margin-top: 8px;
+      margin-top: 35px;
     }
 
     .mic-caption {
@@ -338,10 +342,9 @@
       <div class="recognized" id="recognized"></div>
 
       <div class="controls">
-        <button id="replayBtn" disabled>🔊 영어 다시 듣기</button>
-        <button id="showAnswerBtn" disabled>정답 확인</button>
-        <button class="primary" id="nextBtn" disabled>다음 대화 →</button>
-      </div>
+  <button id="replayBtn" disabled>🔊 영어 다시 듣기</button>
+  <button class="primary" id="nextBtn" disabled>다음 대화 →</button>
+</div>
 
     </section>
   </div>
@@ -438,7 +441,6 @@
     const recognized = $("recognized");
 
     const replayBtn = $("replayBtn");
-    const showAnswerBtn = $("showAnswerBtn");
     const nextBtn = $("nextBtn");
 
     // 미국식 영어 고정
@@ -703,9 +705,7 @@ function playCorrectSound() {
       micBtn.disabled = true;
       nextBtn.disabled = true;
       replayBtn.disabled = false;
-      showAnswerBtn.disabled = true;
-
-      showAnswerBtn.textContent = "정답 확인";
+      
 
       setMic(false);
 
@@ -733,7 +733,6 @@ appendRows(item);
       waitingForAnswer = true;
 
       micBtn.disabled = false;
-      showAnswerBtn.disabled = false;
 
       currentChild.reveal.disabled = false;
       currentChild.reveal.textContent = "정답 확인";
@@ -1018,7 +1017,6 @@ function checkAnswer(text) {
 
     micBtn.disabled = true;
     nextBtn.disabled = false;
-    showAnswerBtn.disabled = true;
 
     if (currentChild && currentChild.reveal) {
       currentChild.reveal.disabled = true;
@@ -1071,7 +1069,6 @@ function checkAnswer(text) {
 
     micCaption.textContent = "";
 
-    showAnswerBtn.disabled = false;
 
     if (currentChild && currentChild.reveal) {
       currentChild.reveal.disabled = false;
@@ -1101,7 +1098,6 @@ function checkAnswer(text) {
       currentChild.reveal.disabled = true;
       currentChild.reveal.textContent = "정답 확인 완료";
 
-      showAnswerBtn.disabled = true;
 
       if (reverseRole) {
         currentReply.row.classList.remove("hidden");
@@ -1127,7 +1123,6 @@ function checkAnswer(text) {
       scrollBottom();
     }
 
-    showAnswerBtn.addEventListener("click", revealAnswer);
 
     // 영어 다시 듣기
     replayBtn.addEventListener("click", () => {
@@ -1156,7 +1151,6 @@ function checkAnswer(text) {
       currentChild.row.classList.add("hidden");
 
       micBtn.disabled = true;
-      showAnswerBtn.disabled = true;
 
       speak(item.en, showPrompt);
     });
@@ -1194,7 +1188,6 @@ function checkAnswer(text) {
       setMic(false);
 
       replayBtn.disabled = true;
-      showAnswerBtn.disabled = true;
       nextBtn.disabled = true;
 
       micCaption.textContent =
@@ -1220,7 +1213,6 @@ function checkAnswer(text) {
     setMic(false);
 
     replayBtn.disabled = true;
-    showAnswerBtn.disabled = true;
     nextBtn.disabled = true;
   </script>
 </body>
