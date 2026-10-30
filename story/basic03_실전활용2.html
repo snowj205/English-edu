@@ -444,6 +444,60 @@
     // 미국식 영어 고정
     const voiceType = "en-US";
 
+    // 정답 전용 딩동댕 멜로디
+let correctAudioContext = null;
+
+function playCorrectSound() {
+  try {
+    if (!correctAudioContext) {
+      correctAudioContext = new (
+        window.AudioContext || window.webkitAudioContext
+      )();
+    }
+
+    if (correctAudioContext.state === "suspended") {
+      correctAudioContext.resume();
+    }
+
+    const now = correctAudioContext.currentTime;
+
+    function playNote(frequency, delay, duration) {
+      const oscillator = correctAudioContext.createOscillator();
+      const gain = correctAudioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(
+        frequency,
+        now + delay
+      );
+
+      gain.gain.setValueAtTime(0.001, now + delay);
+      gain.gain.linearRampToValueAtTime(
+        0.10,
+        now + delay + 0.025
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        now + delay + duration
+      );
+
+      oscillator.connect(gain);
+      gain.connect(correctAudioContext.destination);
+
+      oscillator.start(now + delay);
+      oscillator.stop(now + delay + duration);
+    }
+
+    // 밝고 자연스러운 딩동댕
+    playNote(659.25, 0, 0.22);
+    playNote(783.99, 0.20, 0.22);
+    playNote(1046.50, 0.40, 0.42);
+
+  } catch (error) {
+    console.log("정답 멜로디 재생 오류:", error);
+  }
+}
+
     const micDefault =
       "https://snowj205.github.io/effect-file/mic_gy.png";
 
@@ -974,6 +1028,10 @@ function checkAnswer(text) {
     feedback.className = "feedback success";
 
     micCaption.textContent = "정답이에요!";
+   
+    playCorrectSound();
+    
+    
 
     // 반대 역할에서는 선생님의 영어 답변도 표시
     if (reverseRole && currentReply) {
