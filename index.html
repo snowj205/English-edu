@@ -40,6 +40,7 @@ header {
   padding: 32px 28px;
   margin-bottom: 30px;
 }
+
 /* 메인 배너 이미지 */
 .hero.banner {
   padding: 0;
@@ -50,12 +51,13 @@ header {
 }
 
 .hero.banner img {
-display: block;
-width: 100%;
-height: 200px;
-object-fit: cover;
-object-position: center;
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
 }
+
 .eyebrow {
   color: #5279d8;
   font-size: 12px;
@@ -123,15 +125,14 @@ p {
 }
 
 /* 학습 메뉴 화면 */
-
 #vocaSection,
 #storySection,
-#audioSection {
+#audioSection,
+#audioListSection {
   display: none;
 }
 
-/* 메인 화면으로 돌아가기 */
-
+/* 메인 화면 및 이전 메뉴로 돌아가기 */
 .back-button {
   display: inline-block;
   margin-bottom: 22px;
@@ -150,7 +151,6 @@ p {
 }
 
 /* 학습 버튼 배치 */
-
 .lesson-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -248,60 +248,45 @@ p {
 </head>
 
 <body>
-
 <div class="wrap">
 
- 
-
   <!-- 메인 화면 -->
-
   <section id="homeSection">
 
-    
-<section class="hero banner">
-  <img
-    src="https://snowj205.github.io/effect-file/main-banner.png"
-    alt="오늘도 한 단계씩, 영어를 즐겁게 배워요!"
-  >
-</section>
-
+    <section class="hero banner">
+      <img
+        src="https://snowj205.github.io/effect-file/main-banner.png"
+        alt="오늘도 한 단계씩, 영어를 즐겁게 배워요!"
+      >
+    </section>
 
     <main class="menu">
 
       <!-- 초등영단어800 -->
-
       <a class="card"
          href="#vocabulary"
          onclick="openVocaMenu(); return false;">
-
         <span class="icon">📚</span>
         <span class="title">초등영단어800</span>
         <span class="desc">알파벳별 단어 학습</span>
-
       </a>
 
       <!-- 영어표현익힘 -->
-
       <a class="card"
          href="#"
          onclick="alert('영어표현익힘은 준비 중입니다.'); return false;">
-
         <span class="icon">💬</span>
         <span class="title">영어표현익힘</span>
         <span class="desc">유용한 영어 표현 익히기</span>
-
       </a>
 
       <!-- 스토리영어 -->
-
       <a class="card"
          href="#story"
          onclick="openStoryMenu(); return false;">
-
         <span class="icon">📖</span>
         <span class="title">스토리 잉글리쉬</span>
         <span class="desc">이야기로 배우는 영어</span>
-
       </a>
 
       <!-- 음원자료 -->
@@ -314,12 +299,9 @@ p {
       </a>
 
     </main>
-
   </section>
 
-
   <!-- 초등영단어800 메뉴 -->
-
   <section id="vocaSection">
 
     <button class="back-button" onclick="backToHome()">
@@ -328,19 +310,14 @@ p {
 
     <section class="hero">
       <div class="eyebrow">VOCABULARY</div>
-
       <h1>초등영단어800</h1>
-
       <p>학습할 단계를 선택하세요.</p>
     </section>
 
     <div class="lesson-grid" id="lessonGrid"></div>
-
   </section>
 
-
   <!-- 스토리영어 메뉴 -->
-
   <section id="storySection">
 
     <button class="back-button" onclick="backToHome()">
@@ -349,18 +326,16 @@ p {
 
     <section class="hero">
       <div class="eyebrow">STORY ENGLISH</div>
-
       <h1>스토리 잉글리쉬</h1>
-
       <p>학습할 단계를 선택하세요.</p>
     </section>
 
     <div class="lesson-grid" id="storyGrid"></div>
-
   </section>
 
-  <!-- 음원자료 메뉴 -->
+  <!-- 음원자료 카테고리 메뉴 -->
   <section id="audioSection">
+
     <button class="back-button" onclick="backToHome()">
       ← 메인 화면
     </button>
@@ -368,11 +343,30 @@ p {
     <section class="hero">
       <div class="eyebrow">AUDIO MATERIALS</div>
       <h1>음원자료</h1>
+      <p>학습할 음원 카테고리를 선택하세요.</p>
+    </section>
+
+    <div class="lesson-grid" id="audioCategoryGrid"></div>
+  </section>
+
+  <!-- 카테고리별 음원 목록 및 오디오 재생기 -->
+  <section id="audioListSection">
+
+    <button class="back-button" onclick="backToAudioCategories()">
+      ← 음원자료
+    </button>
+
+    <section class="hero">
+      <div class="eyebrow">AUDIO PLAYER</div>
+      <h1 id="audioCategoryTitle">음원 목록</h1>
       <p>듣고 싶은 음원을 선택하세요.</p>
     </section>
 
     <section class="hero audio-player-box">
-      <div class="audio-now" id="audioNow">재생할 음원을 선택하세요.</div>
+      <div class="audio-now" id="audioNow">
+        재생할 음원을 선택하세요.
+      </div>
+
       <audio id="audioPlayer" controls preload="none">
         브라우저가 오디오 재생을 지원하지 않습니다.
       </audio>
@@ -383,19 +377,10 @@ p {
 
 </div>
 
-
 <script>
 
 /* ==================================================
    초등영단어800 버튼 설정
-
-   버튼 이름과 연결 파일을 각각 직접 수정할 수 있습니다.
-
-   name : 화면에 표시할 버튼 이름
-   url  : 버튼을 눌렀을 때 열리는 HTML 파일
-
-   버튼 이름만 바꾸려면 name만 수정하세요.
-   연결 파일을 바꾸려면 url을 수정하세요.
    ================================================== */
 
 const vocaLinks = [
@@ -572,31 +557,19 @@ const vocaLinks = [
 
 
 /* 초등영단어800 버튼 만들기 */
-
 const lessonGrid = document.getElementById("lessonGrid");
 
 vocaLinks.forEach(item => {
-
   const link = document.createElement("a");
-
   link.className = "lesson-button";
-
-  // 화면에 표시할 버튼 이름
   link.textContent = item.name;
-
-  // 버튼을 눌렀을 때 열릴 HTML 파일
   link.href = item.url;
-
   lessonGrid.appendChild(link);
-
 });
 
 
 /* ==================================================
    스토리영어 버튼 설정
-
-   name : 화면에 표시할 버튼 이름
-   url  : 연결할 HTML 파일
    ================================================== */
 
 const storyGrid = document.getElementById("storyGrid");
@@ -639,96 +612,180 @@ const storyLinks = [
 
 
 /* 스토리영어 버튼 만들기 */
-
 storyLinks.forEach(item => {
-
   const link = document.createElement("a");
-
   link.className = "lesson-button";
-
-  // 화면에 표시할 버튼 이름
   link.textContent = item.name;
-
-  // 연결할 HTML 파일
   link.href = item.url;
-
   storyGrid.appendChild(link);
-
 });
 
 
 /* ==================================================
-   음원자료 버튼 설정
+   음원자료 카테고리 및 음원 설정
 
-   name : 화면에 표시할 버튼 이름
-   url  : 실제 MP3 파일 경로
+   카테고리 추가:
+   audioCategories 배열 안에 아래 형식으로 추가하세요.
 
-   음원을 추가하려면 아래 배열에 한 줄씩 추가하세요.
-   예: { name: "인사 표현", url: "./audio/greetings.mp3" },
+   {
+     name: "카테고리 이름",
+     icon: "🎧",
+     audios: [
+       { name: "음원 이름", url: "./audio/파일명.mp3" }
+     ]
+   }
+
+   음원 추가:
+   해당 카테고리의 audios 배열 안에 한 줄 추가하세요.
    ================================================== */
 
-const audioLinks = [
-  { name: "음원 01", url: "./audio/audio01.mp3" },
-  { name: "음원 02", url: "./audio/audio02.mp3" },
-  { name: "음원 03", url: "./audio/audio03.mp3" }
+const audioCategories = [
+
+  {
+    name: "기초 영어",
+    icon: "📘",
+    audios: [
+      { name: "음원 01", url: "./audio/audio01.mp3" },
+      { name: "음원 02", url: "./audio/audio02.mp3" },
+      { name: "음원 03", url: "./audio/audio03.mp3" }
+    ]
+  },
+
+  {
+    name: "기초 회화",
+    icon: "💬",
+    audios: [
+      { name: "회화 01", url: "./audio/basic01.mp3" },
+      { name: "회화 02", url: "./audio/basic02.mp3" }
+    ]
+  },
+
+  {
+    name: "영어 동화",
+    icon: "📖",
+    audios: [
+      { name: "동화 01", url: "./audio/story01.mp3" },
+      { name: "동화 02", url: "./audio/story02.mp3" }
+    ]
+  }
+
 ];
 
+
+/* 음원자료 카테고리 버튼 만들기 */
+const audioCategoryGrid = document.getElementById("audioCategoryGrid");
 const audioGrid = document.getElementById("audioGrid");
 const audioPlayer = document.getElementById("audioPlayer");
 const audioNow = document.getElementById("audioNow");
+const audioCategoryTitle = document.getElementById("audioCategoryTitle");
 
-audioLinks.forEach(item => {
+audioCategories.forEach((category, index) => {
   const button = document.createElement("button");
+
   button.type = "button";
   button.className = "lesson-button";
-  button.textContent = "▶ " + item.name;
+  button.textContent = category.icon + " " + category.name;
 
   button.addEventListener("click", () => {
-    audioPlayer.src = item.url;
-    audioNow.textContent = "재생 중인 음원: " + item.name;
-    audioPlayer.play().catch(() => {
-      audioNow.textContent = item.name + " — 음원 파일 경로와 파일 이름을 확인하세요.";
-    });
+    openAudioCategory(index);
   });
 
-  audioGrid.appendChild(button);
+  audioCategoryGrid.appendChild(button);
 });
+
+
+/* 선택한 카테고리의 음원 목록 표시 */
+function openAudioCategory(index) {
+  const category = audioCategories[index];
+
+  if (!category) return;
+
+  audioCategoryTitle.textContent = category.name;
+  audioGrid.innerHTML = "";
+
+  // 이전에 재생하던 음원을 정지하고 초기화
+  audioPlayer.pause();
+  audioPlayer.removeAttribute("src");
+  audioPlayer.load();
+
+  audioNow.textContent = "재생할 음원을 선택하세요.";
+
+  category.audios.forEach(item => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "lesson-button";
+    button.textContent = "▶ " + item.name;
+
+    button.addEventListener("click", () => {
+      audioPlayer.src = item.url;
+      audioNow.textContent = "재생 중인 음원: " + item.name;
+
+      audioPlayer.play().catch(() => {
+        audioNow.textContent =
+          item.name + " — 음원 파일 경로와 파일 이름을 확인하세요.";
+      });
+    });
+
+    audioGrid.appendChild(button);
+  });
+
+  showSection("audioListSection");
+}
 
 
 /* ==================================================
    화면 전환
    ================================================== */
 
-// 모든 메뉴 화면을 숨기고 선택한 화면만 표시
 function showSection(sectionId) {
-  ["homeSection", "vocaSection", "storySection", "audioSection"].forEach(id => {
+  [
+    "homeSection",
+    "vocaSection",
+    "storySection",
+    "audioSection",
+    "audioListSection"
+  ].forEach(id => {
     document.getElementById(id).style.display = "none";
   });
+
   document.getElementById(sectionId).style.display = "block";
+
   window.scrollTo(0, 0);
 }
+
 
 // 초등영단어800 메뉴 열기
 function openVocaMenu() {
   showSection("vocaSection");
 }
 
+
 // 스토리영어 메뉴 열기
 function openStoryMenu() {
   showSection("storySection");
 }
 
-// 음원자료 메뉴 열기
+
+// 음원자료 카테고리 메뉴 열기
 function openAudioMenu() {
   showSection("audioSection");
 }
 
+
+// 음원 목록에서 카테고리 목록으로 돌아가기
+function backToAudioCategories() {
+  audioPlayer.pause();
+  showSection("audioSection");
+}
+
+
 // 메인 화면으로 돌아가기
 function backToHome() {
+  audioPlayer.pause();
   showSection("homeSection");
 }
 
 </script>
-
 </body>
 </html>
