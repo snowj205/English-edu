@@ -125,7 +125,8 @@ p {
 /* 학습 메뉴 화면 */
 
 #vocaSection,
-#storySection {
+#storySection,
+#audioSection {
   display: none;
 }
 
@@ -174,12 +175,30 @@ p {
   cursor: pointer;
   transition: .2s;
   box-shadow: 0 4px 12px #24304408;
+  font-family: inherit;
+  width: 100%;
 }
 
 .lesson-button:hover {
   background: #edf3ff;
   border-color: #5279d8;
   transform: translateY(-2px);
+}
+
+.audio-player-box {
+  padding: 22px;
+}
+
+.audio-now {
+  margin-bottom: 14px;
+  font-weight: bold;
+  color: #5279d8;
+}
+
+#audioPlayer {
+  display: block;
+  width: 100%;
+  max-width: 620px;
 }
 
 @media (max-width: 520px) {
@@ -273,28 +292,6 @@ p {
 
       </a>
 
-      <main class="menu">
-
-  <!-- 음원MP3 -->
-        
-  <a class="card"
-     href="#vocabulary"
-     onclick="openVocaMenu(); return false;">
-
-    <span class="icon🎵</span>
-    <span class="title">음원자료</span>
-    <span class="desc">학습에 필요한 음원자료수록</span>
-    
-  </a>
-
-  <!-- 영어표현익힘 -->
-  ...
-
-  <!-- 스토리영어 -->
-  ...
-
-</main>
-
       <!-- 스토리영어 -->
 
       <a class="card"
@@ -305,6 +302,15 @@ p {
         <span class="title">스토리 잉글리쉬</span>
         <span class="desc">이야기로 배우는 영어</span>
 
+      </a>
+
+      <!-- 음원자료 -->
+      <a class="card"
+         href="#audio"
+         onclick="openAudioMenu(); return false;">
+        <span class="icon">🎧</span>
+        <span class="title">음원자료</span>
+        <span class="desc">학습 음원을 듣고 연습하기</span>
       </a>
 
     </main>
@@ -351,6 +357,28 @@ p {
 
     <div class="lesson-grid" id="storyGrid"></div>
 
+  </section>
+
+  <!-- 음원자료 메뉴 -->
+  <section id="audioSection">
+    <button class="back-button" onclick="backToHome()">
+      ← 메인 화면
+    </button>
+
+    <section class="hero">
+      <div class="eyebrow">AUDIO MATERIALS</div>
+      <h1>음원자료</h1>
+      <p>듣고 싶은 음원을 선택하세요.</p>
+    </section>
+
+    <section class="hero audio-player-box">
+      <div class="audio-now" id="audioNow">재생할 음원을 선택하세요.</div>
+      <audio id="audioPlayer" controls preload="none">
+        브라우저가 오디오 재생을 지원하지 않습니다.
+      </audio>
+    </section>
+
+    <div class="lesson-grid" id="audioGrid"></div>
   </section>
 
 </div>
@@ -630,42 +658,74 @@ storyLinks.forEach(item => {
 
 
 /* ==================================================
+   음원자료 버튼 설정
+
+   name : 화면에 표시할 버튼 이름
+   url  : 실제 MP3 파일 경로
+
+   음원을 추가하려면 아래 배열에 한 줄씩 추가하세요.
+   예: { name: "인사 표현", url: "./audio/greetings.mp3" },
+   ================================================== */
+
+const audioLinks = [
+  { name: "음원 01", url: "./audio/audio01.mp3" },
+  { name: "음원 02", url: "./audio/audio02.mp3" },
+  { name: "음원 03", url: "./audio/audio03.mp3" }
+];
+
+const audioGrid = document.getElementById("audioGrid");
+const audioPlayer = document.getElementById("audioPlayer");
+const audioNow = document.getElementById("audioNow");
+
+audioLinks.forEach(item => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "lesson-button";
+  button.textContent = "▶ " + item.name;
+
+  button.addEventListener("click", () => {
+    audioPlayer.src = item.url;
+    audioNow.textContent = "재생 중인 음원: " + item.name;
+    audioPlayer.play().catch(() => {
+      audioNow.textContent = item.name + " — 음원 파일 경로와 파일 이름을 확인하세요.";
+    });
+  });
+
+  audioGrid.appendChild(button);
+});
+
+
+/* ==================================================
    화면 전환
    ================================================== */
 
-// 초등영단어800 메뉴 열기
-
-function openVocaMenu() {
-
-  document.getElementById("homeSection").style.display = "none";
-  document.getElementById("storySection").style.display = "none";
-  document.getElementById("vocaSection").style.display = "block";
-
+// 모든 메뉴 화면을 숨기고 선택한 화면만 표시
+function showSection(sectionId) {
+  ["homeSection", "vocaSection", "storySection", "audioSection"].forEach(id => {
+    document.getElementById(id).style.display = "none";
+  });
+  document.getElementById(sectionId).style.display = "block";
   window.scrollTo(0, 0);
 }
 
+// 초등영단어800 메뉴 열기
+function openVocaMenu() {
+  showSection("vocaSection");
+}
 
 // 스토리영어 메뉴 열기
-
 function openStoryMenu() {
-
-  document.getElementById("homeSection").style.display = "none";
-  document.getElementById("vocaSection").style.display = "none";
-  document.getElementById("storySection").style.display = "block";
-
-  window.scrollTo(0, 0);
+  showSection("storySection");
 }
 
+// 음원자료 메뉴 열기
+function openAudioMenu() {
+  showSection("audioSection");
+}
 
 // 메인 화면으로 돌아가기
-
 function backToHome() {
-
-  document.getElementById("vocaSection").style.display = "none";
-  document.getElementById("storySection").style.display = "none";
-  document.getElementById("homeSection").style.display = "block";
-
-  window.scrollTo(0, 0);
+  showSection("homeSection");
 }
 
 </script>
