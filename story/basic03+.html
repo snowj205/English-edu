@@ -668,14 +668,19 @@ function fillBlank(spoken) {
 function renderQuestion() {
   stopListening();
 
+  // 이전 문제의 음성이 남아 있으면 중지
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
   finalTranscript = "";
 
   const q = questions[index];
 
   if (q.type === "sentence" || q.type === "repeat") {
-  promptEl.textContent = q.english;
-  meaningEl.textContent = q.korean;
-} else {
+    promptEl.textContent = q.english;
+    meaningEl.textContent = q.korean;
+  } else {
     promptEl.textContent = q.type === "blank" ? q.prompt : q.korean;
     meaningEl.textContent = q.type === "blank" ? `뜻: ${q.korean}` : "";
   }
@@ -692,48 +697,57 @@ function renderQuestion() {
     `${index + 1} / ${questions.length}`;
 
   // 스크롤바 위치 업데이트
-const slider = document.getElementById("questionSlider");
+  const slider = document.getElementById("questionSlider");
+  slider.max = questions.length - 1;
+  slider.value = index;
 
-slider.max = questions.length - 1;
-slider.value = index;
+  const progressPercent =
+    questions.length > 1
+      ? (index / (questions.length - 1)) * 100
+      : 100;
 
-const progressPercent =
-  questions.length > 1
-    ? (index / (questions.length - 1)) * 100
-    : 100;
+  document.getElementById("progressBar").style.width =
+    `${progressPercent}%`;
 
-document.getElementById("progressBar").style.width =
-  `${progressPercent}%`;
+  // 첫 문제에서도 왼쪽 화살표 활성화
+  document.getElementById("prev").disabled = false;
 
-// 첫 문제에서도 왼쪽 화살표 활성화
-document.getElementById("prev").disabled = false;
+  document.getElementById("next").disabled =
+    index === questions.length - 1;
 
-document.getElementById("next").disabled =
-  index === questions.length - 1;
-  // 따라 읽기 문제는 영어 문장을 자동으로 읽어줌
-if (q.type === "repeat") {
-  setTimeout(() => {
-    speakRepeatSentence();
-  }, 500);
+  // repeat 유형에서만 영어 문장 자동 재생
+  if (q.type === "repeat") {
+    setTimeout(() => {
+      speakRepeatSentence();
+    }, 500);
+  }
 }
-  // 따라 읽기 문제 자동 음성
-function speakRepeatSentence() {
 
-  if (!("speechSynthesis" in window)) return;
+// 따라 읽기 문제 전용 자동 음성
+function speakRepeatSentence() {
+  if (!("speechSynthesis" in window)) {
+    statusEl.textContent = "이 브라우저에서는 영어 음성 재생을 지원하지 않아요.";
+    return;
+  }
+
+  const q = questions[index];
+  if (q.type !== "repeat") return;
 
   window.speechSynthesis.cancel();
 
-  const q = questions[index];
-
-  const utterance =
-    new SpeechSynthesisUtterance(q.english);
-
+  const utterance = new SpeechSynthesisUtterance(q.english);
   utterance.lang = "en-US";
   utterance.rate = 0.85;
 
-  window.speechSynthesis.speak(utterance);
+  utterance.onstart = () => {
+    statusEl.textContent = "영어 문장을 듣고 똑같이 따라 읽어 보세요.";
+  };
 
-  statusEl.textContent = "영어 문장을 듣고 똑같이 따라 읽어 보세요.";
+  utterance.onerror = () => {
+    statusEl.textContent = "자동 음성 재생이 되지 않으면 '정답 듣기' 버튼을 눌러 주세요.";
+  };
+
+  window.speechSynthesis.speak(utterance);
 }
 
 /* 말하기를 중단하고 검정 마이크 이미지로 복귀 */
@@ -878,13 +892,13 @@ function startListening() {
       )
     ];
 
+    const expected =
+      q.type === "repeat" ? q.english : q.answer;
+
     candidates.sort(
       (a, b) =>
-        similarityPercent(
-  b,
-  q.type === "repeat" ? q.english : q.answer
-) -
-        similarityPercent(a, q.answer)
+        similarityPercent(b, expected) -
+        similarityPercent(a, expected)
     );
 
     const transcriptToCheck = candidates[0];
@@ -1034,7 +1048,7 @@ const score = Number(similarityPercent(spoken, expected));
     feedbackEl.className = "feedback good"; 
     
     // 한글 뜻 대신 영어 정답 문장 표시 
-    statusEl.textContent = `정답: ${q.answer}`;
+    statusEl.textContent = `정답: ${expected}`;
     
     playFeedbackAudio("goodjob");
 
@@ -1141,8 +1155,14 @@ function speakAnswer() {
 
   window.speechSynthesis.cancel();
 
+  const q = questions[index];
+  const textToSpeak =
+    q.type === "repeat" || q.type === "sentence"
+      ? q.english
+      : q.answer;
+
   const utterance =
-    new SpeechSynthesisUtterance(questions[index].answer);
+    new SpeechSynthesisUtterance(textToSpeak);
 
   utterance.lang = "en-US";
   utterance.rate = 0.85;
@@ -1223,7 +1243,12 @@ document.getElementById("showAnswer").addEventListener("click", () => {
     fillBlank(q.answer);
   }
 
-  answerEl.textContent = `정답: ${q.answer}`;
+  const correctAnswer =
+    q.type === "repeat" || q.type === "sentence"
+      ? q.english
+      : q.answer;
+
+  answerEl.textContent = `정답: ${correctAnswer}`;
 
   playNavigationTone();
 });
