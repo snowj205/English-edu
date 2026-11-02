@@ -1480,7 +1480,8 @@ function showMascot(level) {
     onemore: "https://snowj205.github.io/effect-file/onemore.png"
   };
 
-  const isWrong = level === "onemore";
+  const isWrong = level
+    === "onemore";
 
   // 캐릭터를 0.2초 늦게 표시
 mascotTimer = setTimeout(() => {
@@ -1567,46 +1568,7 @@ function speakAnswer() {
   statusEl.textContent = "";
 }
 
-/* 버튼 이동 효과음 */
-function playNavigationTone() {
-  try {
-    const ctx =
-      new (window.AudioContext || window.webkitAudioContext)();
 
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "sine";
-
-    osc.frequency.setValueAtTime(520, ctx.currentTime);
-
-    osc.frequency.exponentialRampToValueAtTime(
-      740,
-      ctx.currentTime + 0.09
-    );
-
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.07,
-      ctx.currentTime + 0.015
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      ctx.currentTime + 0.13
-    );
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start();
-    osc.stop(ctx.currentTime + 0.14);
-
-    setTimeout(() => ctx.close(), 250);
-
-  } catch (e) {}
-}
 /* 단어를 누를 때 짧은 클릭음 */
 function playWordClickSound() {
   try {
@@ -1656,7 +1618,6 @@ function playWordClickSound() {
 }
 /* 이전 문제 */
 document.getElementById("prev").addEventListener("click", () => {
-playNavigationTone();
 
 if (index > 0) {
 index--;
@@ -1671,7 +1632,7 @@ renderQuestion();
 /* 다음 문제 */
 document.getElementById("next").addEventListener("click", () => {
   if (index < questions.length - 1) {
-    playNavigationTone();
+    
     index++;
     renderQuestion();
   }
@@ -1709,7 +1670,7 @@ document.getElementById("showAnswer").addEventListener("click", () => {
   answerEl.textContent = `정답: ${q.answer}`;
   statusEl.textContent = "";
 
-  playNavigationTone();
+  
 });
 
 /* 정답 듣기 */
