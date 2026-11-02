@@ -1646,16 +1646,18 @@ renderQuestion();
 
 /* 다음 문제 */
 document.getElementById("next").addEventListener("click", () => {
+
   if (index < questions.length - 1) {
-    
     index++;
-    renderQuestion();
+  } else {
+    index = 0;
   }
+
+  renderQuestion();
 });
 
 /* 정답 확인 */
-document.getElementById("showAnswer").addEventListener("click", () => {
-  const q = questions[index];
+document.getElementById("next").disabled = false;
 
   bulbImageEl.src = bulbPressedImage;
 
