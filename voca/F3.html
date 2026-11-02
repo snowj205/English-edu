@@ -68,7 +68,7 @@ pointer-events: none;
 .progress > div {
   height: 100%;
   width: 0;
-  background: #FA85DD;
+  background: #FE06A2;
   transition: width .2s;
 }
 
@@ -1047,14 +1047,14 @@ function checkWordOrder() {
     feedbackEl.className = "feedback good";
     showMascot("excellent");
     setTimeout(() => {
-  playFeedbackAudio("excellent");
+  
 }, 400);
   } else {
     answerEl.textContent = "";
     feedbackEl.textContent = "단어 순서를 다시 확인해 보세요. 선택한 단어를 누르면 취소할 수 있어요.";
     feedbackEl.className = "feedback try";
     showMascot("onemore");
-    playFeedbackAudio("onemore");
+    
   }
 }
 
@@ -1411,7 +1411,7 @@ function checkAnswer(spoken) {
       `Excellent! 아주 훌륭해요! (${safeScore}%) 🎊🏆🎉`;
     feedbackEl.className = "feedback good";
 
-    playFeedbackAudio("excellent");
+  
 
   } else if (safeScore >= 65) {
     showMascot("good");
@@ -1429,7 +1429,7 @@ function checkAnswer(spoken) {
 
     // 일반 정답
 setTimeout(() => {
-  playFeedbackAudio("good");
+  
 }, 400);
 
   } else {
@@ -1442,7 +1442,7 @@ setTimeout(() => {
 
     // 오답
 setTimeout(() => {
-  playFeedbackAudio("onemore");
+  
 }, 400);
   }
 }
