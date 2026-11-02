@@ -1405,61 +1405,53 @@ function checkAnswer(spoken) {
   statusEl.textContent = "";
 
   if (safeScore >= 100) {
+
     showMascot("excellent");
-playFeedbackAudio("excellent");
 
     if (q.type === "meaning") {
       promptEl.textContent = q.answer;
       meaningEl.textContent = q.korean;
     }
 
-    showMascot("excellent");
-    playFeedbackAudio("excellent");
-
     feedbackEl.textContent =
       `Excellent! 아주 훌륭해요! (${safeScore}%) 🎊🏆🎉`;
+
     feedbackEl.className = "feedback good";
 
-  
+    setTimeout(() => {
+      playFeedbackAudio("excellent");
+    }, 400);
 
   } else if (safeScore >= 65) {
-    showMascot("good");
 
-setTimeout(() => {
-  playFeedbackAudio("good");
-}, 400);
+    showMascot("good");
 
     if (q.type === "meaning" || q.type === "sentence") {
       promptEl.textContent = q.answer;
       meaningEl.textContent = q.korean;
     }
 
-    // 굿 캐릭터와 칭찬 문구 표시
     feedbackEl.textContent =
       `Good!!! 잘했어요! (${safeScore}%) 👍🥈👏`;
 
     feedbackEl.className = "feedback good";
 
-    // 일반 정답
-setTimeout(() => {
-  playFeedbackAudio("good");
-}, 400)
+    setTimeout(() => {
+      playFeedbackAudio("good");
+    }, 400);
 
   } else {
+
     showMascot("onemore");
 
-    setTimeout(() => {
-  playFeedbackAudio("onemore");
-}, 400);
     feedbackEl.textContent =
       `한 번 더 도전 해 봐요! (${safeScore}%) 😿😿😿`;
 
     feedbackEl.className = "feedback try";
 
-    // 오답
-setTimeout(() => {
-  playFeedbackAudio("onemore");
-}, 400);
+    setTimeout(() => {
+      playFeedbackAudio("onemore");
+    }, 400);
   }
 }
 
