@@ -728,6 +728,7 @@ const questions = [
 let index = 0;
 let recognition = null;
 let listening = false;
+let manualStop = false;
 let finalTranscript = "";
 let finalAlternatives = [];
 let noSpeechRetries = 0;
@@ -1108,7 +1109,7 @@ function renderQuestion() {
     `${((index + 1) / questions.length) * 100}%`;
 
   document.getElementById("prev").disabled = false;
-  document.getElementById("next").disabled =
+  document.getElementById("next").disabled = false;
     index === questions.length - 1;
 }
 
@@ -1657,7 +1658,9 @@ document.getElementById("next").addEventListener("click", () => {
 });
 
 /* 정답 확인 */
-document.getElementById("next").disabled = false;
+document.getElementById("showAnswer").addEventListener("click", () => {
+
+  const q = questions[index];
 
   bulbImageEl.src = bulbPressedImage;
 
@@ -1666,8 +1669,9 @@ document.getElementById("next").disabled = false;
   }
 
   if (q.type === "order") {
-    // 정답 순서대로 단어를 채워 보여 줍니다.
+
     const unused = q.words.map((word, id) => ({ word, id }));
+
     selectedOrderWords = q.answer
       .replace(/[.,!?;:]+$/g, "")
       .split(/\s+/)
@@ -1675,11 +1679,15 @@ document.getElementById("next").disabled = false;
         const foundIndex = unused.findIndex(item =>
           normalize(item.word) === normalize(word)
         );
+
         if (foundIndex < 0) return null;
+
         return unused.splice(foundIndex, 1)[0];
       })
       .filter(Boolean);
+
     renderWordOrder();
+
     feedbackEl.textContent = "정답 문장을 확인했어요.";
     feedbackEl.className = "feedback good";
   }
@@ -1687,7 +1695,6 @@ document.getElementById("next").disabled = false;
   answerEl.textContent = `정답: ${q.answer}`;
   statusEl.textContent = "";
 
-  
 });
 
 /* 정답 듣기 */
