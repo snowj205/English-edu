@@ -455,6 +455,36 @@ body {
     font-size: 40px !important;
   }
 }
+  /* 퀴즈 유형 스타일 */
+.countdown {
+  font-size: 48px;
+  font-weight: 800;
+  color: #8d9bff;
+  min-height: 65px;
+  margin-top: 12px;
+}
+
+.quiz-answer {
+  font-size: 34px;
+  color: #16845b;
+  font-weight: 600;
+  min-height: 45px;
+  margin-top: 5px;
+}
+
+@media (max-width: 650px) {
+  .countdown {
+    font-size: 36px;
+    min-height: 48px;
+  }
+
+  .quiz-answer {
+    font-size: 23px;
+    min-height: 35px;
+  }
+}
+</style>
+</head>
 </style>
 </head>
 
@@ -494,6 +524,8 @@ body {
       <div class="prompt" id="prompt">나는 사과를 좋아해요.</div>
       <div class="hint" id="meaning"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div id="countdown" class="countdown"></div>
+<div id="quizAnswer" class="quiz-answer"></div>
 
     </section>
 
@@ -546,33 +578,114 @@ const questions = [
   korean: "나는 ~해",
   english: "I~"
 },
-  { type: "repeat",
-  english: "I brush my teeth today.",
-  korean: "난 오늘 나의 이를 닦아." },
-  { type: "repeat",
-  english: "I get up today.",
-  korean: "나는 오늘 일어났어." },
-   { type: "repeat",
-  english: "I clean the room all day.",
-  korean: " 나는 하루종일 방을 청소해." },
-  { type: "repeat",
-  english: "I have breakfast today.",
-  korean: "나는 하루종일 아침을 먹어." },
-  { type: "repeat",
-  english: "I do the laundry at home.",
-  korean: "나의 집에서 빨래를 해." },
-  { type: "repeat",
-  english: "I study English at home.",
-  korean: "나는 집에서 영어공부를 해." },
-  { type: "repeat",
-  english: "I drink water everyday.",
-  korean: "나는 매일 물을 마셔." },
-  { type: "repeat",
-  english: "I take shower every day.",
-  korean: "나는 매일 샤워를해." },
-  { type: "repeat",
-  english: "I eat fruits in the morning.",
-  korean: "나는 매일 물을 마셔." },
+  {
+  type: "quiz",
+  korean: "난 오늘 나의 이를 닦아.",
+  english: "I brush my teeth today."
+},
+  {
+  type: "quiz",
+  korean: "나는 오늘 일어났어.",
+  english: "I get up today."
+},
+  {
+  type: "quiz",
+  korean: "난 오늘 나의 이를 닦아.",
+  english: "I brush my teeth today."
+},
+  {
+  type: "quiz",
+  korean: "난 오늘 방청소를 해.",
+  english: "I clean the room today."
+},
+  {
+  type: "quiz",
+  korean: "난 오늘 아침을 먹어.",
+  english: "I have breakfast today."
+},
+  {
+  type: "quiz",
+  korean: "난 오늘 빨래를 해.",
+  english: "I have breakfast today."
+},
+  {
+  type: "quiz",
+  korean: "난 하루종일 영어공부를해.",
+  english: "I study English all day."
+},
+  {
+  type: "quiz",
+  korean: "난 하루종일 물을 마셔.",
+  english: "I study English all day."
+},
+  {
+  type: "quiz",
+  korean: "난 하루종일 샤워를 해.",
+  english: "I take shower all day."
+},
+  {
+  type: "quiz",
+  korean: "난 하루종일 과일을 먹어.",
+  english: "I eat fruits all day."
+},
+  {
+  type: "quiz",
+  korean: "난 하루종일 세수를 해.",
+  english: "I wash my face all day."
+},
+  {
+  type: "quiz",
+  korean: "난 집에서 이를 닦아.",
+  english: "I bush my teeth at home."
+},
+  {
+  type: "quiz",
+  korean: "난 집에서 방청소를 해.",
+  english: "I clean the room at home."
+},
+  {
+  type: "quiz",
+  korean: "난 집에서 아침을 먹어.",
+  english: "I have breakfast at home."
+},
+  {
+  type: "quiz",
+  korean: "나는 매일 일어나.",
+  english: "I get up everyday."
+},
+  {
+  type: "quiz",
+  korean: "나는 매일 샤워를 해.",
+  english: "I take a shower everyday."
+},
+  {
+  type: "quiz",
+  korean: "나는 매일 과일을 먹어.",
+  english: "I eat fruits everyday."
+},
+  {
+  type: "quiz",
+  korean: "나는 아침에 일어나.",
+  english: "I get up in the morning."
+},
+  {
+  type: "quiz",
+  korean: "나는 아침에 물을 마셔.",
+  english: "I drink water in the morning."
+},
+  {
+  type: "quiz",
+  korean: "나는 아침에 영어공부를 해.",
+  english: "I study English in the morning."
+},
+  {
+  type: "quiz",
+  korean: "나는 아침에 빨래를 해.",
+  english: "I do the laundry in the morning."
+},
+   
+
+  
   { type: "meaning", korean: "내 할아버지는 어디있지?", answer: "Where is my grandpa?" },
   { type: "meaning", korean: "내 할머니는 어디있지?", answer: "Where is my grandma?" },
   { type: "meaning", korean: "내 집은 어디있지?", answer: "Where is my house?" },
@@ -863,7 +976,8 @@ let recognition = null;
 let listening = false;
 let finalTranscript = "";
 let finalAlternatives = [];
-
+let quizTimer = null;
+let quizUtterance = null;
 const promptEl = document.getElementById("prompt");
 const meaningEl = document.getElementById("meaning");
 const feedbackEl = document.getElementById("feedback");
@@ -922,7 +1036,18 @@ function renderQuestion() {
   finalTranscript = "";
 
   const q = questions[index];
+function renderQuestion() {
+  stopListening();
 
+  // 퀴즈 카운트다운이 진행 중이면 중지
+  if (quizTimer) {
+    clearInterval(quizTimer);
+    quizTimer = null;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const q = questions[index];
   if (q.type === "sentence" || q.type === "repeat") {
   promptEl.textContent = q.english;
   meaningEl.textContent = q.korean;
@@ -976,6 +1101,106 @@ if (q.type === "repeat") {
   }, 500);
 
 }
+}
+  /* 5초 생각하기 → 정답 표시 → 2번 읽기 */
+function startQuizQuestion() {
+
+  const currentIndex = index;
+  const q = questions[index];
+
+  if (q.type !== "quiz") return;
+
+  const countdownEl = document.getElementById("countdown");
+  const quizAnswerEl = document.getElementById("quizAnswer");
+
+  let count = 5;
+
+  countdownEl.textContent = count;
+  quizAnswerEl.textContent = "";
+
+  statusEl.textContent = "영어로 어떻게 말할까요?";
+
+  quizTimer = setInterval(() => {
+
+    if (index !== currentIndex) {
+      clearInterval(quizTimer);
+      return;
+    }
+
+    count--;
+
+    if (count > 0) {
+      countdownEl.textContent = count;
+      return;
+    }
+
+    clearInterval(quizTimer);
+    quizTimer = null;
+
+    countdownEl.textContent = "";
+    quizAnswerEl.textContent = q.english;
+
+    speakQuizAnswer(currentIndex, q.english);
+
+  }, 1000);
+}
+
+
+/* 영어 정답 2번 읽기 */
+function speakQuizAnswer(questionIndex, english) {
+
+  if (!("speechSynthesis" in window)) {
+    statusEl.textContent = "음성 재생을 지원하지 않는 브라우저예요.";
+    return;
+  }
+
+  let repeatCount = 0;
+
+  function speakAgain() {
+
+    if (index !== questionIndex) return;
+
+    repeatCount++;
+
+    const utterance = new SpeechSynthesisUtterance(english);
+
+    utterance.lang = "en-US";
+    utterance.rate = 0.85;
+
+    quizUtterance = utterance;
+
+    utterance.onstart = () => {
+      statusEl.textContent =
+        `영어 정답 듣기 (${repeatCount}/2)`;
+    };
+
+    utterance.onend = () => {
+
+      if (index !== questionIndex) return;
+
+      if (repeatCount < 2) {
+        setTimeout(speakAgain, 400);
+      } else {
+
+        statusEl.textContent = "다음 문제로 이동합니다.";
+
+        setTimeout(() => {
+
+          if (index !== questionIndex) return;
+
+          if (index < questions.length - 1) {
+            index++;
+            renderQuestion();
+          }
+
+        }, 1000);
+      }
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  speakAgain();
 }
 /* 뜻 보고 영어 문장 듣기 → 자동 다음 문제 */
 function speakListenQuestion() {
