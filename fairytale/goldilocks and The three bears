@@ -98,6 +98,8 @@ header p {
   display: flex;
   justify-content: center;
   align-items: center;
+.page-image-wrap {
+  transform: translateY(-15px);
 }
 
 .page-image {
