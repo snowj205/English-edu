@@ -770,9 +770,17 @@ function renderSide(elementId, pageIndex) {
 
   const data = STORY_PAGES[pageIndex];
 
-  if (!data) return;
+  if (!data) {
+    container.innerHTML = "";
+    return;
+  }
 
   container.style.background = data.background || "#fffdf7";
+
+  container.style.display = "flex";
+  container.style.flexDirection = "column";
+  container.style.justifyContent = "center";
+  container.style.alignItems = "center";
 
   const imageWrap = document.createElement("div");
 
