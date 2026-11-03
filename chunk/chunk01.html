@@ -872,13 +872,17 @@ function renderQuestion() {
   if (q.type === "sentence" || q.type === "repeat") {
     promptEl.textContent = q.english;
     meaningEl.textContent = q.korean;
-  } else {
-    promptEl.textContent =
-      q.type === "blank" ? q.prompt : q.korean;
+  } else if (q.type === "listen") {
+  promptEl.textContent = q.english;
+  meaningEl.textContent = q.korean;
 
-    meaningEl.textContent =
-      q.type === "blank" ? `뜻: ${q.korean}` : "";
-  }
+} else {
+  promptEl.textContent =
+    q.type === "blank" ? q.prompt : q.korean;
+
+  meaningEl.textContent =
+    q.type === "blank" ? `뜻: ${q.korean}` : "";
+}
 
   // 이전 결과 초기화
   feedbackEl.textContent = "";
