@@ -307,7 +307,15 @@ p {
         <span class="title">음원자료</span>
         <span class="desc">챕터별 학습음원수록</span>
       </a>
-
+      
+<!-- 영어 동화 -->
+<a class="card"
+   href="#fairytale"
+   onclick="openFairyMenu(); return false;">
+  <span class="icon">🧚</span>
+  <span class="title">영어 동화</span>
+  <span class="desc">그림과 소리로 즐기는 영어 동화책</span>
+</a>
     </main>
   </section>
 
@@ -357,6 +365,23 @@ p {
   </section>
 
   <div class="lesson-grid" id="chunkGrid"></div>
+
+</section>
+
+  <!-- 영어 동화 메뉴 -->
+<section id="fairySection">
+
+  <button class="back-button" onclick="backToHome()">
+    ← 메인 화면
+  </button>
+
+  <section class="hero">
+    <div class="eyebrow">ENGLISH FAIRY TALES</div>
+    <h1>영어 동화</h1>
+    <p>읽고 싶은 동화책을 선택하세요.</p>
+  </section>
+
+  <div class="lesson-grid" id="fairyGrid"></div>
 
 </section>
   
@@ -683,6 +708,37 @@ chunkLinks.forEach(item => {
 });
 
 /* ==================================================
+   영어 동화 버튼 설정
+   ================================================== */
+
+const fairyGrid = document.getElementById("fairyGrid");
+
+const fairyLinks = [
+
+  { name: "동화 01", url: "./fairytale/fairy01.html" },
+  { name: "동화 02", url: "./fairytale/fairy02.html" },
+  { name: "동화 03", url: "./fairytale/fairy03.html" },
+  { name: "동화 04", url: "./fairytale/fairy04.html" },
+  { name: "동화 05", url: "./fairytale/fairy05.html" },
+  { name: "동화 06", url: "./fairytale/fairy06.html" },
+  { name: "동화 07", url: "./fairytale/fairy07.html" },
+  { name: "동화 08", url: "./fairytale/fairy08.html" }
+
+];
+
+fairyLinks.forEach(item => {
+
+  const link = document.createElement("a");
+
+  link.className = "lesson-button";
+  link.textContent = "📖 " + item.name;
+  link.href = item.url;
+
+  fairyGrid.appendChild(link);
+
+});
+  
+/* ==================================================
    음원자료 카테고리 및 음원 설정
 
    카테고리 추가:
@@ -818,6 +874,7 @@ function showSection(sectionId) {
     "vocaSection",
     "storySection",
     "chunkSection",
+    "fairySection",
     "audioSection",
     "audioListSection"
   ].forEach(id => {
@@ -845,7 +902,11 @@ function openStoryMenu() {
 function openChunkMenu() {
   showSection("chunkSection");
 }
-  
+
+  // 영어 동화 메뉴 열기
+function openFairyMenu() {
+  showSection("fairySection");
+}
 // 음원자료 카테고리 메뉴 열기
 function openAudioMenu() {
   showSection("audioSection");
