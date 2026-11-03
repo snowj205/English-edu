@@ -485,8 +485,6 @@ body {
 }
 </style>
 </head>
-</style>
-</head>
 
 <body>
 <div class="app">
@@ -864,24 +862,35 @@ function renderQuestion() {
 function renderQuestion() {
   stopListening();
 
-  // 퀴즈 카운트다운이 진행 중이면 중지
+  // 진행 중인 퀴즈 타이머 중지
   if (quizTimer) {
     clearInterval(quizTimer);
     quizTimer = null;
   }
 
-  window.speechSynthesis.cancel();
+  // 이전 음성 중지
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  finalTranscript = "";
+  finalAlternatives = "";
 
   const q = questions[index];
+
+  // 문제 표시
   if (q.type === "sentence" || q.type === "repeat") {
-  promptEl.textContent = q.english;
-  meaningEl.textContent = q.korean;
+    promptEl.textContent = q.english;
+    meaningEl.textContent = q.korean;
+  } else {
+    promptEl.textContent =
+      q.type === "blank" ? q.prompt : q.korean;
 
-} else {
-  promptEl.textContent = q.type === "blank" ? q.prompt : q.korean;
-  meaningEl.textContent = q.type === "blank" ? `뜻: ${q.korean}` : "";
-}
+    meaningEl.textContent =
+      q.type === "blank" ? `뜻: ${q.korean}` : "";
+  }
 
+  // 이전 결과 초기화
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
 
@@ -890,10 +899,14 @@ function renderQuestion() {
   answerEl.textContent = "";
   statusEl.textContent = "마이크 버튼을 누르고 영어로 말해 보세요.";
 
+  document.getElementById("countdown").textContent = "";
+  document.getElementById("quizAnswer").textContent = "";
+
+  // 문제 번호
   document.getElementById("counter").textContent =
     `${index + 1} / ${questions.length}`;
 
-  // 스크롤바 위치 업데이트
+  // 진행 바
   const slider = document.getElementById("questionSlider");
   slider.max = questions.length - 1;
   slider.value = index;
@@ -906,26 +919,21 @@ function renderQuestion() {
   document.getElementById("progressBar").style.width =
     `${progressPercent}%`;
 
-  // 첫 문제에서도 왼쪽 화살표 활성화
   document.getElementById("prev").disabled = false;
 
   document.getElementById("next").disabled =
     index === questions.length - 1;
 
-  // 문제 유형별 자동 음성 재생
-if (q.type === "repeat") {
+  // 문제 유형별 실행
+  if (q.type === "repeat") {
+    setTimeout(speakRepeatSentence, 500);
 
-  setTimeout(() => {
-    speakRepeatSentence();
-  }, 500);
+  } else if (q.type === "listen") {
+    setTimeout(speakListenQuestion, 500);
 
-} else if (q.type === "listen") {
-
-  setTimeout(() => {
-    speakListenQuestion();
-  }, 500);
-
-}
+  } else if (q.type === "quiz") {
+    startQuizQuestion();
+  }
 }
   /* 5초 생각하기 → 정답 표시 → 2번 읽기 */
 function startQuizQuestion() {
