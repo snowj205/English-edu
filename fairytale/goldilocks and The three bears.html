@@ -98,7 +98,6 @@ header p {
   display: flex;
   justify-content: center;
   align-items: center;
-.page-image-wrap {
   transform: translateY(-15px);
 }
 
@@ -128,9 +127,7 @@ header p {
   text-align: center;
   font-size: 20px;
   line-height: 1.9;
-
-  margin-top: -35px;
-
+  margin-top: -65px;
   position: relative;
   z-index: 3;
 }
@@ -168,33 +165,47 @@ header p {
   font-size: 12px;
 }
 
-/* 넘김 버튼 */
+/* 페이지 넘김 버튼 */
 
 .controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 25px;
-  margin: 15px 0 25px;
+  gap: 22px;
+  margin: 18px auto 22px;
 }
 
 .controls button {
-  background: #897666;
-  color: white;
-  border: none;
-  padding: 12px 24px;
+  min-width: 125px;
+  padding: 12px 22px;
+  border: 1px solid #e4d7c8;
   border-radius: 30px;
+  background: #fffdf8;
+  color: #796451;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 15px;
+  box-shadow: 0 3px 8px #806c5520;
+  transition: 0.2s;
+}
+
+.controls button:hover:not(:disabled) {
+  background: #f7ead8;
+  transform: translateY(-2px);
 }
 
 .controls button:disabled {
-  opacity: .3;
+  opacity: 0.3;
+  cursor: default;
+  box-shadow: none;
 }
 
 #pageInfo {
-  font-size: 14px;
-  color: #777;
+  min-width: 65px;
+  text-align: center;
+  font-size: 13px;
+  color: #9b8977;
+  font-weight: 600;
 }
 
 /* 3D 책장 */
@@ -240,28 +251,39 @@ header p {
   }
 }
 
-/* 하단 기능 */
+/* 하단 기능 버튼 */
 
 .bottom-tools {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 14px;
+  margin: 5px auto 25px;
+  padding: 0 12px;
 }
 
 .bottom-tools button {
-  border: none;
-  padding: 10px 18px;
-  background: white;
+  min-width: 145px;
+  padding: 13px 20px;
+  border: 1px solid #e9dfd2;
+  border-radius: 14px;
+  background: #fffdf8;
   color: #766455;
-  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 5px #0001;
+  box-shadow: 0 3px 9px #806c5518;
+  transition: 0.2s;
 }
 
 .bottom-tools button:hover {
-  background: #fff0d9;
+  background: #f8eddf;
+  transform: translateY(-2px);
+}
+
+.bottom-tools button:active {
+  transform: scale(0.97);
 }
 
 /* 이미지 교체 */
@@ -314,13 +336,32 @@ header p {
     line-height: 1.7;
   }
 
+  /* 페이지 넘김 버튼 */
+
   .controls {
-    gap: 12px;
+    gap: 8px;
+    margin: 14px 0 20px;
   }
 
   .controls button {
-    padding: 10px 15px;
-    font-size: 13px;
+    min-width: 95px;
+    padding: 10px 12px;
+    font-size: 12px;
+  #pageInfo {
+    min-width: 50px;
+    font-size: 12px;
+  }
+
+  /* 하단 기능 버튼 */
+
+  .bottom-tools {
+    gap: 9px;
+  }
+
+  .bottom-tools button {
+    min-width: 125px;
+    padding: 11px 13px;
+    font-size: 12px;
   }
 
 }
