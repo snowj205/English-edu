@@ -473,11 +473,11 @@ body {
   color: #8d9bff;
 }
 
-#quizAnswer {
+/* 카운트다운 자리에 표시되는 영어 정답 */
+#countdown.show-answer {
   font-size: 68px !important;
   font-weight: 700;
-  color: #16845b;
-  transform: translateY(-18px);
+  color: #7654C8;
 }
 
 /* 모바일 */
@@ -492,7 +492,7 @@ body {
     font-size: 42px !important;
   }
 
-  #quizAnswer {
+  #countdown.show-answer {
     font-size: 30px !important;
   }
 }
@@ -942,8 +942,7 @@ function renderQuestion() {
     startQuizQuestion();
   }
 }
-  /* 5초 생각하기 → 정답 표시 → 2번 읽기 */
-function startQuizQuestion() {
+ function startQuizQuestion() {
 
   const currentIndex = index;
   const q = questions[index];
@@ -955,6 +954,7 @@ function startQuizQuestion() {
 
   let count = 5;
 
+  countdownEl.classList.remove("show-answer");
   countdownEl.textContent = count;
   quizAnswerEl.textContent = "";
 
@@ -977,8 +977,9 @@ function startQuizQuestion() {
     clearInterval(quizTimer);
     quizTimer = null;
 
-    countdownEl.textContent = "";
-    quizAnswerEl.textContent = q.english;
+    // 카운트다운과 같은 위치에 영어 정답 표시
+    countdownEl.textContent = q.english;
+    countdownEl.classList.add("show-answer");
 
     speakQuizAnswer(currentIndex, q.english);
 
