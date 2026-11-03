@@ -848,17 +848,7 @@ function fillBlank(spoken) {
   );
 }
 
-function renderQuestion() {
-  stopListening();
 
-  // 이전 문제의 음성이 남아 있으면 중지
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-
-  finalTranscript = "";
-
-  const q = questions[index];
 function renderQuestion() {
   stopListening();
 
