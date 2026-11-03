@@ -541,6 +541,11 @@ body {
 
 <script>
 const questions = [
+  { 
+  type: "listen",
+  korean: "나는 사과를 좋아해요.",
+  english: "I like apples."
+},
   { type: "repeat",
   english: "Where is my grandpa?",
   korean: "내 할아버지는 어디있지?" },
@@ -913,12 +918,13 @@ function renderQuestion() {
   const q = questions[index];
 
   if (q.type === "sentence" || q.type === "repeat") {
-    promptEl.textContent = q.english;
-    meaningEl.textContent = q.korean;
-  } else {
-    promptEl.textContent = q.type === "blank" ? q.prompt : q.korean;
-    meaningEl.textContent = q.type === "blank" ? `뜻: ${q.korean}` : "";
-  }
+  promptEl.textContent = q.english;
+  meaningEl.textContent = q.korean;
+
+} else {
+  promptEl.textContent = q.type === "blank" ? q.prompt : q.korean;
+  meaningEl.textContent = q.type === "blank" ? `뜻: ${q.korean}` : "";
+}
 
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
@@ -950,14 +956,66 @@ function renderQuestion() {
   document.getElementById("next").disabled =
     index === questions.length - 1;
 
-  // repeat 유형에서만 영어 문장 자동 재생
-  if (q.type === "repeat") {
-    setTimeout(() => {
-      speakRepeatSentence();
-    }, 500);
-  }
-}
+  // 문제 유형별 자동 음성 재생
+if (q.type === "repeat") {
 
+  setTimeout(() => {
+    speakRepeatSentence();
+  }, 500);
+
+} else if (q.type === "listen") {
+
+  setTimeout(() => {
+    speakListenQuestion();
+  }, 500);
+
+}
+}
+/* 뜻 보고 영어 문장 듣기 → 자동 다음 문제 */
+function speakListenQuestion() {
+
+  const currentIndex = index;
+  const q = questions[currentIndex];
+
+  if (q.type !== "listen") return;
+
+  if (!("speechSynthesis" in window)) {
+    statusEl.textContent = "음성 재생을 지원하지 않는 브라우저예요.";
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(q.english);
+
+  utterance.lang = "en-US";
+  utterance.rate = 0.85;
+
+  utterance.onstart = () => {
+    statusEl.textContent = "영어 문장을 듣고 있어요.";
+  };
+
+  utterance.onend = () => {
+
+    if (index !== currentIndex) return;
+
+    statusEl.textContent = "다음 문제로 이동합니다.";
+
+    setTimeout(() => {
+
+      if (index !== currentIndex) return;
+
+      if (index < questions.length - 1) {
+        index++;
+        renderQuestion();
+      }
+
+    }, 1000);
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+  
 // 따라 읽기 문제 전용 자동 음성
 function speakRepeatSentence() {
   if (!("speechSynthesis" in window)) {
