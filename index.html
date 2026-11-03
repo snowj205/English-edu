@@ -652,6 +652,35 @@ storyLinks.forEach(item => {
   storyGrid.appendChild(link);
 });
 
+  /* ==================================================
+   청크학습 버튼 설정
+   ================================================== */
+
+const chunkGrid = document.getElementById("chunkGrid");
+
+const chunkLinks = [
+
+  { name: "1단계", url: "./chunk/chunk01.html" },
+  { name: "2단계", url: "./chunk/chunk02.html" },
+  { name: "3단계", url: "./chunk/chunk03.html" },
+  { name: "4단계", url: "./chunk/chunk04.html" }
+  { name: "4단계", url: "./chunk/chunk04.html" }
+  { name: "4단계", url: "./chunk/chunk04.html" }
+  { name: "4단계", url: "./chunk/chunk04.html" }
+
+];
+
+
+/* 청크학습 버튼 만들기 */
+chunkLinks.forEach(item => {
+  const link = document.createElement("a");
+
+  link.className = "lesson-button";
+  link.textContent = item.name;
+  link.href = item.url;
+
+  chunkGrid.appendChild(link);
+});
 
 /* ==================================================
    음원자료 카테고리 및 음원 설정
