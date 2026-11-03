@@ -473,7 +473,7 @@ x, y, width, height
 
 const STORY_PAGES = [
 
-  // PAGE 1
+  // PAGE 2
 
   {
     image: "",
@@ -922,18 +922,19 @@ function renderSide(elementId, pageIndex) {
 
 function renderBook() {
 
-  renderSide("leftPage", currentPage);
+  console.log("현재 페이지:", currentPage);
+  console.log("왼쪽 데이터:", STORY_PAGES[currentPage]);
+  console.log("오른쪽 데이터:", STORY_PAGES[currentPage + 1]);
 
+  renderSide("leftPage", currentPage);
   renderSide("rightPage", currentPage + 1);
 
   document.getElementById("pageInfo").textContent =
-
     `${currentPage + 1} - ${Math.min(currentPage + 2, STORY_PAGES.length)} / ${STORY_PAGES.length}`;
 
   document.getElementById("prevBtn").disabled = currentPage === 0;
 
   document.getElementById("nextBtn").disabled =
-
     currentPage + 2 >= STORY_PAGES.length;
 
 }
