@@ -770,27 +770,41 @@ function renderSide(elementId, pageIndex) {
 
   const data = STORY_PAGES[pageIndex];
 
-  if (!data) {
-    container.innerHTML = "";
-    return;
-  }
+  if (!data) return;
 
   container.style.background = data.background || "#fffdf7";
 
   container.style.display = "flex";
   container.style.flexDirection = "column";
-  container.style.justifyContent = "center";
   container.style.alignItems = "center";
+  container.style.justifyContent = "center";
+  container.style.paddingBottom = "50px";
+
+
+  // 그림 영역
 
   const imageWrap = document.createElement("div");
 
   imageWrap.className = "page-image-wrap";
+
+  imageWrap.style.width = "100%";
+  imageWrap.style.height = "65%";
+  imageWrap.style.flex = "0 0 65%";
+  imageWrap.style.position = "relative";
+  imageWrap.style.display = "flex";
+  imageWrap.style.justifyContent = "center";
+  imageWrap.style.alignItems = "center";
+
 
   const img = document.createElement("img");
 
   img.className = "page-image";
 
   img.src = currentUpload[pageIndex] || data.image;
+
+  img.style.maxWidth = "100%";
+  img.style.maxHeight = "100%";
+  img.style.objectFit = "contain";
 
   imageWrap.appendChild(img);
 
@@ -804,11 +818,8 @@ function renderSide(elementId, pageIndex) {
     button.className = "hotspot";
 
     button.style.left = area.x + "%";
-
     button.style.top = area.y + "%";
-
     button.style.width = area.width + "%";
-
     button.style.height = area.height + "%";
 
     button.title = area.word;
@@ -830,11 +841,9 @@ function renderSide(elementId, pageIndex) {
         const temp = new SpeechSynthesisUtterance(area.word);
 
         temp.lang = "en-US";
-
         temp.rate = 0.85;
 
         speechSynthesis.cancel();
-
         speechSynthesis.speak(temp);
 
       }
@@ -849,11 +858,18 @@ function renderSide(elementId, pageIndex) {
   container.appendChild(imageWrap);
 
 
-  // 문장 표시
+  // 영어 문장 영역
 
   const textBox = document.createElement("div");
 
   textBox.className = "story-text";
+
+  textBox.style.width = "100%";
+  textBox.style.flex = "0 0 auto";
+  textBox.style.marginTop = "-20px";
+  textBox.style.position = "relative";
+  textBox.style.zIndex = "3";
+
 
   data.sentences.forEach(sentence => {
 
@@ -872,7 +888,6 @@ function renderSide(elementId, pageIndex) {
         const span = document.createElement("span");
 
         span.className = "word";
-
         span.textContent = part;
 
         line.appendChild(span);
@@ -886,6 +901,7 @@ function renderSide(elementId, pageIndex) {
     textBox.appendChild(line);
 
   });
+
 
   container.appendChild(textBox);
 
