@@ -211,6 +211,8 @@ header p {
 
 /* 3D 책장 */
 
+/* 3D 책장 */
+
 .turning-page {
   position: absolute;
   width: 50%;
@@ -224,6 +226,14 @@ header p {
   pointer-events: none;
   border-left: 1px solid #ddd2c4;
   box-shadow: 5px 5px 20px #0002;
+
+  /* 평소에는 숨기기 */
+  visibility: hidden;
+}
+
+.turning-page.next,
+.turning-page.prev {
+  visibility: visible;
 }
 
 .turning-page.next {
