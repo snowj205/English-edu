@@ -1,354 +1,401 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>트윙클 잉글리쉬 동화책</title>
+<title>Twinkle Storybook</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #e9e3d8;
+  background: #eee9e1;
   font-family: Arial, "Malgun Gothic", sans-serif;
-  color: #333;
+  color: #344054;
+  overflow-x: hidden;
 }
 
 header {
   text-align: center;
-  padding: 18px;
+  padding: 20px 10px 10px;
 }
 
 header h2 {
   margin: 0;
-  color: #594c42;
+  font-size: 23px;
+  color: #68594f;
 }
 
-.book-area {
+header p {
+  color: #999;
+  font-size: 13px;
+}
+
+/* 책 영역 */
+
+.book-wrap {
+  width: 100%;
   display: flex;
   justify-content: center;
-  padding: 20px 12px;
+  padding: 15px;
+  perspective: 1800px;
 }
 
 .book {
-  width: 900px;
+  width: 960px;
   max-width: 100%;
-  min-height: 520px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: #fffdf5;
-  border-radius: 12px;
-  box-shadow: 0 15px 35px #0002;
-  overflow: hidden;
+  aspect-ratio: 1.45 / 1;
+  min-height: 400px;
   position: relative;
-  perspective: 1500px;
+  display: flex;
+  background: #fffdf7;
+  box-shadow: 0 15px 35px #0002;
+  border-radius: 8px;
 }
 
+/* 페이지 */
+
 .page {
-  min-width: 0;
-  padding: 35px;
+  width: 50%;
+  height: 100%;
   position: relative;
-  background: #fffdf5;
+  padding: 35px;
+  overflow: hidden;
+  background: #fffdf7;
 }
 
 .left-page {
-  border-right: 1px solid #e8dfd0;
-  box-shadow: inset -8px 0 15px -15px #555;
+  border-right: 1px solid #e9e1d5;
+  border-radius: 8px 0 0 8px;
+  box-shadow: inset -12px 0 20px -20px #777;
 }
 
 .right-page {
-  box-shadow: inset 8px 0 15px -15px #555;
+  border-radius: 0 8px 8px 0;
+  box-shadow: inset 12px 0 20px -20px #777;
 }
 
-.page-content {
+.page-inner {
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-.story-image {
+.page-image-wrap {
   width: 100%;
-  max-height: 300px;
-  object-fit: contain;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: transform .2s;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.story-image:hover {
-  transform: scale(1.03);
+.page-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.hotspot {
+  position: absolute;
+  border: 2px dashed transparent;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.hotspot:hover {
+  border-color: #ffb64d;
+  background: #ffffff30;
 }
 
 .story-text {
-  font-size: 21px;
-  line-height: 1.8;
-  text-align: center;
   width: 100%;
-  margin-top: 25px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.9;
+  margin-top: 15px;
 }
 
-.sentence {
+.story-sentence {
   display: block;
   cursor: pointer;
-  padding: 5px;
+  padding: 2px 5px;
   border-radius: 6px;
-  transition: background .2s;
 }
 
-.sentence:hover {
-  background: #fff0cf;
+.story-sentence:hover {
+  background: #fff0cc;
 }
 
-.sentence.active {
-  background: #ffe7a8;
+.story-sentence.active {
+  background: #ffe39c;
+}
+
+.word {
+  display: inline-block;
+  padding: 0 2px;
+  border-radius: 4px;
+}
+
+.word.active {
+  background: #ffd66b;
+  color: #754c00;
 }
 
 .page-number {
   position: absolute;
-  bottom: 15px;
+  bottom: 12px;
   color: #aaa;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-.left-page .page-number {
-  left: 25px;
-}
-
-.right-page .page-number {
-  right: 25px;
-}
+/* 넘김 버튼 */
 
 .controls {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 18px;
-  margin: 15px;
+  justify-content: center;
+  gap: 25px;
+  margin: 15px 0 25px;
 }
 
-button {
-  border: none;
-  padding: 12px 22px;
-  border-radius: 25px;
-  background: #8d7765;
+.controls button {
+  background: #897666;
   color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 15px;
 }
 
-button:hover {
-  background: #705b4a;
-}
-
-button:disabled {
+.controls button:disabled {
   opacity: .3;
-  cursor: default;
 }
 
 #pageInfo {
   font-size: 14px;
+  color: #777;
 }
 
-.editor {
-  max-width: 900px;
-  margin: 25px auto;
-  padding: 20px;
+/* 3D 책장 */
+
+.turning-page {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  background: #fffdf7;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  pointer-events: none;
+  border-left: 1px solid #ddd2c4;
+  box-shadow: 5px 5px 20px #0002;
+}
+
+.turning-page.next {
+  animation: nextPage .65s ease-in-out forwards;
+}
+
+.turning-page.prev {
+  animation: prevPage .65s ease-in-out forwards;
+}
+
+@keyframes nextPage {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes prevPage {
+  0% {
+    transform: rotateY(-180deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+
+/* 하단 기능 */
+
+.bottom-tools {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.bottom-tools button {
+  border: none;
+  padding: 10px 18px;
+  background: white;
+  color: #766455;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px #0001;
+}
+
+.bottom-tools button:hover {
+  background: #fff0d9;
+}
+
+/* 이미지 교체 */
+
+.upload-area {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 15px;
   background: white;
   border-radius: 12px;
+  text-align: center;
 }
 
-.editor h3 {
-  margin-top: 0;
-}
-
-.editor label {
+.upload-area label {
   display: block;
-  margin: 15px 0 6px;
-  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
-.editor textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 15px;
-  resize: vertical;
+.upload-area input {
+  max-width: 100%;
 }
 
-.editor input {
-  width: 100%;
-  margin-top: 8px;
-}
-
-.editor-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.editor-buttons button {
-  font-size: 13px;
-}
-
-.note {
-  font-size: 13px;
-  color: #888;
-  line-height: 1.6;
-  margin-top: 15px;
-}
-
-@keyframes turnNext {
-  0% {
-    transform: rotateY(0);
-  }
-  50% {
-    transform: rotateY(-12deg);
-  }
-  100% {
-    transform: rotateY(0);
-  }
-}
-
-@keyframes turnPrev {
-  0% {
-    transform: rotateY(0);
-  }
-  50% {
-    transform: rotateY(12deg);
-  }
-  100% {
-    transform: rotateY(0);
-  }
-}
-
-.turn-next {
-  animation: turnNext .4s ease;
-}
-
-.turn-prev {
-  animation: turnPrev .4s ease;
+#uploadStatus {
+  font-size: 12px;
+  color: #999;
 }
 
 @media(max-width:650px) {
 
+  header h2 {
+    font-size: 19px;
+  }
+
+  .book-wrap {
+    padding: 8px;
+  }
+
   .book {
+    aspect-ratio: 0.9 / 1;
     min-height: 430px;
   }
 
   .page {
-    padding: 15px 10px 30px;
-  }
-
-  .story-image {
-    max-height: 210px;
+    padding: 15px 9px 25px;
   }
 
   .story-text {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.7;
-    margin-top: 15px;
   }
 
-  button {
+  .controls {
+    gap: 12px;
+  }
+
+  .controls button {
     padding: 10px 15px;
     font-size: 13px;
   }
 
-  header h2 {
-    font-size: 20px;
-  }
-
 }
+
 </style>
 </head>
+
 
 <body>
 
 <header>
-  <h2>📖 트윙클 잉글리쉬 Storybook</h2>
+
+  <h2>📖 Twinkle Storybook</h2>
+
+  <p>Touch the pictures and enjoy the story!</p>
+
 </header>
 
-<div class="book-area">
+
+<div class="book-wrap">
 
   <div class="book" id="book">
 
     <div class="page left-page">
-      <div class="page-content" id="leftContent"></div>
-      <div class="page-number" id="leftNumber"></div>
+
+      <div class="page-inner" id="leftPage"></div>
+
     </div>
 
     <div class="page right-page">
-      <div class="page-content" id="rightContent"></div>
-      <div class="page-number" id="rightNumber"></div>
+
+      <div class="page-inner" id="rightPage"></div>
+
     </div>
+
+    <div class="turning-page" id="turningPage"></div>
 
   </div>
 
 </div>
 
+
 <div class="controls">
 
-  <button id="prevBtn" onclick="changePage(-1)">
-    ◀ 이전
+  <button id="prevBtn" onclick="turnPage(-1)">
+    ◀ Previous
   </button>
 
   <span id="pageInfo"></span>
 
-  <button id="nextBtn" onclick="changePage(1)">
-    다음 ▶
+  <button id="nextBtn" onclick="turnPage(1)">
+    Next ▶
   </button>
 
 </div>
 
 
-<!-- 편집 영역 -->
+<div class="bottom-tools">
 
-<div class="editor">
+  <button onclick="readAll()">🔊 Read Story</button>
 
-  <h3>✏️ 동화책 편집하기</h3>
+  <button onclick="stopReading()">⏹ Stop</button>
 
-  <label>왼쪽 페이지 문장</label>
-  <textarea id="leftText"></textarea>
+  <button onclick="toggleUpload()">🖼 Change Picture</button>
 
-  <label>오른쪽 페이지 문장</label>
-  <textarea id="rightText"></textarea>
+</div>
 
-  <label>왼쪽 페이지 그림</label>
-  <input type="file" id="leftImage" accept="image/*">
 
-  <label>오른쪽 페이지 그림</label>
-  <input type="file" id="rightImage" accept="image/*">
+<div class="upload-area" id="uploadArea" hidden>
 
-  <label>왼쪽 페이지 그림 효과음</label>
-  <input type="file" id="leftSound" accept="audio/*">
+  <label>현재 오른쪽 페이지 그림 교체하기</label>
 
-  <label>오른쪽 페이지 그림 효과음</label>
-  <input type="file" id="rightSound" accept="audio/*">
+  <input
+    type="file"
+    accept="image/*"
+    id="imageUpload"
+    onchange="changePicture(event)"
+  >
 
-  <div class="editor-buttons">
-
-    <button onclick="saveEdit()">변경 내용 저장</button>
-
-    <button onclick="addPage()">페이지 추가</button>
-
-    <button onclick="deletePage()">페이지 삭제</button>
-
-  </div>
-
-  <p class="note">
-    • 문장은 한 줄에 한 문장씩 입력하세요.<br>
-    • 영어 문장을 클릭하면 음성이 재생됩니다.<br>
-    • 그림을 클릭하면 지정한 효과음이 재생됩니다.<br>
-    • 업로드한 자료는 이 브라우저에 저장됩니다.
+  <p id="uploadStatus">
+    내 기기에 있는 그림을 선택하세요.
   </p>
 
 </div>
@@ -356,74 +403,304 @@ button:disabled {
 
 <script>
 
-// 기본 동화책 내용
+/* =================================================
+   1. 동화책 편집 영역
 
-const defaultPages = [
+   이 부분만 수정하면 새로운 동화책을 만들 수 있습니다.
+================================================= */
+
+
+/*
+그림 경로 예시:
+images/rabbit.jpg
+
+효과음 경로 예시:
+sounds/rabbit.mp3
+
+그림 속 클릭 영역:
+x, y, width, height
+모두 0~100 사이의 퍼센트 값입니다.
+*/
+
+
+const STORY_PAGES = [
+
+  // PAGE 1
 
   {
-    text: [
+    image: "",
+
+    background: "#e9f3e5",
+
+    sentences: [
+
       "Once upon a time,",
+
       "there was a little rabbit."
+
     ],
-    image: "",
-    sound: ""
+
+    sounds: [
+
+      {
+        x: 10,
+        y: 10,
+        width: 80,
+        height: 80,
+        word: "Rabbit",
+        sound: "",
+        say: true
+      }
+
+    ]
+
   },
 
+
+  // PAGE 2
+
   {
-    text: [
+    image: "",
+
+    background: "#e5f0fc",
+
+    sentences: [
+
       "The rabbit lived in a forest.",
-      "He liked to play every day."
+
+      "He loved beautiful flowers."
+
     ],
-    image: "",
-    sound: ""
+
+    sounds: [
+
+      {
+        x: 10,
+        y: 10,
+        width: 80,
+        height: 80,
+        word: "Flower",
+        sound: "",
+        say: true
+      }
+
+    ]
+
   },
 
-  {
-    text: [
-      "One day, he saw a big tree.",
-      "It was very tall!"
-    ],
-    image: "",
-    sound: ""
-  },
+
+  // PAGE 3
 
   {
-    text: [
-      "He found a little bird.",
-      "They became good friends."
-    ],
     image: "",
-    sound: ""
+
+    background: "#fff0dc",
+
+    sentences: [
+
+      "One day, he saw a little bird.",
+
+      "The bird was singing happily."
+
+    ],
+
+    sounds: [
+
+      {
+        x: 10,
+        y: 10,
+        width: 80,
+        height: 80,
+        word: "Bird",
+        sound: "",
+        say: true
+      }
+
+    ]
+
+  },
+
+
+  // PAGE 4
+
+  {
+    image: "",
+
+    background: "#f4eafa",
+
+    sentences: [
+
+      "Hello, little bird!",
+
+      "Let's play together!"
+
+    ],
+
+    sounds: [
+
+      {
+        x: 10,
+        y: 10,
+        width: 80,
+        height: 80,
+        word: "Hello",
+        sound: "",
+        say: true
+      }
+
+    ]
+
   }
 
 ];
 
-let pages = JSON.parse(
-  localStorage.getItem("storybookData")
-) || defaultPages;
+
+
+/* =================================================
+   2. 예시 그림
+================================================= */
+
+
+function makeIllustration(emoji, color, title) {
+
+  const svg = `
+
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="700" height="470"
+       viewBox="0 0 700 470">
+
+    <rect width="700" height="470"
+          rx="25" fill="${color}"/>
+
+    <circle cx="570" cy="90" r="48"
+            fill="#fff2b0"/>
+
+    <path d="M0 330 Q170 240 350 330 T700 310 V470 H0Z"
+          fill="#a8cba0"/>
+
+    <path d="M0 380 Q200 310 390 380 T700 350 V470 H0Z"
+          fill="#7fae83"/>
+
+    <text x="350" y="270"
+          text-anchor="middle"
+          font-size="160">${emoji}</text>
+
+    <text x="350" y="430"
+          text-anchor="middle"
+          font-size="32"
+          fill="#ffffff"
+          font-family="Arial">${title}</text>
+
+  </svg>`;
+
+  return "data:image/svg+xml;charset=utf-8," +
+    encodeURIComponent(svg);
+
+}
+
+
+// 예시 그림 자동 연결
+
+const exampleImages = [
+
+  makeIllustration("🐰", "#d8e9d3", "Little Rabbit"),
+
+  makeIllustration("🌳🌸", "#d7e8f5", "Beautiful Forest"),
+
+  makeIllustration("🐦", "#f8e3c9", "Little Bird"),
+
+  makeIllustration("🐰🐦", "#e9d9ed", "Good Friends")
+
+];
+
+
+// 이미지가 비어 있으면 예시 그림 사용
+
+STORY_PAGES.forEach((page, index) => {
+
+  if (!page.image) {
+    page.image = exampleImages[index % exampleImages.length];
+  }
+
+});
+
+
+
+/* =================================================
+   3. 기본 설정
+================================================= */
+
 
 let currentPage = 0;
 
+let isTurning = false;
 
-// 음성 읽기
+let isReading = false;
+
+let currentUpload = {};
+
+let readingQueue = [];
+
+
+
+/* =================================================
+   4. 음성 읽기
+================================================= */
+
 
 function speak(text, element) {
 
   speechSynthesis.cancel();
 
-  document.querySelectorAll(".sentence")
+  document.querySelectorAll(".story-sentence")
     .forEach(el => el.classList.remove("active"));
 
-  element.classList.add("active");
+  document.querySelectorAll(".word")
+    .forEach(el => el.classList.remove("active"));
 
   const utterance = new SpeechSynthesisUtterance(text);
 
   utterance.lang = "en-US";
+
   utterance.rate = 0.85;
+
   utterance.pitch = 1;
 
+  element.classList.add("active");
+
+  const words = element.querySelectorAll(".word");
+
+  utterance.onboundary = event => {
+
+    if (event.name !== "word") return;
+
+    let index = 0;
+    let total = 0;
+
+    for (let i = 0; i < words.length; i++) {
+
+      if (total <= event.charIndex) {
+        index = i;
+      }
+
+      total += words[i].textContent.length + 1;
+
+    }
+
+    words.forEach(w => w.classList.remove("active"));
+
+    if (words[index]) {
+      words[index].classList.add("active");
+    }
+
+  };
+
   utterance.onend = () => {
+
     element.classList.remove("active");
+
+    words.forEach(w => w.classList.remove("active"));
+
   };
 
   speechSynthesis.speak(utterance);
@@ -431,312 +708,367 @@ function speak(text, element) {
 }
 
 
-// 효과음 재생
 
-function playSound(src) {
-
-  if (!src) return;
-
-  const audio = new Audio(src);
-
-  audio.play().catch(() => {});
-
-}
+/* =================================================
+   5. 페이지 렌더링
+================================================= */
 
 
-// 페이지 표시
+function renderSide(elementId, pageIndex) {
 
-function renderPage() {
+  const container = document.getElementById(elementId);
 
-  const left = pages[currentPage];
-  const right = pages[currentPage + 1];
+  container.innerHTML = "";
 
-  renderSide("left", left);
-  renderSide("right", right);
+  const data = STORY_PAGES[pageIndex];
 
-  document.getElementById("pageInfo").textContent =
-    `${currentPage + 1} - ${Math.min(currentPage + 2, pages.length)} / ${pages.length}`;
+  if (!data) return;
 
-  document.getElementById("prevBtn").disabled =
-    currentPage === 0;
+  container.style.background = data.background || "#fffdf7";
 
-  document.getElementById("nextBtn").disabled =
-    currentPage + 2 >= pages.length;
+  const imageWrap = document.createElement("div");
 
-  loadEditor();
+  imageWrap.className = "page-image-wrap";
 
-}
+  const img = document.createElement("img");
+
+  img.className = "page-image";
+
+  img.src = currentUpload[pageIndex] || data.image;
+
+  imageWrap.appendChild(img);
 
 
-function renderSide(side, data) {
+  // 그림 클릭 영역
 
-  const content = document.getElementById(
-    side + "Content"
-  );
+  (data.sounds || []).forEach(area => {
 
-  const number = document.getElementById(
-    side + "Number"
-  );
+    const button = document.createElement("button");
 
-  content.innerHTML = "";
+    button.className = "hotspot";
 
-  if (!data) {
-    number.textContent = "";
-    return;
-  }
+    button.style.left = area.x + "%";
 
-  // 그림
+    button.style.top = area.y + "%";
 
-  if (data.image) {
+    button.style.width = area.width + "%";
 
-    const img = document.createElement("img");
+    button.style.height = area.height + "%";
 
-    img.src = data.image;
-    img.className = "story-image";
+    button.title = area.word;
 
-    img.onclick = () => playSound(data.sound);
+    button.onclick = event => {
 
-    content.appendChild(img);
+      event.stopPropagation();
 
-  }
+      if (area.sound) {
 
-  // 문장
+        const audio = new Audio(area.sound);
+
+        audio.play().catch(() => {});
+
+      }
+
+      if (area.say) {
+
+        const temp = new SpeechSynthesisUtterance(area.word);
+
+        temp.lang = "en-US";
+
+        temp.rate = 0.85;
+
+        speechSynthesis.cancel();
+
+        speechSynthesis.speak(temp);
+
+      }
+
+    };
+
+    imageWrap.appendChild(button);
+
+  });
+
+
+  container.appendChild(imageWrap);
+
+
+  // 문장 표시
 
   const textBox = document.createElement("div");
 
   textBox.className = "story-text";
 
-  data.text.forEach(sentence => {
+  data.sentences.forEach(sentence => {
 
-    const span = document.createElement("span");
+    const line = document.createElement("div");
 
-    span.className = "sentence";
-    span.textContent = sentence;
+    line.className = "story-sentence";
 
-    span.onclick = () => speak(sentence, span);
+    sentence.split(/(\s+)/).forEach(part => {
 
-    textBox.appendChild(span);
+      if (/^\s+$/.test(part)) {
+
+        line.appendChild(document.createTextNode(part));
+
+      } else {
+
+        const span = document.createElement("span");
+
+        span.className = "word";
+
+        span.textContent = part;
+
+        line.appendChild(span);
+
+      }
+
+    });
+
+    line.onclick = () => speak(sentence, line);
+
+    textBox.appendChild(line);
 
   });
 
-  content.appendChild(textBox);
+  container.appendChild(textBox);
 
-  number.textContent =
-    pages.indexOf(data) + 1;
+
+  // 페이지 번호
+
+  const number = document.createElement("div");
+
+  number.className = "page-number";
+
+  number.textContent = pageIndex + 1;
+
+  container.appendChild(number);
 
 }
 
 
-// 페이지 넘기기
 
-function changePage(direction) {
+function renderBook() {
 
-  const book = document.getElementById("book");
+  renderSide("leftPage", currentPage);
 
-  speechSynthesis.cancel();
+  renderSide("rightPage", currentPage + 1);
 
-  if (direction === 1) {
+  document.getElementById("pageInfo").textContent =
 
-    if (currentPage + 2 >= pages.length) return;
+    `${currentPage + 1} - ${Math.min(currentPage + 2, STORY_PAGES.length)} / ${STORY_PAGES.length}`;
 
-    currentPage += 2;
+  document.getElementById("prevBtn").disabled = currentPage === 0;
 
-    book.classList.remove("turn-prev");
-    book.classList.add("turn-next");
+  document.getElementById("nextBtn").disabled =
 
-  } else {
+    currentPage + 2 >= STORY_PAGES.length;
 
-    if (currentPage === 0) return;
+}
 
-    currentPage -= 2;
 
-    book.classList.remove("turn-next");
-    book.classList.add("turn-prev");
 
-  }
+/* =================================================
+   6. 3D 페이지 넘기기
+================================================= */
+
+
+function turnPage(direction) {
+
+  if (isTurning) return;
+
+  const next = currentPage + direction * 2;
+
+  if (next < 0 || next >= STORY_PAGES.length) return;
+
+  isTurning = true;
+
+  stopReading();
+
+  const page = document.getElementById("turningPage");
+
+  page.className = "turning-page";
+
+  void page.offsetWidth;
+
+  page.classList.add(direction === 1 ? "next" : "prev");
 
   setTimeout(() => {
 
-    renderPage();
+    currentPage = next;
 
-    book.classList.remove("turn-next", "turn-prev");
+    renderBook();
 
-  }, 200);
+    page.className = "turning-page";
 
-}
+    isTurning = false;
 
-
-// 편집기 내용 불러오기
-
-function loadEditor() {
-
-  const left = pages[currentPage];
-  const right = pages[currentPage + 1];
-
-  document.getElementById("leftText").value =
-    left ? left.text.join("\n") : "";
-
-  document.getElementById("rightText").value =
-    right ? right.text.join("\n") : "";
+  }, 650);
 
 }
 
 
-// 이미지 파일 읽기
 
-function readFile(input) {
+/* =================================================
+   7. 전체 이야기 읽기
+================================================= */
 
-  return new Promise(resolve => {
 
-    const file = input.files[0];
+function readAll() {
 
-    if (!file) {
-      resolve(null);
-      return;
-    }
+  stopReading();
 
-    const reader = new FileReader();
+  isReading = true;
 
-    reader.onload = () => resolve(reader.result);
+  readingQueue = [];
 
-    reader.readAsDataURL(file);
+  STORY_PAGES.forEach((page, index) => {
+
+    page.sentences.forEach(sentence => {
+
+      readingQueue.push({
+        page: index,
+        text: sentence
+      });
+
+    });
 
   });
 
-}
-
-
-// 편집 내용 저장
-
-async function saveEdit() {
-
-  const left = pages[currentPage];
-  const right = pages[currentPage + 1];
-
-  if (left) {
-
-    left.text = document.getElementById("leftText")
-      .value.split("\n").filter(x => x.trim());
-
-    const img = await readFile(
-      document.getElementById("leftImage")
-    );
-
-    const sound = await readFile(
-      document.getElementById("leftSound")
-    );
-
-    if (img) left.image = img;
-    if (sound) left.sound = sound;
-
-  }
-
-  if (right) {
-
-    right.text = document.getElementById("rightText")
-      .value.split("\n").filter(x => x.trim());
-
-    const img = await readFile(
-      document.getElementById("rightImage")
-    );
-
-    const sound = await readFile(
-      document.getElementById("rightSound")
-    );
-
-    if (img) right.image = img;
-    if (sound) right.sound = sound;
-
-  }
-
-  try {
-
-    localStorage.setItem(
-      "storybookData",
-      JSON.stringify(pages)
-    );
-
-    alert("저장되었습니다!");
-
-    renderPage();
-
-  } catch (error) {
-
-    alert("저장 공간이 부족합니다. 이미지 크기를 줄여주세요.");
-
-  }
+  playNextSentence();
 
 }
 
 
-// 페이지 추가
+function playNextSentence() {
 
-function addPage() {
+  if (!isReading || readingQueue.length === 0) {
 
-  if (pages.length % 2 !== 0) {
+    isReading = false;
 
-    pages.push({
-      text: [],
-      image: "",
-      sound: ""
-    });
-
-  } else {
-
-    pages.push({
-      text: [],
-      image: "",
-      sound: ""
-    });
-
-  }
-
-  currentPage = Math.floor((pages.length - 1) / 2) * 2;
-
-  saveAll();
-
-  renderPage();
-
-}
-
-
-// 페이지 삭제
-
-function deletePage() {
-
-  if (pages.length <= 2) {
-    alert("최소 두 페이지는 남겨주세요.");
     return;
+
   }
 
-  pages.splice(currentPage, 2);
+  const item = readingQueue.shift();
 
-  currentPage = Math.min(
-    currentPage,
-    Math.max(0, Math.floor((pages.length - 1) / 2) * 2)
+  const spread = Math.floor(item.page / 2) * 2;
+
+  if (currentPage !== spread) {
+
+    currentPage = spread;
+
+    renderBook();
+
+  }
+
+  const side = item.page % 2 === 0
+    ? "leftPage"
+    : "rightPage";
+
+  const container = document.getElementById(side);
+
+  const lines = container.querySelectorAll(".story-sentence");
+
+  const line = [...lines].find(el =>
+    el.textContent === item.text
   );
 
-  saveAll();
-  renderPage();
+  if (!line) {
+
+    playNextSentence();
+
+    return;
+
+  }
+
+  const utterance = new SpeechSynthesisUtterance(item.text);
+
+  utterance.lang = "en-US";
+
+  utterance.rate = 0.85;
+
+  line.classList.add("active");
+
+  utterance.onend = () => {
+
+    line.classList.remove("active");
+
+    playNextSentence();
+
+  };
+
+  speechSynthesis.speak(utterance);
 
 }
 
 
-// 전체 저장
+function stopReading() {
 
-function saveAll() {
+  isReading = false;
 
-  localStorage.setItem(
-    "storybookData",
-    JSON.stringify(pages)
-  );
+  readingQueue = [];
+
+  speechSynthesis.cancel();
 
 }
 
 
-// 처음 실행
 
-renderPage();
+/* =================================================
+   8. 내 이미지로 교체
+================================================= */
+
+
+function toggleUpload() {
+
+  const area = document.getElementById("uploadArea");
+
+  area.hidden = !area.hidden;
+
+}
+
+
+function changePicture(event) {
+
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+
+    alert("이미지 파일을 선택해주세요.");
+
+    return;
+
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    currentUpload[currentPage + 1] = e.target.result;
+
+    renderBook();
+
+    document.getElementById("uploadStatus").textContent =
+
+      "그림이 교체되었습니다. (현재 브라우저에서만 적용)";
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+
+/* =================================================
+   9. 초기 실행
+================================================= */
+
+
+renderBook();
 
 </script>
 
