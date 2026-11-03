@@ -455,31 +455,32 @@ body {
     font-size: 40px !important;
   }
 }
-  /* 퀴즈 유형 스타일 */
-.countdown {
-  font-size: 60px;
+  /* 퀴즈 유형 스타일 - PC */
+#countdown {
+  font-size: 60px !important;
   font-weight: 800;
   color: #8d9bff;
-  min-height: 65px;
+  min-height: 70px;
   margin-top: 12px;
 }
 
-.quiz-answer {
-  font-size: 44px;
+#quizAnswer {
+  font-size: 44px !important;
   color: #16845b;
   font-weight: 600;
   min-height: 55px;
   margin-top: 5px;
 }
 
+/* 모바일 */
 @media (max-width: 650px) {
-  .countdown {
-    font-size: 36px;
+  #countdown {
+    font-size: 36px !important;
     min-height: 48px;
   }
 
-  .quiz-answer {
-    font-size: 23px;
+  #quizAnswer {
+    font-size: 23px !important;
     min-height: 35px;
   }
 }
